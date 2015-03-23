@@ -48,7 +48,7 @@ include(ConfigCompilerFlags)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/interfaces
+    ${PROJECT_SOURCE_DIR}/api
     ${PROJECT_SOURCE_DIR}/external/lebedev
     )
 
@@ -60,7 +60,7 @@ add_library(
     src/io.cpp
     src/rolex.cpp
     src/MemAllocator.cpp
-    interfaces/numgrid_c_interface.cpp
+    api/numgrid_c_api.cpp
     external/lebedev/sphere_lebedev_rule.cpp
     )
 

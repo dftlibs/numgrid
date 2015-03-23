@@ -1,5 +1,5 @@
 
-#include "numgrid_c_interface.h"
+#include "numgrid_c_api.h"
 #include "Grid.h"
 
 
@@ -7,8 +7,8 @@ Grid grid;
 
 
 void numgrid_set_grid_parameters(const double radial_precision,
-                                  const int    angular_min,
-                                  const int    angular_max)
+                                 const int    angular_min,
+                                 const int    angular_max)
 {
     grid.set_grid_parameters(radial_precision,
                              angular_min,
@@ -17,14 +17,14 @@ void numgrid_set_grid_parameters(const double radial_precision,
 
 
 void numgrid_generate(const int    verbosity,
-                       const int    num_centers,
-                       const double center_xyz[],
-                       const int    center_element[],
-                       const int    num_shells,
-                       const int    shell_center[],
-                       const int    l_quantum_num[],
-                       const int    shell_num_primitives[],
-                       const double primitive_exp[])
+                      const int    num_centers,
+                      const double center_xyz[],
+                      const int    center_element[],
+                      const int    num_shells,
+                      const int    shell_center[],
+                      const int    l_quantum_num[],
+                      const int    shell_num_primitives[],
+                      const double primitive_exp[])
 {
     grid.generate(verbosity,
                   num_centers,
