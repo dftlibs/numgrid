@@ -1,4 +1,7 @@
 
+// must be included before fstream (stdio)
+#include "Grid.h"
+
 #include <cstddef>
 #include <fstream>
 #include <cstdlib>
@@ -15,9 +18,6 @@
 #include "grid_radial.h"
 #include "becke_partitioning.h"
 #include "MemAllocator.h"
-
-// has to be included after any stdio include
-#include "Grid.h"
 
 
 const int    max_angular_order        = 33;
