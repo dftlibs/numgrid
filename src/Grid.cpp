@@ -7,8 +7,6 @@
 
 #include "math.h"
 
-#include "Grid.h"
-
 #include "io.h"
 #include "rolex.h"
 #include "parameters.h"
@@ -17,6 +15,9 @@
 #include "grid_radial.h"
 #include "becke_partitioning.h"
 #include "MemAllocator.h"
+
+// has to be included after any stdio include
+#include "Grid.h"
 
 
 const int    max_angular_order        = 33;
