@@ -66,11 +66,3 @@ double *numgrid_get_grid_p()
 {
     return grid.p;
 }
-
-
-#ifdef ENABLE_MPI
-void numgrid_distribute(const MPI_Comm &comm)
-{
-    grid.distribute(comm);
-}
-#endif

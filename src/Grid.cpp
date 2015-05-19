@@ -158,11 +158,6 @@ void Grid::generate_sub(const int    num_centers,
     // second round allocates and does the real work
     for (int iround = 0; iround < 2; iround++)
     {
-#ifdef ENABLE_OMP
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(dynamic,1)
-#endif
             for (int icent = 0; icent < num_centers; icent++)
             {
                 double *pa_buffer = (double*) MemAllocator::allocate(num_centers*sizeof(double));
@@ -280,9 +275,6 @@ void Grid::generate_sub(const int    num_centers,
 
                 MemAllocator::deallocate(pa_buffer);
             }
-#ifdef ENABLE_OMP
-        }
-#endif
 
         if (iround == 0)
         {
@@ -424,85 +416,3 @@ void Grid::read()
 
     is_generated = true;
 }
-
-
-#ifdef ENABLE_MPI
-void Grid::distribute(const MPI_Comm &comm)
-// redefines num_points
-{
-    if (is_distributed) return;
-
-    int rank = 0;
-    int num_proc = 1;
-    size_t block_size;
-
-    MPI_Comm_rank(comm, &rank);
-    MPI_Comm_size(comm, &num_proc);
-
-    MPI_Bcast(&num_points, 1, MPI_INT, 0, comm);
-
-    int num_points_proc = num_points/num_proc;
-    int num_points_rest = num_points%num_proc;
-
-    if (rank != 0)
-    {
-        // free just in case
-        MemAllocator::deallocate(p);
-        MemAllocator::deallocate(w);
-
-        block_size = num_points_proc*sizeof(double);
-        p = (double*) MemAllocator::allocate(3*block_size);
-        w = (double*) MemAllocator::allocate(block_size);
-    }
-
-    if (rank == 0)
-    {
-        double *buffer = NULL;
-        block_size = 3*num_points_proc*sizeof(double);
-        buffer = (double*) MemAllocator::allocate(block_size);
-
-        MPI_Scatter(p, 3*num_points_proc, MPI_DOUBLE, buffer, 3*num_points_proc, MPI_DOUBLE, 0, comm);
-        MPI_Scatter(w,   num_points_proc, MPI_DOUBLE, buffer,   num_points_proc, MPI_DOUBLE, 0, comm);
-
-        MemAllocator::deallocate(buffer);
-    }
-    else
-    {
-        double empty[1] = {0.0};
-        MPI_Scatter(empty, 0, MPI_DOUBLE, p, 3*num_points_proc, MPI_DOUBLE, 0, comm);
-        MPI_Scatter(empty, 0, MPI_DOUBLE, w,   num_points_proc, MPI_DOUBLE, 0, comm);
-    }
-
-    // if there is a rest of points, master will do them
-    if (num_points_rest > 0 && rank == 0)
-    {
-        int n = num_points_proc;
-        for (int i = num_points-num_points_rest; i < num_points; i++)
-        {
-            w[n]       = w[i];
-            p[3*n]     = p[3*i];
-            p[3*n + 1] = p[3*i + 1];
-            p[3*n + 2] = p[3*i + 2];
-            n++;
-        }
-        num_points_proc += num_points_rest;
-    }
-
-    // verify that sum matches num_points_batch
-    int control_sum = num_points_proc;
-
-    if (rank == 0)
-    {
-        MPI_Reduce(MPI_IN_PLACE, &control_sum, 1, MPI_INT, MPI_SUM, 0, comm);
-        assert(control_sum == num_points);
-    }
-    else
-    {
-        MPI_Reduce(&control_sum, MPI_IN_PLACE, 1, MPI_INT, MPI_SUM, 0, comm);
-    }
-
-    num_points = num_points_proc;
-
-    is_distributed = true;
-}
-#endif

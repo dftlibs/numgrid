@@ -1,10 +1,6 @@
 #ifndef numgrid_c_api_h_
 #define numgrid_c_api_h_
 
-#ifdef ENABLE_MPI
-#include "mpi.h"
-#endif
-
 extern "C"
 {
 void numgrid_set_grid_parameters(const double radial_precision,
@@ -30,10 +26,6 @@ int numgrid_get_num_points();
 double *numgrid_get_grid_w();
 
 double *numgrid_get_grid_p();
-
-#ifdef ENABLE_MPI
-void numgrid_distribute(const MPI_Comm &comm);
-#endif
 }
 
 #endif // numgrid_c_api_h_

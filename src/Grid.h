@@ -1,10 +1,6 @@
 #ifndef Grid_h_
 #define Grid_h_
 
-#ifdef ENABLE_MPI
-#include "mpi.h"
-#endif
-
 class Grid
 {
     public:
@@ -33,10 +29,6 @@ class Grid
         void set_grid_parameters(const double in_radial_precision,
                                  const int    in_angular_min,
                                  const int    in_angular_max);
-
-#ifdef ENABLE_MPI
-        void distribute(const MPI_Comm &comm);
-#endif
 
     private:
 

@@ -7,47 +7,12 @@ enable_language(C CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/compilers
-    )
-
-option(ENABLE_MPI "Enable MPI" OFF)
-if(ENABLE_MPI)
-    find_package(MPI)
-    if(MPI_FOUND)
-        include_directories(${MPI_INCLUDE_PATH})
-        add_definitions(-DENABLE_MPI)
-    else()
-        message(FATAL_ERROR "-- You asked for MPI, but CMake could not find any MPI installation, check $PATH")
+option(ENABLE_COVERAGE "Enable test coverage" OFF)
+if(ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()
 endif()
-
-option(ENABLE_OMP "Enable OpenMP" OFF)
-if(ENABLE_OMP)
-    find_package(OpenMP)
-    if(OPENMP_FOUND)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-        add_definitions(-DENABLE_OMP)
-    endif()
-endif()
-
-include(OptimizeForArchitecture)
-OptimizeForArchitecture()
-if(AVX_FOUND)
-    add_definitions(-DCPU_MEM_ALIGN=32)
-    message(STATUS "Setting CPU_MEM_ALIGN=32")
-elseif(SSE3_FOUND)
-    add_definitions(-DCPU_MEM_ALIGN=16)
-    message(STATUS "Setting CPU_MEM_ALIGN=16")
-else()
-    message(FATAL_ERROR "neither SSE3 nor AVX detected; adapt CMakeLists.txt")
-endif()
-
-include(ConfigSafeGuards)
-include(ConfigCompilerFlags)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
@@ -66,7 +31,6 @@ add_library(
     api/numgrid_c_api.cpp
     external/lebedev/sphere_lebedev_rule.cpp
     )
-
 
 add_custom_target(
     git_update
