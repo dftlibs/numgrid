@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "gtest/gtest.h"
 #include "numgrid_c_api.h"
 
@@ -118,5 +120,16 @@ TEST(example, numgrid)
     double *grid_p = (double*) numgrid_get_grid_p();
     double *grid_w = (double*) numgrid_get_grid_w();
 
-    ASSERT_NEAR(grid_p[0], 1.2304794589759454e-06, 1.0e-11);
+    std::ifstream infile("../test/referece_grid.txt");
+
+    int i = 0;
+    int j = 0;
+    double x, y, z, w;
+    while (infile >> x >> y >> z >> w)
+    {
+        ASSERT_NEAR(grid_p[i++], x, 1.0e-5);
+        ASSERT_NEAR(grid_p[i++], y, 1.0e-5);
+        ASSERT_NEAR(grid_p[i++], z, 1.0e-5);
+        ASSERT_NEAR(grid_w[j++], w, 1.0e-5);
+    }
 }
