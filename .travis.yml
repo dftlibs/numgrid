@@ -1,7 +1,16 @@
 language: cpp
+install:
+  - sudo pip install cpp-coveralls
+  - sudo pip install pytest
+  - sudo pip install cffi
+  - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-4.9 g++-4.9 valgrind
 script:
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake -DENABLE_COVERAGE=ON ..
   - make
   - make test
+after_success:
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
