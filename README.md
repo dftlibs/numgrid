@@ -3,6 +3,5 @@
 
 ![alt text](https://github.com/rbast/numgrid/raw/master/images/truegrid.jpg "numgrid")
 
-- Currently no tests and no documentation.
 - Status: Pre-alpha. API, internals, and even project name subject to heavy modifications.
-- Licensed under [LGPLv3](../master/LICENSE).
+- Licensed under [BSD-3](../master/LICENSE)

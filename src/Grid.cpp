@@ -165,7 +165,6 @@ void Grid::generate_sub(const int    num_centers,
 #endif
             for (int icent = 0; icent < num_centers; icent++)
             {
-
                 double *pa_buffer = (double*) MemAllocator::allocate(num_centers*sizeof(double));
 
                 // get extreme alpha values
@@ -209,6 +208,7 @@ void Grid::generate_sub(const int    num_centers,
                     if (alpha_min[l] > 0.0)
                     {
                         r_outer = std::max(r_outer, get_r_outer(radial_precision, alpha_min[l], l, 4.0*get_bragg_angstrom(center_element[icent])));
+                        assert(r_outer > r_inner);
                         h = std::min(h, get_h(radial_precision, l, 0.1*(r_outer - r_inner)));
                     }
                 }
