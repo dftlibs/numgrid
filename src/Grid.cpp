@@ -104,6 +104,9 @@ void numgrid_generate(numgrid_context_t *context,
                       const int    num_centers,
                       const double center_xyz[],
                       const int    center_element[],
+                      const int    num_outer_centers,
+                      const double outer_center_xyz[],
+                      const int    outer_center_element[],
                       const int    num_shells,
                       const int    shell_center[],
                       const int    l_quantum_num[],
@@ -116,6 +119,9 @@ void numgrid_generate(numgrid_context_t *context,
                                             num_centers,
                                             center_xyz,
                                             center_element,
+                                            num_outer_centers,
+                                            outer_center_xyz,
+                                            outer_center_element,
                                             num_shells,
                                             shell_center,
                                             l_quantum_num,
@@ -128,6 +134,9 @@ void Grid::generate(const double radial_precision,
                     const int    num_centers,
                     const double center_xyz[],
                     const int    center_element[],
+                    const int    num_outer_centers,
+                    const double outer_center_xyz[],
+                    const int    outer_center_element[],
                     const int    num_shells,
                     const int    shell_center[],
                     const int    l_quantum_num[],
@@ -142,6 +151,28 @@ void Grid::generate(const double radial_precision,
     double *angular_z = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
     double *angular_w = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
 
+    int num_centers_total = num_centers + num_outer_centers;
+    double *center_xyz_total = (double*) MemAllocator::allocate(3*num_centers_total*sizeof(double));
+    int *center_element_total = (int*) MemAllocator::allocate(num_centers_total*sizeof(int));
+
+    int i = 0;
+    for (int icent = 0; icent < num_centers; icent++)
+    {
+        center_xyz_total[i*3 + 0] = center_xyz[icent*3 + 0];
+        center_xyz_total[i*3 + 1] = center_xyz[icent*3 + 1];
+        center_xyz_total[i*3 + 2] = center_xyz[icent*3 + 2];
+        center_element_total[i] = center_element[icent];
+        i++;
+    }
+    for (int icent = 0; icent < num_outer_centers; icent++)
+    {
+        center_xyz_total[i*3 + 0] = outer_center_xyz[icent*3 + 0];
+        center_xyz_total[i*3 + 1] = outer_center_xyz[icent*3 + 1];
+        center_xyz_total[i*3 + 2] = outer_center_xyz[icent*3 + 2];
+        center_element_total[i] = outer_center_element[icent];
+        i++;
+    }
+
     for (int i = get_angular_order(num_angular_min); i <= get_angular_order(num_angular_max); i++)
     {
         int angular_off = i*MAX_ANGULAR_GRID;
@@ -154,10 +185,10 @@ void Grid::generate(const double radial_precision,
     // second round allocates and does the real work
     for (int iround = 0; iround < 2; iround++)
     {
+        double *pa_buffer = (double*) MemAllocator::allocate(num_centers_total*sizeof(double));
+
         for (int icent = 0; icent < num_centers; icent++)
         {
-            double *pa_buffer = (double*) MemAllocator::allocate(num_centers*sizeof(double));
-
             int l_max = 0;
             for (int ishell = 0; ishell < num_shells; ishell++)
             {
@@ -260,27 +291,26 @@ void Grid::generate(const double radial_precision,
                         pw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
 
                         double becke_w = 1.0;
-                        if (num_centers > 1)
+                        if (num_centers_total > 1)
                         {
-                            becke_w = get_becke_w(center_xyz,
-                                                  center_element,
+                            becke_w = get_becke_w(center_xyz_total,
+                                                  center_element_total,
                                                   pa_buffer,
                                                   icent,
-                                                  num_centers,
+                                                  num_centers_total,
                                                   pw[4*(ioff + iang)    ],
                                                   pw[4*(ioff + iang) + 1],
                                                   pw[4*(ioff + iang) + 2]);
                         }
-
                         pw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
                     }
                 }
 
                 ioff += num_angular;
             }
-
-            MemAllocator::deallocate(pa_buffer);
         }
+
+        MemAllocator::deallocate(pa_buffer);
 
         if (iround == 0)
         {
@@ -300,4 +330,7 @@ void Grid::generate(const double radial_precision,
     MemAllocator::deallocate(angular_y);
     MemAllocator::deallocate(angular_z);
     MemAllocator::deallocate(angular_w);
+
+    MemAllocator::deallocate(center_xyz_total);
+    MemAllocator::deallocate(center_element_total);
 }
