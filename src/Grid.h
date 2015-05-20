@@ -12,10 +12,6 @@ class Grid
         double *w;
         int    num_points;
 
-        void read();
-
-        void stretch();
-
         void generate(const int    verbosity,
                       const int    num_centers,
                       const double center_xyz[],

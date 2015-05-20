@@ -17,10 +17,6 @@ void numgrid_generate(const int    verbosity,
                       const int    shell_num_primitives[],
                       const double primitive_exp[]);
 
-void numgrid_read();
-
-void numgrid_stretch();
-
 int numgrid_get_num_points();
 
 double *numgrid_get_grid_w();

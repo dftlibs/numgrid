@@ -55,45 +55,6 @@ void Grid::nullify()
 }
 
 
-void Grid::stretch()
-// stretch grid so that it aligns nicely with block length
-// if already aligned, we do nothing
-// redefines num_points and reallocates p and w
-{
-    if (num_points%AO_BLOCK_LENGTH > 0)
-    {
-        int num_points_aligned = AO_BLOCK_LENGTH*(1 + num_points/AO_BLOCK_LENGTH);
-
-        double *p_temp;
-        double *w_temp;
-        size_t block_size = num_points*sizeof(double);
-        p_temp = (double*) MemAllocator::allocate(3*block_size);
-        w_temp = (double*) MemAllocator::allocate(block_size);
-
-        std::copy(p, p + 3*num_points, &p_temp[0]);
-        std::copy(w, w +   num_points, &w_temp[0]);
-
-        MemAllocator::deallocate(p);
-        MemAllocator::deallocate(w);
-
-        block_size = num_points_aligned*sizeof(double);
-        p = (double*) MemAllocator::allocate(3*block_size);
-        w = (double*) MemAllocator::allocate(block_size);
-
-        std::fill(&p[0], &p[3*num_points_aligned], 1.0e10);
-        std::fill(&w[0], &w[  num_points_aligned], 0.0);
-
-        std::copy(p_temp, p_temp + 3*num_points, &p[0]);
-        std::copy(w_temp, w_temp +   num_points, &w[0]);
-
-        MemAllocator::deallocate(p_temp);
-        MemAllocator::deallocate(w_temp);
-
-        num_points = num_points_aligned;
-    }
-}
-
-
 int lebedev_table[33] = {6,   14,   26,   38,   50,   74,   86,  110,  146,  170,
                        194,  230,  266,  302,  350,  434,  590,  770,  974, 1202,
                       1454, 1730, 2030, 2354, 2702, 3074, 3470, 3890, 4334, 4802,
@@ -350,69 +311,7 @@ void Grid::generate(const int    verbosity,
     MemAllocator::deallocate(angular_w);
 
     if (verbosity > 0) io::speak_your_mind("Finished generating grid after %.2f seconds.\n", rolex::stop_partial());
-
-    // FIXME not correct since we may stretch to align on mem boundaries
     if (verbosity > 0) io::speak_your_mind("Total number of points: %i\n", num_points);
-
-    is_generated = true;
-}
-
-
-void Grid::read()
-{
-    if (is_generated) return;
-
-    int num_batches;
-    int num_points_batch;
-
-    std::ifstream infile("num_grid");
-
-    // first we get the total number of points
-    num_points = 0;
-    double foo;
-    infile >> num_batches;
-    for (int ibatch = 0; ibatch < num_batches; ibatch++)
-    {
-        infile >> num_points_batch;
-        num_points += num_points_batch;
-        for (int ipoint = 0; ipoint < num_points_batch; ipoint++)
-        {
-            for (int k = 0; k < 3; k++)
-            {
-               infile >> foo;
-            }
-            infile >> foo;
-        }
-    }
-
-    // free just in case
-    MemAllocator::deallocate(p);
-    MemAllocator::deallocate(w);
-
-    // allocate
-    size_t block_size = num_points*sizeof(double);
-    p = (double*) MemAllocator::allocate(3*block_size);
-    w = (double*) MemAllocator::allocate(block_size);
-
-    // now we read for real
-    infile.seekg(0); // rewind
-    infile >> num_batches;
-    int np = 0;
-    int nw = 0;
-    for (int ibatch = 0; ibatch < num_batches; ibatch++)
-    {
-        infile >> num_points_batch;
-        for (int ipoint = 0; ipoint < num_points_batch; ipoint++)
-        {
-            for (int k = 0; k < 3; k++)
-            {
-               infile >> p[np++];
-            }
-            infile >> w[nw++];
-        }
-    }
-
-    infile.close();
 
     is_generated = true;
 }

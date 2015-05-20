@@ -38,18 +38,6 @@ void numgrid_generate(const int    verbosity,
 }
 
 
-void numgrid_read()
-{
-    grid.read();
-}
-
-
-void numgrid_stretch()
-{
-    grid.stretch();
-}
-
-
 int numgrid_get_num_points()
 {
     return grid.num_points;
