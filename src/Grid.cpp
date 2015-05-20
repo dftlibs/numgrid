@@ -122,123 +122,133 @@ void Grid::generate_sub(const int    num_centers,
     // second round allocates and does the real work
     for (int iround = 0; iround < 2; iround++)
     {
-            for (int icent = 0; icent < num_centers; icent++)
+        for (int icent = 0; icent < num_centers; icent++)
+        {
+            double *pa_buffer = (double*) MemAllocator::allocate(num_centers*sizeof(double));
+
+            int l_max = 0;
+            for (int ishell = 0; ishell < num_shells; ishell++)
             {
-                double *pa_buffer = (double*) MemAllocator::allocate(num_centers*sizeof(double));
-
-                // get extreme alpha values
-                double alpha_max = 0.0;
-                int l_max = 0;
-                double alpha_min[MAX_L_VALUE + 1];
-                bool   alpha_min_set[MAX_L_VALUE + 1];
-                std::fill(&alpha_min[0],     &alpha_min[MAX_L_VALUE + 1],     0.0);
-                std::fill(&alpha_min_set[0], &alpha_min_set[MAX_L_VALUE + 1], false);
-
-                int n = 0;
-                for (int ishell = 0; ishell < num_shells; ishell++)
+                if ((shell_center[ishell] - 1) == icent)
                 {
-                    if ((shell_center[ishell] - 1) == icent)
-                    {
-                        int l = l_quantum_num[ishell];
-                        l_max = std::max(l_max, l);
-
-                        if (!alpha_min_set[l])
-                        {
-                            alpha_min[l] = 1.0e50;
-                            alpha_min_set[l] = true;
-                        }
-
-                        for (int p = 0; p < shell_num_primitives[ishell]; p++)
-                        {
-                            double e = primitive_exp[n];
-                            alpha_max    = std::max(alpha_max, 2.0*e); // factor 2.0 to match DIRAC
-                            alpha_min[l] = std::min(alpha_min[l], e);
-                        }
-                    }
-                    n += shell_num_primitives[ishell];
+                    l_max = std::max(l_max, l_quantum_num[ishell]);
                 }
+            }
 
-                // obtain radial parameters
-                double r_inner = get_r_inner(radial_precision, alpha_max);
-                double h       = 1.0e50;
-                double r_outer = 0.0;
-                for (int l = 0; l <= l_max; l++)
+            // get extreme alpha values
+            double alpha_max = 0.0;
+            double *alpha_min = (double*) MemAllocator::allocate((l_max + 1)*sizeof(double));
+            bool *alpha_min_set = (bool*) MemAllocator::allocate((l_max + 1)*sizeof(bool));
+            std::fill(&alpha_min[0],     &alpha_min[l_max + 1],     0.0);
+            std::fill(&alpha_min_set[0], &alpha_min_set[l_max + 1], false);
+
+            int n = 0;
+            for (int ishell = 0; ishell < num_shells; ishell++)
+            {
+                if ((shell_center[ishell] - 1) == icent)
                 {
-                    if (alpha_min[l] > 0.0)
+                    int l = l_quantum_num[ishell];
+
+                    if (!alpha_min_set[l])
                     {
-                        r_outer = std::max(r_outer, get_r_outer(radial_precision, alpha_min[l], l, 4.0*get_bragg_angstrom(center_element[icent])));
-                        assert(r_outer > r_inner);
-                        h = std::min(h, get_h(radial_precision, l, 0.1*(r_outer - r_inner)));
+                        alpha_min[l] = 1.0e50;
+                        alpha_min_set[l] = true;
+                    }
+
+                    for (int p = 0; p < shell_num_primitives[ishell]; p++)
+                    {
+                        double e = primitive_exp[n];
+                        alpha_max    = std::max(alpha_max, 2.0*e); // factor 2.0 to match DIRAC
+                        alpha_min[l] = std::min(alpha_min[l], e);
                     }
                 }
-                assert(r_outer > h);
+                n += shell_num_primitives[ishell];
+            }
 
-                int ioff = 0;
+            // obtain radial parameters
+            double r_inner = get_r_inner(radial_precision, alpha_max);
+            double h       = 1.0e50;
+            double r_outer = 0.0;
+            for (int l = 0; l <= l_max; l++)
+            {
+                if (alpha_min[l] > 0.0)
+                {
+                    r_outer = std::max(r_outer, get_r_outer(radial_precision, alpha_min[l], l, 4.0*get_bragg_angstrom(center_element[icent])));
+                    assert(r_outer > r_inner);
+                    h = std::min(h, get_h(radial_precision, l, 0.1*(r_outer - r_inner)));
+                }
+            }
+            assert(r_outer > h);
+
+            MemAllocator::deallocate(alpha_min);
+            MemAllocator::deallocate(alpha_min_set);
+
+            int ioff = 0;
+
+            if (iround == 0)
+            {
+                num_points_on_atom[icent] = 0;
+            }
+            else
+            {
+                for (int jcent = 0; jcent < icent; jcent++)
+                {
+                    ioff += num_points_on_atom[jcent];
+                }
+            }
+
+            double rb = get_bragg_angstrom(center_element[icent])/(5.0*0.529177249); // factors match DIRAC code
+            double c = r_inner/(exp(h) - 1.0);
+            int num_radial = int(log(1.0 + (r_outer/c))/h);
+            for (int irad = 0; irad < num_radial; irad++)
+            {
+                double radial_r = c*(exp((irad+1)*h) - 1.0);
+                double radial_w = (radial_r + c)*radial_r*radial_r*h;
+
+                int num_angular = num_angular_max;
+                if (radial_r < rb)
+                {
+                    num_angular = static_cast<int>(num_angular_max*(radial_r/rb));
+                    num_angular = get_closest_num_angular(num_angular);
+                    if (num_angular < num_angular_min) num_angular = num_angular_min;
+                }
 
                 if (iround == 0)
                 {
-                    num_points_on_atom[icent] = 0;
+                    num_points_on_atom[icent] += num_angular;
                 }
                 else
                 {
-                    for (int jcent = 0; jcent < icent; jcent++)
-                    {
-                        ioff += num_points_on_atom[jcent];
-                    }
-                }
+                    int angular_off = get_angular_order(num_angular)*MAX_ANGULAR_GRID;
 
-                double rb = get_bragg_angstrom(center_element[icent])/(5.0*0.529177249); // factors match DIRAC code
-                double c = r_inner/(exp(h) - 1.0);
-                int num_radial = int(log(1.0 + (r_outer/c))/h);
-                for (int irad = 0; irad < num_radial; irad++)
-                {
-                    double radial_r = c*(exp((irad+1)*h) - 1.0);
-                    double radial_w = (radial_r + c)*radial_r*radial_r*h;
-
-                    int num_angular = num_angular_max;
-                    if (radial_r < rb)
+                    for (int iang = 0; iang < num_angular; iang++)
                     {
-                        num_angular = static_cast<int>(num_angular_max*(radial_r/rb));
-                        num_angular = get_closest_num_angular(num_angular);
-                        if (num_angular < num_angular_min) num_angular = num_angular_min;
-                    }
+                        pw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
+                        pw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
+                        pw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
 
-                    if (iround == 0)
-                    {
-                        num_points_on_atom[icent] += num_angular;
-                    }
-                    else
-                    {
-                        int angular_off = get_angular_order(num_angular)*MAX_ANGULAR_GRID;
-
-                        for (int iang = 0; iang < num_angular; iang++)
+                        double becke_w = 1.0;
+                        if (num_centers > 1)
                         {
-                            pw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
-                            pw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
-                            pw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
-
-                            double becke_w = 1.0;
-                            if (num_centers > 1)
-                            {
-                                becke_w = get_becke_w(center_xyz,
-                                                      center_element,
-                                                      pa_buffer,
-                                                      icent,
-                                                      num_centers,
-                                                      pw[4*(ioff + iang)    ],
-                                                      pw[4*(ioff + iang) + 1],
-                                                      pw[4*(ioff + iang) + 2]);
-                            }
-
-                            pw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
+                            becke_w = get_becke_w(center_xyz,
+                                                  center_element,
+                                                  pa_buffer,
+                                                  icent,
+                                                  num_centers,
+                                                  pw[4*(ioff + iang)    ],
+                                                  pw[4*(ioff + iang) + 1],
+                                                  pw[4*(ioff + iang) + 2]);
                         }
-                    }
 
-                    ioff += num_angular;
+                        pw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
+                    }
                 }
 
-                MemAllocator::deallocate(pa_buffer);
+                ioff += num_angular;
             }
+
+            MemAllocator::deallocate(pa_buffer);
+        }
 
         if (iround == 0)
         {
