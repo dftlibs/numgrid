@@ -1,5 +1,5 @@
-#ifndef becke_partitioning_h_
-#define becke_partitioning_h_
+#ifndef BECKE_PARTITIONING_H_INCLUDED
+#define BECKE_PARTITIONING_H_INCLUDED
 
 double get_becke_w(const double center_xyz[],
                    const int    center_charge[],
@@ -12,4 +12,4 @@ double get_becke_w(const double center_xyz[],
 
 double get_bragg_angstrom(const int charge);
 
-#endif // becke_partitioning_h_
+#endif
