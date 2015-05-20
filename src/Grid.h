@@ -1,5 +1,5 @@
-#ifndef Grid_h_
-#define Grid_h_
+#ifndef GRID_H_INCLUDED
+#define GRID_H_INCLUDED
 
 class Grid
 {
@@ -8,11 +8,13 @@ class Grid
         Grid();
         ~Grid();
 
-        double *p;
-        double *w;
+        double *pw;
         int    num_points;
 
-        void generate(const int    verbosity,
+        void generate(const double in_radial_precision,
+                      const int    in_angular_min,
+                      const int    in_angular_max,
+                      const int    verbosity,
                       const int    num_centers,
                       const double center_xyz[],
                       const int    center_element[],
@@ -21,10 +23,6 @@ class Grid
                       const int    l_quantum_num[],
                       const int    shell_num_primitives[],
                       const double primitive_exp[]);
-
-        void set_grid_parameters(const double in_radial_precision,
-                                 const int    in_angular_min,
-                                 const int    in_angular_max);
 
     private:
 
@@ -59,4 +57,4 @@ class Grid
         int    angular_max;
 };
 
-#endif // Grid_h_
+#endif

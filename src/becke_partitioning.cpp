@@ -5,7 +5,7 @@
 #include "math.h"
 
 #include "becke_partitioning.h"
-#include "grid_constants.h"
+#include "parameters.h"
 
 
 double get_bragg_angstrom(const int charge)

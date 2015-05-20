@@ -1,17 +1,13 @@
 #include <fstream>
 
 #include "gtest/gtest.h"
-#include "numgrid_c_api.h"
+#include "numgrid.h"
 
 TEST(example, numgrid)
 {
     double radial_precision = 1.000000e-12;
     int angular_min = 86;
     int angular_max = 302;
-    numgrid_set_grid_parameters(radial_precision,
-                                angular_min,
-                                angular_max);
-
     int verbosity = 1;
     int num_centers = 3;
     double center_xyz[num_centers*3];
@@ -107,7 +103,13 @@ TEST(example, numgrid)
     primitive_exp[35] = 1.220000e-01;
     primitive_exp[36] = 7.270000e-01;
 
-    numgrid_generate(verbosity,
+    numgrid_context_t *context = numgrid_new();
+
+    numgrid_generate(context,
+                     radial_precision,
+                     angular_min,
+                     angular_max,
+                     verbosity,
                      num_centers,
                      center_xyz,
                      center_element,
@@ -117,19 +119,20 @@ TEST(example, numgrid)
                      shell_num_primitives,
                      primitive_exp);
 
-    double *grid_p = (double*) numgrid_get_grid_p();
-    double *grid_w = (double*) numgrid_get_grid_w();
+    int num_points = numgrid_get_num_points(context);
+    ASSERT_EQ(num_points, 46220);
 
+    double *grid_pw = (double*) numgrid_get_grid(context);
     std::ifstream infile("../test/referece_grid.txt");
-
     int i = 0;
-    int j = 0;
     double x, y, z, w;
     while (infile >> x >> y >> z >> w)
     {
-        ASSERT_NEAR(grid_p[i++], x, 1.0e-5);
-        ASSERT_NEAR(grid_p[i++], y, 1.0e-5);
-        ASSERT_NEAR(grid_p[i++], z, 1.0e-5);
-        ASSERT_NEAR(grid_w[j++], w, 1.0e-5);
+        ASSERT_NEAR(grid_pw[i++], x, 1.0e-5);
+        ASSERT_NEAR(grid_pw[i++], y, 1.0e-5);
+        ASSERT_NEAR(grid_pw[i++], z, 1.0e-5);
+        ASSERT_NEAR(grid_pw[i++], w, 1.0e-5);
     }
+
+    numgrid_free(context);
 }

@@ -5,7 +5,7 @@
 #include "math.h"
 
 #include "grid_radial.h"
-#include "grid_constants.h"
+#include "parameters.h"
 
 
 // TCA 106, 178 (2001), eq. 25

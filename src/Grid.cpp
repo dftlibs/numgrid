@@ -14,41 +14,54 @@
 #include "rolex.h"
 #include "parameters.h"
 #include "sphere_lebedev_rule.h"
-#include "grid_constants.h"
 #include "grid_radial.h"
 #include "becke_partitioning.h"
 #include "MemAllocator.h"
 
+#include "numgrid.h"
 
-const int    max_angular_order        = 33;
-const int    max_angular_grid         = 5810;
-const double default_radial_precision = 1.0e-12;
-const int    default_angular_min      = 86;
-const int    default_angular_max      = 302;
+#define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
+#define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
 
 
+numgrid_context_t *numgrid_new()
+{
+    return AS_TYPE(numgrid_context_t, new Grid());
+}
 Grid::Grid()
 {
     nullify();
-    radial_precision = default_radial_precision;
-    angular_min      = default_angular_min;
-    angular_max      = default_angular_max;
 }
 
 
+void numgrid_free(numgrid_context_t *context)
+{
+    if (!context) return;
+    delete AS_TYPE(Grid, context);
+}
 Grid::~Grid()
 {
-    MemAllocator::deallocate(p);
-    MemAllocator::deallocate(w);
+    MemAllocator::deallocate(pw);
 
     nullify();
+}
+
+
+int numgrid_get_num_points(const numgrid_context_t *context)
+{
+    return AS_CTYPE(Grid, context)->num_points;
+}
+
+
+double *numgrid_get_grid(const numgrid_context_t *context)
+{
+    return AS_CTYPE(Grid, context)->pw;
 }
 
 
 void Grid::nullify()
 {
-    p = NULL;
-    w = NULL;
+    pw = NULL;
     num_points = -1;
     is_generated = false;
     is_distributed = false;
@@ -65,7 +78,7 @@ int Grid::get_closest_num_angular(int n)
 {
     int m;
 
-    for (int i = 0; i < max_angular_order; i++)
+    for (int i = 0; i < MAX_ANGULAR_ORDER; i++)
     {
         m = lebedev_table[i];
         if (m >= n) return m;
@@ -78,23 +91,13 @@ int Grid::get_closest_num_angular(int n)
 
 int Grid::get_angular_order(int n)
 {
-    for (int i = 0; i < max_angular_order; i++)
+    for (int i = 0; i < MAX_ANGULAR_ORDER; i++)
     {
         if (lebedev_table[i] == n) return i;
     }
 
     fprintf(stderr, "ERROR: no match found in get_angular_offset\n");
     exit(-1);
-}
-
-
-void Grid::set_grid_parameters(const double in_radial_precision,
-                               const int    in_angular_min,
-                               const int    in_angular_max)
-{
-    radial_precision = in_radial_precision;
-    angular_min      = in_angular_min;
-    angular_max      = in_angular_max;
 }
 
 
@@ -206,13 +209,13 @@ void Grid::generate_sub(const int    num_centers,
                     }
                     else
                     {
-                        int angular_off = get_angular_order(num_angular)*max_angular_grid;
+                        int angular_off = get_angular_order(num_angular)*MAX_ANGULAR_GRID;
 
                         for (int iang = 0; iang < num_angular; iang++)
                         {
-                            p[3*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
-                            p[3*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
-                            p[3*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
+                            pw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
+                            pw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
+                            pw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
 
                             double becke_w = 1.0;
                             if (num_centers > 1)
@@ -222,12 +225,12 @@ void Grid::generate_sub(const int    num_centers,
                                                       pa_buffer,
                                                       icent,
                                                       num_centers,
-                                                      p[3*(ioff + iang)    ],
-                                                      p[3*(ioff + iang) + 1],
-                                                      p[3*(ioff + iang) + 2]);
+                                                      pw[4*(ioff + iang)    ],
+                                                      pw[4*(ioff + iang) + 1],
+                                                      pw[4*(ioff + iang) + 2]);
                             }
 
-                            w[ioff + iang] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
+                            pw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
                         }
                     }
 
@@ -245,8 +248,7 @@ void Grid::generate_sub(const int    num_centers,
                 num_points += num_points_on_atom[icent];
             }
 
-            p = (double*) MemAllocator::allocate(3*num_points*sizeof(double));
-            w = (double*) MemAllocator::allocate(num_points*sizeof(double));
+            pw = (double*) MemAllocator::allocate(4*num_points*sizeof(double));
         }
     }
 
@@ -254,7 +256,37 @@ void Grid::generate_sub(const int    num_centers,
 }
 
 
-void Grid::generate(const int    verbosity,
+void numgrid_generate(numgrid_context_t *context,
+                      const double radial_precision,
+                      const int    angular_min,
+                      const int    angular_max,
+                      const int    verbosity,
+                      const int    num_centers,
+                      const double center_xyz[],
+                      const int    center_element[],
+                      const int    num_shells,
+                      const int    shell_center[],
+                      const int    l_quantum_num[],
+                      const int    shell_num_primitives[],
+                      const double primitive_exp[])
+{
+    return AS_TYPE(Grid, context)->generate(radial_precision,
+                                            angular_min,
+                                            angular_max,
+                                            verbosity,
+                                            num_centers,
+                                            center_xyz,
+                                            center_element,
+                                            num_shells,
+                                            shell_center,
+                                            l_quantum_num,
+                                            shell_num_primitives,
+                                            primitive_exp);
+}
+void Grid::generate(const double in_radial_precision,
+                    const int    in_angular_min,
+                    const int    in_angular_max,
+                    const int    verbosity,
                     const int    num_centers,
                     const double center_xyz[],
                     const int    center_element[],
@@ -264,6 +296,10 @@ void Grid::generate(const int    verbosity,
                     const int    shell_num_primitives[],
                     const double primitive_exp[])
 {
+    radial_precision = in_radial_precision;
+    angular_min      = in_angular_min;
+    angular_max      = in_angular_max;
+
     if (is_generated) return;
 
     if (verbosity > 0)
@@ -279,14 +315,14 @@ void Grid::generate(const int    verbosity,
     int num_angular_max = get_closest_num_angular(angular_max);
     if (verbosity > 0) io::speak_your_mind("Angular grid range: %i-%i\n", num_angular_min, num_angular_max);
 
-    double *angular_x = (double*) MemAllocator::allocate(max_angular_order*max_angular_grid*sizeof(double));
-    double *angular_y = (double*) MemAllocator::allocate(max_angular_order*max_angular_grid*sizeof(double));
-    double *angular_z = (double*) MemAllocator::allocate(max_angular_order*max_angular_grid*sizeof(double));
-    double *angular_w = (double*) MemAllocator::allocate(max_angular_order*max_angular_grid*sizeof(double));
+    double *angular_x = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
+    double *angular_y = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
+    double *angular_z = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
+    double *angular_w = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
 
     for (int i = get_angular_order(num_angular_min); i <= get_angular_order(num_angular_max); i++)
     {
-        int angular_off = i*max_angular_grid;
+        int angular_off = i*MAX_ANGULAR_GRID;
         ld_by_order(lebedev_table[i], &angular_x[angular_off], &angular_y[angular_off], &angular_z[angular_off], &angular_w[angular_off]);
     }
 

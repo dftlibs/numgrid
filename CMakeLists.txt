@@ -28,7 +28,6 @@ add_library(
     src/io.cpp
     src/rolex.cpp
     src/MemAllocator.cpp
-    api/numgrid_c_api.cpp
     external/lebedev/sphere_lebedev_rule.cpp
     )
 
