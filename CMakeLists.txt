@@ -25,8 +25,6 @@ add_library(
     src/becke_partitioning.cpp
     src/grid_radial.cpp
     src/Grid.cpp
-    src/io.cpp
-    src/rolex.cpp
     src/MemAllocator.cpp
     external/lebedev/sphere_lebedev_rule.cpp
     )

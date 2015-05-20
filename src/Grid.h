@@ -14,7 +14,6 @@ class Grid
         void generate(const double in_radial_precision,
                       const int    in_angular_min,
                       const int    in_angular_max,
-                      const int    verbosity,
                       const int    num_centers,
                       const double center_xyz[],
                       const int    center_element[],

@@ -10,8 +10,6 @@
 
 #include "math.h"
 
-#include "io.h"
-#include "rolex.h"
 #include "parameters.h"
 #include "sphere_lebedev_rule.h"
 #include "grid_radial.h"
@@ -270,7 +268,6 @@ void numgrid_generate(numgrid_context_t *context,
                       const double radial_precision,
                       const int    angular_min,
                       const int    angular_max,
-                      const int    verbosity,
                       const int    num_centers,
                       const double center_xyz[],
                       const int    center_element[],
@@ -283,7 +280,6 @@ void numgrid_generate(numgrid_context_t *context,
     return AS_TYPE(Grid, context)->generate(radial_precision,
                                             angular_min,
                                             angular_max,
-                                            verbosity,
                                             num_centers,
                                             center_xyz,
                                             center_element,
@@ -296,7 +292,6 @@ void numgrid_generate(numgrid_context_t *context,
 void Grid::generate(const double in_radial_precision,
                     const int    in_angular_min,
                     const int    in_angular_max,
-                    const int    verbosity,
                     const int    num_centers,
                     const double center_xyz[],
                     const int    center_element[],
@@ -312,18 +307,8 @@ void Grid::generate(const double in_radial_precision,
 
     if (is_generated) return;
 
-    if (verbosity > 0)
-    {
-        io::speak_your_mind("\n\nXCint grid\n");
-        io::speak_your_mind("----------\n\n");
-    }
-
-    rolex::start_partial();
-    if (verbosity > 0) io::speak_your_mind("Starting generating grid ...\n");
-
     int num_angular_min = get_closest_num_angular(angular_min);
     int num_angular_max = get_closest_num_angular(angular_max);
-    if (verbosity > 0) io::speak_your_mind("Angular grid range: %i-%i\n", num_angular_min, num_angular_max);
 
     double *angular_x = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
     double *angular_y = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
@@ -355,9 +340,6 @@ void Grid::generate(const double in_radial_precision,
     MemAllocator::deallocate(angular_y);
     MemAllocator::deallocate(angular_z);
     MemAllocator::deallocate(angular_w);
-
-    if (verbosity > 0) io::speak_your_mind("Finished generating grid after %.2f seconds.\n", rolex::stop_partial());
-    if (verbosity > 0) io::speak_your_mind("Total number of points: %i\n", num_points);
 
     is_generated = true;
 }

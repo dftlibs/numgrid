@@ -8,7 +8,6 @@ TEST(example, numgrid)
     double radial_precision = 1.000000e-12;
     int angular_min = 86;
     int angular_max = 302;
-    int verbosity = 1;
     int num_centers = 3;
     double center_xyz[num_centers*3];
     center_xyz[0] = 0.000000e+00;
@@ -109,7 +108,6 @@ TEST(example, numgrid)
                      radial_precision,
                      angular_min,
                      angular_max,
-                     verbosity,
                      num_centers,
                      center_xyz,
                      center_element,
