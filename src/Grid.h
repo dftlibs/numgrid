@@ -8,9 +8,6 @@ class Grid
         Grid();
         ~Grid();
 
-        double *pw;
-        int    num_points;
-
         void generate(const double radial_precision,
                       const int    angular_min,
                       const int    angular_max,
@@ -26,6 +23,9 @@ class Grid
                       const int    shell_num_primitives[],
                       const double primitive_exp[]);
 
+        int get_num_points() const;
+        double *get_grid() const;
+
     private:
 
         Grid(const Grid &rhs);            // not implemented
@@ -33,8 +33,11 @@ class Grid
 
         void nullify();
 
-        int get_closest_num_angular(int n);
-        int get_angular_order(int n);
+        int get_closest_num_angular(int n) const;
+        int get_angular_order(int n) const;
+
+        int num_points;
+        double *xyzw;
 };
 
 #endif

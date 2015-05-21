@@ -1,7 +1,3 @@
-
-#include <cstdlib>
-
-#include "stdio.h"
 #include "math.h"
 
 #include "grid_radial.h"

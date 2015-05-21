@@ -39,27 +39,34 @@ void numgrid_free(numgrid_context_t *context)
 }
 Grid::~Grid()
 {
-    MemAllocator::deallocate(pw);
-
+    MemAllocator::deallocate(xyzw);
     nullify();
 }
 
 
 int numgrid_get_num_points(const numgrid_context_t *context)
 {
-    return AS_CTYPE(Grid, context)->num_points;
+    return AS_CTYPE(Grid, context)->get_num_points();
+}
+int Grid::get_num_points() const
+{
+    return num_points;
 }
 
 
 double *numgrid_get_grid(const numgrid_context_t *context)
 {
-    return AS_CTYPE(Grid, context)->pw;
+    return AS_CTYPE(Grid, context)->get_grid();
+}
+double *Grid::get_grid() const
+{
+    return xyzw;
 }
 
 
 void Grid::nullify()
 {
-    pw = NULL;
+    xyzw = NULL;
     num_points = -1;
 }
 
@@ -70,7 +77,7 @@ int lebedev_table[33] = {6,   14,   26,   38,   50,   74,   86,  110,  146,  170
                       4934, 5294, 5810};
 
 
-int Grid::get_closest_num_angular(int n)
+int Grid::get_closest_num_angular(int n) const
 {
     int m;
 
@@ -85,7 +92,7 @@ int Grid::get_closest_num_angular(int n)
 }
 
 
-int Grid::get_angular_order(int n)
+int Grid::get_angular_order(int n) const
 {
     for (int i = 0; i < MAX_ANGULAR_ORDER; i++)
     {
@@ -286,9 +293,9 @@ void Grid::generate(const double radial_precision,
 
                     for (int iang = 0; iang < num_angular; iang++)
                     {
-                        pw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
-                        pw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
-                        pw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
 
                         double becke_w = 1.0;
                         if (num_centers_total > 1)
@@ -298,11 +305,11 @@ void Grid::generate(const double radial_precision,
                                                   pa_buffer,
                                                   icent,
                                                   num_centers_total,
-                                                  pw[4*(ioff + iang)    ],
-                                                  pw[4*(ioff + iang) + 1],
-                                                  pw[4*(ioff + iang) + 2]);
+                                                  xyzw[4*(ioff + iang)    ],
+                                                  xyzw[4*(ioff + iang) + 1],
+                                                  xyzw[4*(ioff + iang) + 2]);
                         }
-                        pw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
+                        xyzw[4*(ioff + iang) + 3] = 4.0*PI*angular_w[angular_off + iang]*radial_w*becke_w;
                     }
                 }
 
@@ -320,7 +327,7 @@ void Grid::generate(const double radial_precision,
                 num_points += num_points_on_atom[icent];
             }
 
-            pw = (double*) MemAllocator::allocate(4*num_points*sizeof(double));
+            xyzw = (double*) MemAllocator::allocate(4*num_points*sizeof(double));
         }
     }
 
