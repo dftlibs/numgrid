@@ -31,6 +31,8 @@ Yes please!
 # Building and testing
 
 ```
+git clone --recursive https://github.com/rbast/numgrid.git
+cd numgrid
 mkdir build
 cd build
 cmake ..

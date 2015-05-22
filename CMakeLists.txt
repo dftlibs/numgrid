@@ -34,13 +34,6 @@ add_library(
     external/lebedev/sphere_lebedev_rule.cpp
     )
 
-add_custom_target(
-    git_update
-    COMMAND git submodule init
-    COMMAND git submodule update
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    )
-
 include_directories(
     ${PROJECT_SOURCE_DIR}/external/googletest
     ${PROJECT_SOURCE_DIR}/external/googletest/include
@@ -56,8 +49,6 @@ add_library(gtest ${GTEST_SOURCES})
 foreach(_source ${GTEST_SOURCES})
     set_source_files_properties(${_source} PROPERTIES GENERATED 1)
 endforeach()
-
-add_dependencies(gtest git_update)
 
 add_executable(
     unit_tests
