@@ -53,6 +53,18 @@ the generation of the Becke partitioning weights but will not carry any grid
 points themselves. This can be used for multi-scale computations.
 
 
+# Why is the grid basis set dependent?
+
+The basis set (more precisely the Gaussian primitives/exponents) are used to
+generate the atomic radial grid range. This means that a more diffuse basis set
+generates a more diffuse radial grid.
+
+If you need a grid but you do not have a basis set or choose not to use a
+specific one, then you can feed the library with a fantasy basis set consisting
+of just two primitives. You can then adjust the range by making the exponents
+more steep or more diffuse.
+
+
 # API
 
 Write me ...
@@ -60,7 +72,69 @@ Write me ...
 
 # Python interface
 
-Write me ...
+The Python interface is generated using [CFFI](https://cffi.readthedocs.org).
+
+As an example let us generate a grid for the water molecule:
+
+```python
+from numgrid import lib
+
+radial_precision = 1.0e-12
+angular_min = 86
+angular_max = 302
+
+num_centers = 3
+center_xyz = [0.000000e+00,
+              0.000000e+00,
+              0.000000e+00,
+              5.516800e-01,
+              7.734000e-01,
+              0.000000e+00,
+              5.516800e-01,
+              -7.734000e-01,
+              0.000000e+00]
+center_element = [8, 1, 1]
+
+num_outer_centers = 0
+outer_center_xyz = []
+outer_center_element = []
+
+num_shells = 12
+shell_center = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
+l_quantum_num = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
+shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
+
+primitive_exp = [1.172000e+04,
+                 1.759000e+03,
+                 ...
+                 7.270000e-01]
+
+ctx = lib.numgrid_new()
+
+lib.numgrid_generate(
+    context,
+    radial_precision,
+    angular_min,
+    angular_max,
+    num_centers,
+    center_xyz,
+    center_element,
+    num_outer_centers,
+    outer_center_xyz,
+    outer_center_element,
+    num_shells,
+    shell_center,
+    l_quantum_num,
+    shell_num_primitives,
+    primitive_exp
+)
+
+num_points = lib.numgrid_get_num_points(context)
+
+grid = lib.numgrid_get_grid(context)
+
+lib.numgrid_free(ctx)
+```
 
 
 # Integration grid

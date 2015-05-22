@@ -8,7 +8,7 @@ sys.path.append(BUILD_DIR)
 import os
 import subprocess
 import pytest
-from numgrid import ffi, lib
+from numgrid import lib
 
 #-------------------------------------------------------------------------------
 
