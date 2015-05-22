@@ -114,7 +114,7 @@ primitive_exp = [1.172000e+04,
                  ...  # we skip many numbers here for brevity
                  7.270000e-01]
 
-ctx = lib.numgrid_new()
+context = lib.numgrid_new()
 
 lib.numgrid_generate(
     context,
@@ -138,7 +138,7 @@ num_points = lib.numgrid_get_num_points(context)
 
 grid = lib.numgrid_get_grid(context)
 
-lib.numgrid_free(ctx)
+lib.numgrid_free(context)
 ```
 
 
