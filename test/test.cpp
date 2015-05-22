@@ -26,8 +26,8 @@ TEST(numgrid, h2o)
     center_element[1] = 1;
     center_element[2] = 1;
     int num_outer_centers = 0;
-    double *outer_center_xyz;
-    int *outer_center_element;
+    double *outer_center_xyz = NULL;
+    int *outer_center_element = NULL;
     int num_shells = 12;
     int shell_center[num_shells];
     shell_center[ 0] = 1;
