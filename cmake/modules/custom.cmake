@@ -5,13 +5,6 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include)
 file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.h  DESTINATION ${PROJECT_BINARY_DIR}/include)
 file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.py DESTINATION ${PROJECT_BINARY_DIR})
 
-option(ENABLE_COVERAGE "Enable test coverage" OFF)
-if(ENABLE_COVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    endif()
-endif()
-
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/api
