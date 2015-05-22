@@ -14,6 +14,11 @@ Numgrid is a library that produces numerical integration grid for molecules
 based on atom coordinates, atom types, and basis set information.
 
 
+# Contributing
+
+Yes please!
+
+
 # Requirements
 
 - CMake
@@ -106,7 +111,7 @@ shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
 
 primitive_exp = [1.172000e+04,
                  1.759000e+03,
-                 ...
+                 ...  # we skip many numbers here for brevity
                  7.270000e-01]
 
 ctx = lib.numgrid_new()
