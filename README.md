@@ -5,32 +5,52 @@
 
 - [Build and test history](https://travis-ci.org/rbast/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/rbast/numgrid)
-- Licensed under [BSD-3](../master/LICENSE)
+- Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
 
 
 # About
 
-Write me ...
+Numgrid is a library that produces numerical integration grid for molecules
+based on atom coordinates, atom types, and basis set information.
 
 
-# Building
+# Requirements
 
-Write me ...
+- CMake
+- C++ compiler
+- Git (to fetch Google Test sources)
+- [CFFI](https://cffi.readthedocs.org) (Python interface)
+- [py.test](http://pytest.org) (to test the Python interface)
 
 
-# Testing
+# Building and testing
 
-Write me ...
+```
+mkdir build
+cd build
+cmake ..
+make
+make test
+```
 
 
 # Parallelization
 
-Write me ...
+The design decision was to not parallelize the library but rather parallelize
+over the generated points by the caller. This simplifies modularity and code
+reuse.  See also the section about "Distributed computation using 'outer
+centers'".
 
 
-# Distributed computation using "outer centers"
+# Distributed computation using 'outer centers'
 
-Write me ...
+For very large molecules the caller may not want to generate the entire grid at
+once but perhaps only generate center by center or fragment by fragment
+(however taking Becke partitioning into account) and possibly keep the centers
+or fragments on different parallel tasks or threads. This can be achieved by
+using 'outer centers'. The 'outer centers' with influence the active centers in
+the generation of the Becke partitioning weights but will not carry any grid
+points themselves. This can be used for multi-scale computations.
 
 
 # API
