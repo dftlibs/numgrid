@@ -1,71 +1,53 @@
+# set minimum cmake version
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+
 
 project(numgrid)
 
-enable_language(C CXX)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+# do not rebuild if rules (compiler flags) change
+set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include)
-file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.h  DESTINATION ${PROJECT_BINARY_DIR}/include)
-file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.py DESTINATION ${PROJECT_BINARY_DIR})
 
-option(ENABLE_COVERAGE "Enable test coverage" OFF)
-if(ENABLE_COVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    endif()
+# directory which holds enabled cmake modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+
+# guards against in-source builds and bad build types
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-include_directories(
-    ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/api
-    ${PROJECT_SOURCE_DIR}/external/lebedev
+
+# python interpreter is required at many
+# places during configuration and build
+find_package(PythonInterp REQUIRED)
+
+
+# determine program version from file, example: "14.1"
+# the reason why this information is stored
+# in a file and not as cmake variable
+# is that cmake-unaware programs can
+# parse and use it (e.g. Sphinx)
+file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)
+string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)
+
+
+# generated cmake files will be written to this path
+# only build info is generated
+# everything else is static for the user
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/generated_by_cmake)
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_BINARY_DIR}/generated_by_cmake
     )
 
-add_library(
-    numgrid
-    SHARED
-    src/becke_partitioning.cpp
-    src/grid_radial.cpp
-    src/Grid.cpp
-    src/MemAllocator.cpp
-    external/lebedev/sphere_lebedev_rule.cpp
-    )
 
-include_directories(
-    ${PROJECT_SOURCE_DIR}/external/googletest
-    ${PROJECT_SOURCE_DIR}/external/googletest/include
-    )
-
-set(GTEST_SOURCES
-    ${PROJECT_SOURCE_DIR}/external/googletest/src/gtest-all.cc
-    ${PROJECT_SOURCE_DIR}/external/googletest/src/gtest_main.cc
-    )
-
-add_library(gtest ${GTEST_SOURCES})
-
-foreach(_source ${GTEST_SOURCES})
-    set_source_files_properties(${_source} PROPERTIES GENERATED 1)
-endforeach()
-
-add_executable(
-    unit_tests
-    test/main.cpp
-    test/test.cpp
-    )
-
-add_dependencies(unit_tests gtest)
-
-target_link_libraries(
-    unit_tests
-    gtest
-    numgrid
-    pthread
-    )
-
-include(CTest)
-enable_testing()
-
-add_test(unit ${PROJECT_BINARY_DIR}/bin/unit_tests)
+# included cmake modules
+include(UseC)
+include(UseCXX)
+include(GNU.CXX)
+include(Intel.CXX)
+include(UseCodeCoverage)
+include(custom)

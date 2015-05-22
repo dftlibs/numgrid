@@ -22,6 +22,7 @@ Yes please!
 # Requirements
 
 - CMake
+- C compiler
 - C++ compiler
 - [CFFI](https://cffi.readthedocs.org) (Python interface)
 - [py.test](http://pytest.org) (to test the Python interface)
@@ -32,9 +33,8 @@ Yes please!
 ```
 git clone --recursive https://github.com/rbast/numgrid.git
 cd numgrid
-mkdir build
+python setup.py --cc=gcc --cxx=g++
 cd build
-cmake ..
 make
 make test
 ```
@@ -142,6 +142,12 @@ grid = lib.numgrid_get_grid(context)
 lib.numgrid_free(context)
 ```
 
+
+# Testing the Python interface
+
+```
+python test/test.py <build_dir>
+```
 
 # Integration grid
 
