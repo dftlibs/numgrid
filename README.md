@@ -143,7 +143,7 @@ lib.numgrid_free(context)
 ```
 
 
-# Testing the Python interface
+## Testing the Python interface
 
 ```
 python test/test.py <build_dir>
