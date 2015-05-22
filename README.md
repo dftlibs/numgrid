@@ -23,7 +23,6 @@ Yes please!
 
 - CMake
 - C++ compiler
-- Git (to fetch Google Test sources)
 - [CFFI](https://cffi.readthedocs.org) (Python interface)
 - [py.test](http://pytest.org) (to test the Python interface)
 
