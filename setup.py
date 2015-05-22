@@ -14,12 +14,13 @@ Usage:
   ./setup.py (-h | --help)
 
 Options:
-  --cc=<CC>    C compiler [default: gcc].
-  --cxx=<CXX>  C++ compiler [default: g++].
-  --coverage   Enable code coverage [default: False].
-  --show       Show CMake command and exit.
-  <builddir>   Build directory.
-  -h --help    Show this screen.
+  --cc=<CC>      C compiler [default: gcc].
+  --cxx=<CXX>    C++ compiler [default: g++].
+  --coverage     Enable code coverage [default: False].
+  --type=<TYPE>  Set the CMake build type (debug, release, or relwithdeb) [default: release].
+  --show         Show CMake command and exit.
+  <builddir>     Build directory.
+  -h --help      Show this screen.
 """
 
 
@@ -32,6 +33,7 @@ def gen_cmake_command(options, arguments):
     command.append('CXX=%s' % arguments['--cxx'])
     command.append('cmake')
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
+    command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
 
     return ' '.join(command)
 

@@ -7,9 +7,8 @@ install:
   - sudo apt-get update
   - sudo apt-get install gcc-4.9 g++-4.9 valgrind
 script:
-  - mkdir build
+  - python setup.py --type=debug --coverage
   - cd build
-  - cmake -DENABLE_CODE_COVERAGE=ON ..
   - make
   - make test
   - cd ..
