@@ -30,8 +30,10 @@ find_package(PythonInterp REQUIRED)
 # in a file and not as cmake variable
 # is that cmake-unaware programs can
 # parse and use it (e.g. Sphinx)
-file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)
-string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)
+if(EXISTS "${PROJECT_SOURCE_DIR}/VERSION")
+    file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)
+    string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)
+endif()
 
 
 # generated cmake files will be written to this path

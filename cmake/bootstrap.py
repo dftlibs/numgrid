@@ -2,20 +2,29 @@
 
 import os
 import sys
-import urllib
 import shutil
-import tempfile
 from collections import OrderedDict
-from ConfigParser import ConfigParser
+
+if sys.version_info.major > 2:
+    from configparser import RawConfigParser
+else:
+    from ConfigParser import RawConfigParser
+
+if sys.version_info.major > 2:
+    import urllib.request
+    class URLopener(urllib.request.FancyURLopener):
+        def http_error_default(self, url, fp, errcode, errmsg, headers):
+            sys.stderr.write("ERROR: could not fetch %s\n" % url)
+            sys.exit(-1)
+else:
+    import urllib
+    class URLopener(urllib.FancyURLopener):
+        def http_error_default(self, url, fp, errcode, errmsg, headers):
+            sys.stderr.write("ERROR: could not fetch %s\n" % url)
+            sys.exit(-1)
 
 
 AUTOCMAKE_GITHUB_URL = 'https://github.com/scisoft/autocmake'
-
-
-class URLopener(urllib.FancyURLopener):
-    def http_error_default(self, url, fp, errcode, errmsg, headers):
-        sys.stderr.write("ERROR: could not fetch %s\n" % url)
-        sys.exit(-1)
 
 
 def fetch_url(src, dst):
@@ -176,8 +185,10 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('# in a file and not as cmake variable')
     s.append('# is that cmake-unaware programs can')
     s.append('# parse and use it (e.g. Sphinx)')
-    s.append('file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)')
-    s.append('string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)')
+    s.append('if(EXISTS "${PROJECT_SOURCE_DIR}/VERSION")')
+    s.append('    file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)')
+    s.append('    string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)')
+    s.append('endif()')
 
     s.append('\n')
     s.append('# generated cmake files will be written to this path')
@@ -206,8 +217,9 @@ def fetch_modules(config, module_directory):
     if not os.path.exists(module_directory):
         os.makedirs(module_directory)
 
-    n = len(filter(lambda x: config.has_option(x, 'source'),
-                   config.sections()))
+    l = list(filter(lambda x: config.has_option(x, 'source'),
+                    config.sections()))
+    n = len(l)
 
     i = 0
     print_progress_bar(text='- fetching modules:', done=0, total=n, width=30)
@@ -242,22 +254,18 @@ def main(argv):
     Main function.
     """
     if len(argv) != 2:
-        sys.stderr.write("\nYou can bootstrap a project in two steps.\n")
-        sys.stderr.write("First step is typically done only once.\n")
-        sys.stderr.write("Second step can be repeated many time without re-running the first step.\n\n")
-        sys.stderr.write("Step 1:\n")
-        sys.stderr.write("Create an example autocmake.cfg and other infrastructure files\n")
-        sys.stderr.write("which will be needed to configure and build the project:\n")
-        sys.stderr.write("$ %s --init\n\n" % argv[0])
-        sys.stderr.write("Step 2:\n")
-        sys.stderr.write("Create CMakeLists.txt and setup.py in PROJECT_ROOT:\n")
-        sys.stderr.write("$ %s PROJECT_ROOT\n" % argv[0])
-        sys.stderr.write("example:\n")
-        sys.stderr.write("$ %s ..\n" % argv[0])
+        sys.stderr.write("\nYou can bootstrap a project in two steps.\n\n")
+        sys.stderr.write("Step 1: Update or create infrastructure files\n")
+        sys.stderr.write("        which will be needed to configure and build the project:\n")
+        sys.stderr.write("        $ %s --update\n\n" % argv[0])
+        sys.stderr.write("Step 2: Create CMakeLists.txt and setup.py in PROJECT_ROOT:\n")
+        sys.stderr.write("        $ %s <PROJECT_ROOT>\n" % argv[0])
+        sys.stderr.write("        example:\n")
+        sys.stderr.write("        $ %s ..\n" % argv[0])
         sys.exit(-1)
 
-    if argv[1] == '--init':
-        # empty project, create infrastructure files
+    if argv[1] == '--update':
+        # update infrastructure files
         if not os.path.isfile('autocmake.cfg'):
             print('- fetching example autocmake.cfg')
             fetch_url(
@@ -274,6 +282,11 @@ def main(argv):
             src='https://github.com/docopt/docopt/raw/master/docopt.py',
             dst='lib/docopt.py'
         )
+        print('- fetching bootstrap.py')
+        fetch_url(
+            src='%s/raw/master/bootstrap.py' % AUTOCMAKE_GITHUB_URL,
+            dst='bootstrap.py'
+        )
         sys.exit(0)
 
     project_root = argv[1]
@@ -283,7 +296,7 @@ def main(argv):
 
     # read config file
     print('- parsing autocmake.cfg')
-    config = ConfigParser(dict_type=OrderedDict)
+    config = RawConfigParser(dict_type=OrderedDict)
     config.read('autocmake.cfg')
 
     # fetch modules from the web or from relative paths
