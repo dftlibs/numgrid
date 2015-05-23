@@ -18,7 +18,7 @@ class URLopener(urllib.FancyURLopener):
         sys.exit(-1)
 
 
-def fetch_url(src, dst, fail_if_dst_exists=False):
+def fetch_url(src, dst):
     """
     Fetch file from URL src and save it to dst.
     """
@@ -26,11 +26,6 @@ def fetch_url(src, dst, fail_if_dst_exists=False):
     if dirname != '':
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
-
-    if os.path.isfile(dst):
-        if fail_if_dst_exists:
-            sys.stderr.write("ERROR: %s already exists - aborting\n" % dst)
-            sys.exit(-1)
 
     opener = URLopener()
     opener.retrieve(src, dst)
@@ -263,12 +258,12 @@ def main(argv):
 
     if argv[1] == '--init':
         # empty project, create infrastructure files
-        print('- fetching example autocmake.cfg')
-        fetch_url(
-            src='%s/raw/master/example/autocmake.cfg' % AUTOCMAKE_GITHUB_URL,
-            dst='autocmake.cfg',
-            fail_if_dst_exists=True
-        )
+        if not os.path.isfile('autocmake.cfg'):
+            print('- fetching example autocmake.cfg')
+            fetch_url(
+                src='%s/raw/master/example/autocmake.cfg' % AUTOCMAKE_GITHUB_URL,
+                dst='autocmake.cfg'
+            )
         print('- fetching lib/config.py')
         fetch_url(
             src='%s/raw/master/lib/config.py' % AUTOCMAKE_GITHUB_URL,
