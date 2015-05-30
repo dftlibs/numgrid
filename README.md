@@ -1,10 +1,10 @@
 
-[![Build Status](https://travis-ci.org/rbast/numgrid.svg?branch=master)](https://travis-ci.org/rbast/numgrid/builds) [![Coverage Status](https://coveralls.io/repos/rbast/numgrid/badge.png?branch=master)](https://coveralls.io/r/rbast/numgrid?branch=master)
+[![Build Status](https://travis-ci.org/bast/numgrid.svg?branch=master)](https://travis-ci.org/bast/numgrid/builds) [![Coverage Status](https://coveralls.io/repos/bast/numgrid/badge.png?branch=master)](https://coveralls.io/r/bast/numgrid?branch=master)
 
-![alt text](https://github.com/rbast/numgrid/raw/master/img/truegrid.jpg "numgrid")
+![alt text](https://github.com/bast/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
-- [Build and test history](https://travis-ci.org/rbast/numgrid/builds)
-- [Code coverage](https://coveralls.io/r/rbast/numgrid)
+- [Build and test history](https://travis-ci.org/bast/numgrid/builds)
+- [Code coverage](https://coveralls.io/r/bast/numgrid)
 - Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
 
 
@@ -31,7 +31,7 @@ Yes please!
 # Building and testing
 
 ```
-git clone --recursive https://github.com/rbast/numgrid.git
+git clone --recursive https://github.com/bast/numgrid.git
 cd numgrid
 python setup.py --cc=gcc --cxx=g++
 cd build
