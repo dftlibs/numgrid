@@ -73,7 +73,7 @@ more steep or more diffuse.
 
 # API
 
-Write me ...
+Use the [source](../master/api/numgrid.h) Luke!
 
 
 # Python interface
