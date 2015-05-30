@@ -183,6 +183,11 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('find_package(PythonInterp REQUIRED)')
 
     s.append('\n')
+    s.append('# default paths')
+    s.append('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)')
+    s.append('set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)')
+
+    s.append('\n')
     s.append('# determine program version from file, example: "14.1"')
     s.append('# the reason why this information is stored')
     s.append('# in a file and not as cmake variable')
@@ -207,6 +212,9 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('# included cmake modules')
     for m in list_of_modules:
         s.append('include(%s)' % os.path.splitext(m)[0])
+
+    s.append('\n')
+    s.append('add_subdirectory(${PROJECT_SOURCE_DIR}/src)')
 
     return s
 

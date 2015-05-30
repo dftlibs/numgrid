@@ -1,8 +1,4 @@
-# used variables:
-#     GTEST_ROOT
-
-# defines:
-#     library gtest
+set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/external/googletest)
 
 include_directories(
     ${GTEST_ROOT}

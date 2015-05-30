@@ -25,6 +25,11 @@ endif()
 find_package(PythonInterp REQUIRED)
 
 
+# default paths
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+
+
 # determine program version from file, example: "14.1"
 # the reason why this information is stored
 # in a file and not as cmake variable
@@ -54,6 +59,9 @@ include(Intel.CXX)
 include(UseCodeCoverage)
 include(UseSafeGuards)
 include(UseCPP)
-include(custom)
+include(api)
 include(gtest)
 include(test)
+
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
