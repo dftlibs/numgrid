@@ -5,6 +5,8 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include)
 file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.h  DESTINATION ${PROJECT_BINARY_DIR}/include)
 file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.py DESTINATION ${PROJECT_BINARY_DIR})
 
+set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/external/googletest)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/api
@@ -20,39 +22,3 @@ add_library(
     src/MemAllocator.cpp
     external/lebedev/sphere_lebedev_rule.cpp
     )
-
-include_directories(
-    ${PROJECT_SOURCE_DIR}/external/googletest
-    ${PROJECT_SOURCE_DIR}/external/googletest/include
-    )
-
-set(GTEST_SOURCES
-    ${PROJECT_SOURCE_DIR}/external/googletest/src/gtest-all.cc
-    ${PROJECT_SOURCE_DIR}/external/googletest/src/gtest_main.cc
-    )
-
-add_library(gtest ${GTEST_SOURCES})
-
-foreach(_source ${GTEST_SOURCES})
-    set_source_files_properties(${_source} PROPERTIES GENERATED 1)
-endforeach()
-
-add_executable(
-    unit_tests
-    test/main.cpp
-    test/test.cpp
-    )
-
-add_dependencies(unit_tests gtest)
-
-target_link_libraries(
-    unit_tests
-    gtest
-    numgrid
-    pthread
-    )
-
-include(CTest)
-enable_testing()
-
-add_test(unit ${PROJECT_BINARY_DIR}/bin/unit_tests)

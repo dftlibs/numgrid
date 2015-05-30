@@ -1,6 +1,6 @@
 
 # Copyright (c) 2015 by Radovan Bast and Jonas Juselius
-# see https://github.com/scisoft/autocmake/blob/master/LICENSE
+# See https://github.com/scisoft/autocmake/blob/master/LICENSE
 
 
 import subprocess
