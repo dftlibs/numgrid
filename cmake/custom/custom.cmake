@@ -8,9 +8,9 @@ file(COPY ${PROJECT_SOURCE_DIR}/api/numgrid.py DESTINATION ${PROJECT_BINARY_DIR}
 set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/external/googletest)
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/api
-    ${PROJECT_SOURCE_DIR}/external/lebedev
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/lebedev
     )
 
 add_library(
@@ -20,5 +20,5 @@ add_library(
     src/grid_radial.cpp
     src/Grid.cpp
     src/MemAllocator.cpp
-    external/lebedev/sphere_lebedev_rule.cpp
+    src/lebedev/sphere_lebedev_rule.cpp
     )
