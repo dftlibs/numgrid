@@ -7,6 +7,12 @@ if(ENABLE_CODE_COVERAGE)
         endif()
     endif()
 
+    if(DEFINED CMAKE_C_COMPILER_ID)
+        if(CMAKE_C_COMPILER_ID MATCHES GNU)
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+        endif()
+    endif()
+
     if(DEFINED CMAKE_CXX_COMPILER_ID)
         if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")

@@ -265,18 +265,18 @@ def main(argv):
     Main function.
     """
     if len(argv) != 2:
-        sys.stderr.write("\nYou can bootstrap a project in two steps.\n\n")
+        sys.stderr.write("\nYou can update a project in two steps.\n\n")
         sys.stderr.write("Step 1: Update or create infrastructure files\n")
         sys.stderr.write("        which will be needed to configure and build the project:\n")
-        sys.stderr.write("        $ %s --update\n\n" % argv[0])
+        sys.stderr.write("        $ %s --self\n\n" % argv[0])
         sys.stderr.write("Step 2: Create CMakeLists.txt and setup.py in PROJECT_ROOT:\n")
         sys.stderr.write("        $ %s <PROJECT_ROOT>\n" % argv[0])
         sys.stderr.write("        example:\n")
         sys.stderr.write("        $ %s ..\n" % argv[0])
         sys.exit(-1)
 
-    if argv[1] == '--update':
-        # update infrastructure files
+    if argv[1] == '--self':
+        # update self
         if not os.path.isfile('autocmake.cfg'):
             print('- fetching example autocmake.cfg')
             fetch_url(
@@ -293,10 +293,10 @@ def main(argv):
             src='https://github.com/docopt/docopt/raw/master/docopt.py',
             dst='lib/docopt.py'
         )
-        print('- fetching bootstrap.py')
+        print('- fetching update.py')
         fetch_url(
-            src='%s/raw/master/bootstrap.py' % AUTOCMAKE_GITHUB_URL,
-            dst='bootstrap.py'
+            src='%s/raw/master/update.py' % AUTOCMAKE_GITHUB_URL,
+            dst='update.py'
         )
         sys.exit(0)
 

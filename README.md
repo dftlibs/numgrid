@@ -6,6 +6,7 @@
 - [Build and test history](https://travis-ci.org/bast/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/bast/numgrid)
 - Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
+- Built with [Autocmake](https://github.com/scisoft/autocmake)
 
 
 # About
@@ -22,8 +23,7 @@ Yes please!
 # Requirements
 
 - CMake
-- C compiler
-- C++ compiler
+- C and C++ compiler
 - [CFFI](https://cffi.readthedocs.org) (Python interface)
 - [py.test](http://pytest.org) (to test the Python interface)
 
