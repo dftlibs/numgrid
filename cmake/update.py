@@ -183,11 +183,6 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('find_package(PythonInterp REQUIRED)')
 
     s.append('\n')
-    s.append('# default paths')
-    s.append('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)')
-    s.append('set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)')
-
-    s.append('\n')
     s.append('# determine program version from file, example: "14.1"')
     s.append('# the reason why this information is stored')
     s.append('# in a file and not as cmake variable')
@@ -211,10 +206,7 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('\n')
     s.append('# included cmake modules')
     for m in list_of_modules:
-        s.append('include(%s)' % os.path.splitext(m)[0])
-
-    s.append('\n')
-    s.append('add_subdirectory(${PROJECT_SOURCE_DIR}/src)')
+        s.append('include(autocmake_%s)' % os.path.splitext(m)[0])
 
     return s
 
@@ -240,7 +232,7 @@ def fetch_modules(config, module_directory):
             for src in config.get(section, 'source').split('\n'):
                 module_name = os.path.basename(src)
                 list_of_modules.append(module_name)
-                dst = os.path.join(module_directory, module_name)
+                dst = os.path.join(module_directory, 'autocmake_%s' % module_name)
                 if 'http' in src:
                     fetch_url(src, dst)
                 else:

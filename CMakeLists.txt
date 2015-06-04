@@ -25,11 +25,6 @@ endif()
 find_package(PythonInterp REQUIRED)
 
 
-# default paths
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
-
-
 # determine program version from file, example: "14.1"
 # the reason why this information is stored
 # in a file and not as cmake variable
@@ -52,16 +47,15 @@ set(CMAKE_MODULE_PATH
 
 
 # included cmake modules
-include(UseC)
-include(UseCXX)
-include(GNU.CXX)
-include(Intel.CXX)
-include(UseCodeCoverage)
-include(UseSafeGuards)
-include(UseCPP)
-include(api)
-include(gtest)
-include(test)
-
-
-add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+include(autocmake_cc)
+include(autocmake_cxx)
+include(autocmake_GNU.CXX)
+include(autocmake_Intel.CXX)
+include(autocmake_code_coverage)
+include(autocmake_safe_guards)
+include(autocmake_cpp)
+include(autocmake_default_build_paths)
+include(autocmake_src)
+include(autocmake_api)
+include(autocmake_gtest)
+include(autocmake_test)
