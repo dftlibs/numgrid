@@ -1,4 +1,5 @@
 #include <fstream>
+#include <cmath>
 #include "gtest/gtest.h"
 
 #include "numgrid.h"
@@ -131,13 +132,15 @@ TEST(numgrid, h2o)
     double *grid_pw = (double*) numgrid_get_grid(context);
     std::ifstream infile("../test/referece_grid.txt");
     int i = 0;
-    double x, y, z, w;
-    while (infile >> x >> y >> z >> w)
+    double ref[4];
+    while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])
     {
-        ASSERT_NEAR(grid_pw[i++], x, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], y, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], z, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], w, 1.0e-5);
+        for (int j = 0; j < 4; j++)
+        {
+            double error = grid_pw[i++] - ref[j];
+            if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
+            ASSERT_TRUE(fabs(error) < 1.0e-6);
+        }
     }
 
     numgrid_free(context);
@@ -241,13 +244,15 @@ TEST(numgrid, o_in_h2o)
     double *grid_pw = (double*) numgrid_get_grid(context);
     std::ifstream infile("../test/referece_grid.txt");
     int i = 0;
-    double x, y, z, w;
-    while (infile >> x >> y >> z >> w)
+    double ref[4];
+    while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])
     {
-        ASSERT_NEAR(grid_pw[i++], x, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], y, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], z, 1.0e-5);
-        ASSERT_NEAR(grid_pw[i++], w, 1.0e-5);
+        for (int j = 0; j < 4; j++)
+        {
+            double error = grid_pw[i++] - ref[j];
+            if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
+            ASSERT_TRUE(fabs(error) < 1.0e-6);
+        }
         if (i == num_points*4) break;
     }
 

@@ -124,7 +124,10 @@ def test_h2o_grid(context):
                 reference_grid.append(float(x))
     grid = lib.numgrid_get_grid(context)
     for i in range(num_points):
-        assert abs(grid[i] - reference_grid[i]) < 1.0e-6
+        error = grid[i] - reference_grid[i]
+        if abs(reference_grid[i]) > 1.0e-20:
+            error /= reference_grid[i]
+        assert abs(error) < 1.0e-6
 
 #-------------------------------------------------------------------------------
 
