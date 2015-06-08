@@ -24,8 +24,8 @@ Yes please!
 
 - CMake
 - C and C++ compiler
-- [CFFI](https://cffi.readthedocs.org) (Python interface)
-- [py.test](http://pytest.org) (to test the Python interface)
+- [CFFI](https://cffi.readthedocs.org) (you need it if you want to access the Python interface)
+- [py.test](http://pytest.org) (you only need it to test the Python interface)
 
 
 # Building and testing
@@ -146,7 +146,7 @@ lib.numgrid_free(context)
 ## Testing the Python interface
 
 ```
-python test/test.py <build_dir>
+py.test test/test.py <build_dir>
 ```
 
 # Integration grid
