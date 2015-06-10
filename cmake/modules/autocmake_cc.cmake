@@ -1,3 +1,31 @@
+#.rst:
+#
+# Adds C support.
+# Appends EXTRA_CFLAGS to CMAKE_C_FLAGS.
+# If environment variable CFLAGS is set, then the CFLAGS are used
+# and no other flags are used or appended.
+#
+# Variables used::
+#
+#   EXTRA_CFLAGS
+#
+# Variables modified::
+#
+#   CMAKE_C_FLAGS
+#
+# Environment variables used::
+#
+#   CFLAGS
+#
+# Example autocmake.cfg entry::
+#
+#   [cc]
+#   source: https://github.com/scisoft/autocmake/raw/master/modules/cc.cmake
+#   docopt: --cc=<CC> C compiler [default: gcc].
+#           --extra-cc-flags=<EXTRA_CFLAGS> Extra C compiler flags [default: ''].
+#   export: 'CC=%s' % arguments['--cc']
+#   define: '-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags']
+
 enable_language(C)
 
 if(NOT DEFINED CMAKE_C_COMPILER_ID)
@@ -8,6 +36,11 @@ if(NOT CMAKE_C_COMPILER_WORKS)
     message(FATAL_ERROR "CMAKE_C_COMPILER_WORKS is false!")
 endif()
 
-if(DEFINED EXTRA_C_FLAGS)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_C_FLAGS}")
+if(DEFINED EXTRA_CFLAGS)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
+endif()
+
+if(DEFINED ENV{CFLAGS})
+    message(STATUS "CFLAGS is set to '$ENV{CFLAGS}'.")
+    set(CMAKE_C_FLAGS "$ENV{CFLAGS}")
 endif()

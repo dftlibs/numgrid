@@ -18,13 +18,15 @@ Usage:
   ./setup.py (-h | --help)
 
 Options:
-  --cc=<CC>      C compiler [default: gcc].
-  --cxx=<CXX>    C++ compiler [default: g++].
-  --coverage     Enable code coverage [default: False].
-  --type=<TYPE>  Set the CMake build type (debug, release, or relwithdeb) [default: release].
-  --show         Show CMake command and exit.
-  <builddir>     Build directory.
-  -h --help      Show this screen.
+  --cc=<CC>                           C compiler [default: gcc].
+  --extra-cc-flags=<EXTRA_CFLAGS>     Extra C compiler flags [default: ''].
+  --cxx=<CXX>                         C++ compiler [default: g++].
+  --extra-cxx-flags=<EXTRA_CXXFLAGS>  Extra C++ compiler flags [default: ''].
+  --coverage                          Enable code coverage [default: False].
+  --type=<TYPE>                       Set the CMake build type (debug, release, or relwithdeb) [default: release].
+  --show                              Show CMake command and exit.
+  <builddir>                          Build directory.
+  -h --help                           Show this screen.
 """
 
 
@@ -36,6 +38,8 @@ def gen_cmake_command(options, arguments):
     command.append('CC=%s' % arguments['--cc'])
     command.append('CXX=%s' % arguments['--cxx'])
     command.append('cmake')
+    command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])
+    command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
     command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
 

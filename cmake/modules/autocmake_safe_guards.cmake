@@ -15,9 +15,5 @@ function(guard_against_bad_build_types in_build_type)
     endif()
 endfunction()
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
 guard_against_in_source(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 guard_against_bad_build_types(${CMAKE_BUILD_TYPE})

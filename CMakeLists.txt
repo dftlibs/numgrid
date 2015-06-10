@@ -9,6 +9,11 @@ project(numgrid)
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+
 # python interpreter is required at many
 # places during configuration and build
 find_package(PythonInterp REQUIRED)

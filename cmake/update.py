@@ -167,6 +167,11 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)')
 
     s.append('\n')
+    s.append('if(NOT CMAKE_BUILD_TYPE)')
+    s.append('    set(CMAKE_BUILD_TYPE "Debug")')
+    s.append('endif()')
+
+    s.append('\n')
     s.append('# python interpreter is required at many')
     s.append('# places during configuration and build')
     s.append('find_package(PythonInterp REQUIRED)')
