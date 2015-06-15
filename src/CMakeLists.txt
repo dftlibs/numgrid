@@ -13,3 +13,5 @@ add_library(
     MemAllocator.cpp
     lebedev/sphere_lebedev_rule.cpp
     )
+
+install(TARGETS numgrid LIBRARY DESTINATION lib)
