@@ -18,7 +18,7 @@ def check_cmake_exists(cmake_command):
                          shell=True,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE)
-    if not ('cmake version' in p.communicate()[0]):
+    if not ('cmake version' in p.communicate()[0].decode('UTF-8')):
         sys.stderr.write('   This code is built using CMake\n\n')
         sys.stderr.write('   CMake is not found\n')
         sys.stderr.write('   get CMake at http://www.cmake.org/\n')
@@ -41,7 +41,7 @@ def setup_build_path(build_path):
             sys.stderr.write('remove the build directory and then rerun setup\n')
             sys.exit(1)
     else:
-        os.makedirs(build_path, 0755)
+        os.makedirs(build_path, 0o755)
 
 
 def run_cmake(command, build_path, default_build_path):
@@ -56,7 +56,7 @@ def run_cmake(command, build_path, default_build_path):
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE
         )
-    s = p.communicate()[0]
+    s = p.communicate()[0].decode('UTF-8')
     # print cmake output to screen
     print(s)
     # write cmake output to file
