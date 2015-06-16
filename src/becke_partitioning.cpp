@@ -47,7 +47,7 @@ double f3(const double x)
 
 
 // JCP 88, 2547 (1988)
-double get_becke_w(const double center_xyz[],
+double get_becke_w(const double center_coordinates[],
                    const int    center_charge[],
                          double pa[],
                    const int    icent,
@@ -69,9 +69,9 @@ double get_becke_w(const double center_xyz[],
 
     for (int a = 0; a < num_centers; a++)
     {
-        vx = center_xyz[a*3    ] - x;
-        vy = center_xyz[a*3 + 1] - y;
-        vz = center_xyz[a*3 + 2] - z;
+        vx = center_coordinates[a*3    ] - x;
+        vy = center_coordinates[a*3 + 1] - y;
+        vz = center_coordinates[a*3 + 2] - z;
         dist_a = vx*vx + vy*vy + vz*vz;
         dist_a = sqrt(dist_a);
 
@@ -88,17 +88,17 @@ double get_becke_w(const double center_xyz[],
             if (a != b)
             {
 
-                vx = center_xyz[b*3    ] - x;
-                vy = center_xyz[b*3 + 1] - y;
-                vz = center_xyz[b*3 + 2] - z;
+                vx = center_coordinates[b*3    ] - x;
+                vy = center_coordinates[b*3 + 1] - y;
+                vz = center_coordinates[b*3 + 2] - z;
                 dist_b = vx*vx + vy*vy + vz*vz;
                 dist_b = sqrt(dist_b);
 
                 R_b = get_bragg_angstrom(center_charge[b]);
 
-                vx = center_xyz[b*3    ] - center_xyz[a*3    ];
-                vy = center_xyz[b*3 + 1] - center_xyz[a*3 + 1];
-                vz = center_xyz[b*3 + 2] - center_xyz[a*3 + 2];
+                vx = center_coordinates[b*3    ] - center_coordinates[a*3    ];
+                vy = center_coordinates[b*3 + 1] - center_coordinates[a*3 + 1];
+                vz = center_coordinates[b*3 + 2] - center_coordinates[a*3 + 2];
                 dist_ab = vx*vx + vy*vy + vz*vz;
                 dist_ab = sqrt(dist_ab);
 

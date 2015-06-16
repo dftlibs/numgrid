@@ -1,7 +1,7 @@
 #ifndef BECKE_PARTITIONING_H_INCLUDED
 #define BECKE_PARTITIONING_H_INCLUDED
 
-double get_becke_w(const double center_xyz[],
+double get_becke_w(const double center_coordinates[],
                    const int    center_charge[],
                          double pa[],
                    const int    icent,

@@ -104,51 +104,51 @@ int Grid::get_angular_order(int n) const
 }
 
 
-void numgrid_generate(numgrid_context_t *context,
-                      const double radial_precision,
-                      const int    angular_min,
-                      const int    angular_max,
-                      const int    num_centers,
-                      const double center_xyz[],
-                      const int    center_element[],
-                      const int    num_outer_centers,
-                      const double outer_center_xyz[],
-                      const int    outer_center_element[],
-                      const int    num_shells,
-                      const int    shell_center[],
-                      const int    l_quantum_num[],
-                      const int    shell_num_primitives[],
-                      const double primitive_exp[])
+int numgrid_generate(numgrid_context_t *context,
+                     const double radial_precision,
+                     const int    angular_min,
+                     const int    angular_max,
+                     const int    num_centers,
+                     const double center_coordinates[],
+                     const int    center_elements[],
+                     const int    num_outer_centers,
+                     const double outer_center_coordinates[],
+                     const int    outer_center_elements[],
+                     const int    num_shells,
+                     const int    shell_centers[],
+                     const int    l_quantum_numbers[],
+                     const int    shell_num_primitives[],
+                     const double primitive_exponents[])
 {
     return AS_TYPE(Grid, context)->generate(radial_precision,
                                             angular_min,
                                             angular_max,
                                             num_centers,
-                                            center_xyz,
-                                            center_element,
+                                            center_coordinates,
+                                            center_elements,
                                             num_outer_centers,
-                                            outer_center_xyz,
-                                            outer_center_element,
+                                            outer_center_coordinates,
+                                            outer_center_elements,
                                             num_shells,
-                                            shell_center,
-                                            l_quantum_num,
+                                            shell_centers,
+                                            l_quantum_numbers,
                                             shell_num_primitives,
-                                            primitive_exp);
+                                            primitive_exponents);
 }
-void Grid::generate(const double radial_precision,
-                    const int    angular_min,
-                    const int    angular_max,
-                    const int    num_centers,
-                    const double center_xyz[],
-                    const int    center_element[],
-                    const int    num_outer_centers,
-                    const double outer_center_xyz[],
-                    const int    outer_center_element[],
-                    const int    num_shells,
-                    const int    shell_center[],
-                    const int    l_quantum_num[],
-                    const int    shell_num_primitives[],
-                    const double primitive_exp[])
+int Grid::generate(const double radial_precision,
+                   const int    angular_min,
+                   const int    angular_max,
+                   const int    num_centers,
+                   const double center_coordinates[],
+                   const int    center_elements[],
+                   const int    num_outer_centers,
+                   const double outer_center_coordinates[],
+                   const int    outer_center_elements[],
+                   const int    num_shells,
+                   const int    shell_centers[],
+                   const int    l_quantum_numbers[],
+                   const int    shell_num_primitives[],
+                   const double primitive_exponents[])
 {
     int num_angular_min = get_closest_num_angular(angular_min);
     int num_angular_max = get_closest_num_angular(angular_max);
@@ -159,24 +159,24 @@ void Grid::generate(const double radial_precision,
     double *angular_w = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
 
     int num_centers_total = num_centers + num_outer_centers;
-    double *center_xyz_total = (double*) MemAllocator::allocate(3*num_centers_total*sizeof(double));
-    int *center_element_total = (int*) MemAllocator::allocate(num_centers_total*sizeof(int));
+    double *center_coordinates_total = (double*) MemAllocator::allocate(3*num_centers_total*sizeof(double));
+    int *center_elements_total = (int*) MemAllocator::allocate(num_centers_total*sizeof(int));
 
     int i = 0;
     for (int icent = 0; icent < num_centers; icent++)
     {
-        center_xyz_total[i*3 + 0] = center_xyz[icent*3 + 0];
-        center_xyz_total[i*3 + 1] = center_xyz[icent*3 + 1];
-        center_xyz_total[i*3 + 2] = center_xyz[icent*3 + 2];
-        center_element_total[i] = center_element[icent];
+        center_coordinates_total[i*3 + 0] = center_coordinates[icent*3 + 0];
+        center_coordinates_total[i*3 + 1] = center_coordinates[icent*3 + 1];
+        center_coordinates_total[i*3 + 2] = center_coordinates[icent*3 + 2];
+        center_elements_total[i] = center_elements[icent];
         i++;
     }
     for (int icent = 0; icent < num_outer_centers; icent++)
     {
-        center_xyz_total[i*3 + 0] = outer_center_xyz[icent*3 + 0];
-        center_xyz_total[i*3 + 1] = outer_center_xyz[icent*3 + 1];
-        center_xyz_total[i*3 + 2] = outer_center_xyz[icent*3 + 2];
-        center_element_total[i] = outer_center_element[icent];
+        center_coordinates_total[i*3 + 0] = outer_center_coordinates[icent*3 + 0];
+        center_coordinates_total[i*3 + 1] = outer_center_coordinates[icent*3 + 1];
+        center_coordinates_total[i*3 + 2] = outer_center_coordinates[icent*3 + 2];
+        center_elements_total[i] = outer_center_elements[icent];
         i++;
     }
 
@@ -199,9 +199,9 @@ void Grid::generate(const double radial_precision,
             int l_max = 0;
             for (int ishell = 0; ishell < num_shells; ishell++)
             {
-                if ((shell_center[ishell] - 1) == icent)
+                if ((shell_centers[ishell] - 1) == icent)
                 {
-                    l_max = std::max(l_max, l_quantum_num[ishell]);
+                    l_max = std::max(l_max, l_quantum_numbers[ishell]);
                 }
             }
 
@@ -215,9 +215,9 @@ void Grid::generate(const double radial_precision,
             int n = 0;
             for (int ishell = 0; ishell < num_shells; ishell++)
             {
-                if ((shell_center[ishell] - 1) == icent)
+                if ((shell_centers[ishell] - 1) == icent)
                 {
-                    int l = l_quantum_num[ishell];
+                    int l = l_quantum_numbers[ishell];
 
                     if (!alpha_min_set[l])
                     {
@@ -227,7 +227,7 @@ void Grid::generate(const double radial_precision,
 
                     for (int p = 0; p < shell_num_primitives[ishell]; p++)
                     {
-                        double e = primitive_exp[n];
+                        double e = primitive_exponents[n];
                         alpha_max    = std::max(alpha_max, 2.0*e); // factor 2.0 to match DIRAC
                         alpha_min[l] = std::min(alpha_min[l], e);
                     }
@@ -243,7 +243,7 @@ void Grid::generate(const double radial_precision,
             {
                 if (alpha_min[l] > 0.0)
                 {
-                    r_outer = std::max(r_outer, get_r_outer(radial_precision, alpha_min[l], l, 4.0*get_bragg_angstrom(center_element[icent])));
+                    r_outer = std::max(r_outer, get_r_outer(radial_precision, alpha_min[l], l, 4.0*get_bragg_angstrom(center_elements[icent])));
                     assert(r_outer > r_inner);
                     h = std::min(h, get_h(radial_precision, l, 0.1*(r_outer - r_inner)));
                 }
@@ -267,7 +267,7 @@ void Grid::generate(const double radial_precision,
                 }
             }
 
-            double rb = get_bragg_angstrom(center_element[icent])/(5.0*0.529177249); // factors match DIRAC code
+            double rb = get_bragg_angstrom(center_elements[icent])/(5.0*0.529177249); // factors match DIRAC code
             double c = r_inner/(exp(h) - 1.0);
             int num_radial = int(log(1.0 + (r_outer/c))/h);
             for (int irad = 0; irad < num_radial; irad++)
@@ -293,15 +293,15 @@ void Grid::generate(const double radial_precision,
 
                     for (int iang = 0; iang < num_angular; iang++)
                     {
-                        xyzw[4*(ioff + iang)    ] = center_xyz[icent*3    ] + angular_x[angular_off + iang]*radial_r;
-                        xyzw[4*(ioff + iang) + 1] = center_xyz[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
-                        xyzw[4*(ioff + iang) + 2] = center_xyz[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang)    ] = center_coordinates[icent*3    ] + angular_x[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang) + 1] = center_coordinates[icent*3 + 1] + angular_y[angular_off + iang]*radial_r;
+                        xyzw[4*(ioff + iang) + 2] = center_coordinates[icent*3 + 2] + angular_z[angular_off + iang]*radial_r;
 
                         double becke_w = 1.0;
                         if (num_centers_total > 1)
                         {
-                            becke_w = get_becke_w(center_xyz_total,
-                                                  center_element_total,
+                            becke_w = get_becke_w(center_coordinates_total,
+                                                  center_elements_total,
                                                   pa_buffer,
                                                   icent,
                                                   num_centers_total,
@@ -338,6 +338,8 @@ void Grid::generate(const double radial_precision,
     MemAllocator::deallocate(angular_z);
     MemAllocator::deallocate(angular_w);
 
-    MemAllocator::deallocate(center_xyz_total);
-    MemAllocator::deallocate(center_element_total);
+    MemAllocator::deallocate(center_coordinates_total);
+    MemAllocator::deallocate(center_elements_total);
+
+    return 0;
 }
