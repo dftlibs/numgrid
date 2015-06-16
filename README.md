@@ -48,7 +48,7 @@ reuse.  See also the section about "Distributed computation using 'outer
 centers'".
 
 
-# 'Outer centers'
+# Outer centers
 
 For very large molecules the caller may not want to generate the entire grid at
 once but perhaps only generate center by center or fragment by fragment
@@ -59,7 +59,7 @@ the generation of the Becke partitioning weights but will not carry any grid
 points themselves. This can be used for multi-scale computations.
 
 Another use-case for 'outer centers' is to create a grid with
-different grid qualities across the system/molecule.
+varying grid quality across the system/molecule.
 
 
 # Why is the grid basis set dependent?
