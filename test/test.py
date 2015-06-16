@@ -33,8 +33,8 @@ def test_h2o_grid(context):
     Test H2O grid generation.
     """
     radial_precision = 1.0e-12
-    angular_min = 86
-    angular_max = 302
+    min_num_angular_points = 86
+    max_num_angular_points = 302
 
     num_centers = 3
     center_coordinates = [0.000000e+00,
@@ -54,7 +54,7 @@ def test_h2o_grid(context):
 
     num_shells = 12
     shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-    l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
+    shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
     shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
 
     primitive_exponents = [1.172000e+04,
@@ -98,8 +98,8 @@ def test_h2o_grid(context):
     ierr = lib.numgrid_generate(
                context,
                radial_precision,
-               angular_min,
-               angular_max,
+               min_num_angular_points,
+               max_num_angular_points,
                num_centers,
                center_coordinates,
                center_elements,
@@ -108,7 +108,7 @@ def test_h2o_grid(context):
                outer_center_elements,
                num_shells,
                shell_centers,
-               l_quantum_numbers,
+               shell_l_quantum_numbers,
                shell_num_primitives,
                primitive_exponents
            )

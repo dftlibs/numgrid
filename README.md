@@ -48,7 +48,7 @@ reuse.  See also the section about "Distributed computation using 'outer
 centers'".
 
 
-# Distributed computation using 'outer centers'
+# 'Outer centers'
 
 For very large molecules the caller may not want to generate the entire grid at
 once but perhaps only generate center by center or fragment by fragment
@@ -57,6 +57,9 @@ or fragments on different parallel tasks or threads. This can be achieved by
 using 'outer centers'. The 'outer centers' with influence the active centers in
 the generation of the Becke partitioning weights but will not carry any grid
 points themselves. This can be used for multi-scale computations.
+
+Another use-case for 'outer centers' is to create a grid with
+different grid qualities across the system/molecule.
 
 
 # Why is the grid basis set dependent?
@@ -86,8 +89,8 @@ As an example let us generate a grid for the water molecule:
 from numgrid import lib
 
 radial_precision = 1.0e-12
-angular_min = 86
-angular_max = 302
+min_num_angular_points = 86
+max_num_angular_points = 302
 
 num_centers = 3
 center_coordinates = [0.000000e+00,
@@ -107,7 +110,7 @@ outer_center_elements = []
 
 num_shells = 12
 shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
+shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
 shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
 
 primitive_exponents = [1.172000e+04,
@@ -120,8 +123,8 @@ context = lib.numgrid_new()
 ierr = lib.numgrid_generate(
            context,
            radial_precision,
-           angular_min,
-           angular_max,
+           min_num_angular_points,
+           max_num_angular_points,
            num_centers,
            center_coordinates,
            center_elements,
@@ -130,7 +133,7 @@ ierr = lib.numgrid_generate(
            outer_center_elements,
            num_shells,
            shell_centers,
-           l_quantum_numbers,
+           shell_l_quantum_numbers,
            shell_num_primitives,
            primitive_exponents
        )

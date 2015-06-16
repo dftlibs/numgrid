@@ -106,8 +106,8 @@ int Grid::get_angular_order(int n) const
 
 int numgrid_generate(numgrid_context_t *context,
                      const double radial_precision,
-                     const int    angular_min,
-                     const int    angular_max,
+                     const int    min_num_angular_points,
+                     const int    max_num_angular_points,
                      const int    num_centers,
                      const double center_coordinates[],
                      const int    center_elements[],
@@ -116,13 +116,13 @@ int numgrid_generate(numgrid_context_t *context,
                      const int    outer_center_elements[],
                      const int    num_shells,
                      const int    shell_centers[],
-                     const int    l_quantum_numbers[],
+                     const int    shell_l_quantum_numbers[],
                      const int    shell_num_primitives[],
                      const double primitive_exponents[])
 {
     return AS_TYPE(Grid, context)->generate(radial_precision,
-                                            angular_min,
-                                            angular_max,
+                                            min_num_angular_points,
+                                            max_num_angular_points,
                                             num_centers,
                                             center_coordinates,
                                             center_elements,
@@ -131,13 +131,13 @@ int numgrid_generate(numgrid_context_t *context,
                                             outer_center_elements,
                                             num_shells,
                                             shell_centers,
-                                            l_quantum_numbers,
+                                            shell_l_quantum_numbers,
                                             shell_num_primitives,
                                             primitive_exponents);
 }
 int Grid::generate(const double radial_precision,
-                   const int    angular_min,
-                   const int    angular_max,
+                   const int    min_num_angular_points,
+                   const int    max_num_angular_points,
                    const int    num_centers,
                    const double center_coordinates[],
                    const int    center_elements[],
@@ -146,12 +146,12 @@ int Grid::generate(const double radial_precision,
                    const int    outer_center_elements[],
                    const int    num_shells,
                    const int    shell_centers[],
-                   const int    l_quantum_numbers[],
+                   const int    shell_l_quantum_numbers[],
                    const int    shell_num_primitives[],
                    const double primitive_exponents[])
 {
-    int num_angular_min = get_closest_num_angular(angular_min);
-    int num_angular_max = get_closest_num_angular(angular_max);
+    int num_min_num_angular_points = get_closest_num_angular(min_num_angular_points);
+    int num_max_num_angular_points = get_closest_num_angular(max_num_angular_points);
 
     double *angular_x = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
     double *angular_y = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
@@ -180,7 +180,7 @@ int Grid::generate(const double radial_precision,
         i++;
     }
 
-    for (int i = get_angular_order(num_angular_min); i <= get_angular_order(num_angular_max); i++)
+    for (int i = get_angular_order(num_min_num_angular_points); i <= get_angular_order(num_max_num_angular_points); i++)
     {
         int angular_off = i*MAX_ANGULAR_GRID;
         ld_by_order(lebedev_table[i], &angular_x[angular_off], &angular_y[angular_off], &angular_z[angular_off], &angular_w[angular_off]);
@@ -201,7 +201,7 @@ int Grid::generate(const double radial_precision,
             {
                 if ((shell_centers[ishell] - 1) == icent)
                 {
-                    l_max = std::max(l_max, l_quantum_numbers[ishell]);
+                    l_max = std::max(l_max, shell_l_quantum_numbers[ishell]);
                 }
             }
 
@@ -217,7 +217,7 @@ int Grid::generate(const double radial_precision,
             {
                 if ((shell_centers[ishell] - 1) == icent)
                 {
-                    int l = l_quantum_numbers[ishell];
+                    int l = shell_l_quantum_numbers[ishell];
 
                     if (!alpha_min_set[l])
                     {
@@ -275,12 +275,12 @@ int Grid::generate(const double radial_precision,
                 double radial_r = c*(exp((irad+1)*h) - 1.0);
                 double radial_w = (radial_r + c)*radial_r*radial_r*h;
 
-                int num_angular = num_angular_max;
+                int num_angular = num_max_num_angular_points;
                 if (radial_r < rb)
                 {
-                    num_angular = static_cast<int>(num_angular_max*(radial_r/rb));
+                    num_angular = static_cast<int>(num_max_num_angular_points*(radial_r/rb));
                     num_angular = get_closest_num_angular(num_angular);
-                    if (num_angular < num_angular_min) num_angular = num_angular_min;
+                    if (num_angular < num_min_num_angular_points) num_angular = num_min_num_angular_points;
                 }
 
                 if (iround == 0)

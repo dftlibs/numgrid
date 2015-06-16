@@ -31,8 +31,8 @@ NUMGRID_API void numgrid_free(numgrid_context_t *context);
 
 NUMGRID_API int numgrid_generate(numgrid_context_t *context,
                                  const double radial_precision,
-                                 const int    angular_min,
-                                 const int    angular_max,
+                                 const int    min_num_angular_points,
+                                 const int    max_num_angular_points,
                                  const int    num_centers,
                                  const double center_coordinates[],
                                  const int    center_elements[],
@@ -41,7 +41,7 @@ NUMGRID_API int numgrid_generate(numgrid_context_t *context,
                                  const int    outer_center_elements[],
                                  const int    num_shells,
                                  const int    shell_centers[],
-                                 const int    l_quantum_numbers[],
+                                 const int    shell_l_quantum_numbers[],
                                  const int    shell_num_primitives[],
                                  const double primitive_exponents[]);
 

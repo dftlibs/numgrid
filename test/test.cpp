@@ -9,8 +9,8 @@
 TEST(numgrid, h2o)
 {
     double radial_precision = 1.000000e-12;
-    int angular_min = 86;
-    int angular_max = 302;
+    int min_num_angular_points = 86;
+    int max_num_angular_points = 302;
     int num_centers = 3;
     double center_coordinates[num_centers*3];
     center_coordinates[0] = 0.000000e+00;
@@ -43,19 +43,19 @@ TEST(numgrid, h2o)
     shell_centers[ 9] = 3;
     shell_centers[10] = 3;
     shell_centers[11] = 3;
-    int l_quantum_numbers[num_shells];
-    l_quantum_numbers[ 0] = 0;
-    l_quantum_numbers[ 1] = 0;
-    l_quantum_numbers[ 2] = 0;
-    l_quantum_numbers[ 3] = 1;
-    l_quantum_numbers[ 4] = 1;
-    l_quantum_numbers[ 5] = 2;
-    l_quantum_numbers[ 6] = 0;
-    l_quantum_numbers[ 7] = 0;
-    l_quantum_numbers[ 8] = 1;
-    l_quantum_numbers[ 9] = 0;
-    l_quantum_numbers[10] = 0;
-    l_quantum_numbers[11] = 1;
+    int shell_l_quantum_numbers[num_shells];
+    shell_l_quantum_numbers[ 0] = 0;
+    shell_l_quantum_numbers[ 1] = 0;
+    shell_l_quantum_numbers[ 2] = 0;
+    shell_l_quantum_numbers[ 3] = 1;
+    shell_l_quantum_numbers[ 4] = 1;
+    shell_l_quantum_numbers[ 5] = 2;
+    shell_l_quantum_numbers[ 6] = 0;
+    shell_l_quantum_numbers[ 7] = 0;
+    shell_l_quantum_numbers[ 8] = 1;
+    shell_l_quantum_numbers[ 9] = 0;
+    shell_l_quantum_numbers[10] = 0;
+    shell_l_quantum_numbers[11] = 1;
     int shell_num_primitives[num_shells];
     shell_num_primitives[ 0] = 9;
     shell_num_primitives[ 1] = 9;
@@ -112,8 +112,8 @@ TEST(numgrid, h2o)
 
     int ierr = numgrid_generate(context,
                                 radial_precision,
-                                angular_min,
-                                angular_max,
+                                min_num_angular_points,
+                                max_num_angular_points,
                                 num_centers,
                                 center_coordinates,
                                 center_elements,
@@ -122,7 +122,7 @@ TEST(numgrid, h2o)
                                 outer_center_elements,
                                 num_shells,
                                 shell_centers,
-                                l_quantum_numbers,
+                                shell_l_quantum_numbers,
                                 shell_num_primitives,
                                 primitive_exponents);
 
@@ -151,8 +151,8 @@ TEST(numgrid, h2o)
 TEST(numgrid, o_in_h2o)
 {
     double radial_precision = 1.000000e-12;
-    int angular_min = 86;
-    int angular_max = 302;
+    int min_num_angular_points = 86;
+    int max_num_angular_points = 302;
     int num_centers = 1;
     double center_coordinates[num_centers*3];
     center_coordinates[0] = 0.000000e+00;
@@ -179,13 +179,13 @@ TEST(numgrid, o_in_h2o)
     shell_centers[3] = 1;
     shell_centers[4] = 1;
     shell_centers[5] = 1;
-    int l_quantum_numbers[num_shells];
-    l_quantum_numbers[0] = 0;
-    l_quantum_numbers[1] = 0;
-    l_quantum_numbers[2] = 0;
-    l_quantum_numbers[3] = 1;
-    l_quantum_numbers[4] = 1;
-    l_quantum_numbers[5] = 2;
+    int shell_l_quantum_numbers[num_shells];
+    shell_l_quantum_numbers[0] = 0;
+    shell_l_quantum_numbers[1] = 0;
+    shell_l_quantum_numbers[2] = 0;
+    shell_l_quantum_numbers[3] = 1;
+    shell_l_quantum_numbers[4] = 1;
+    shell_l_quantum_numbers[5] = 2;
     int shell_num_primitives[num_shells];
     shell_num_primitives[0] = 9;
     shell_num_primitives[1] = 9;
@@ -224,8 +224,8 @@ TEST(numgrid, o_in_h2o)
 
     int ierr = numgrid_generate(context,
                                 radial_precision,
-                                angular_min,
-                                angular_max,
+                                min_num_angular_points,
+                                max_num_angular_points,
                                 num_centers,
                                 center_coordinates,
                                 center_elements,
@@ -234,7 +234,7 @@ TEST(numgrid, o_in_h2o)
                                 outer_center_elements,
                                 num_shells,
                                 shell_centers,
-                                l_quantum_numbers,
+                                shell_l_quantum_numbers,
                                 shell_num_primitives,
                                 primitive_exponents);
 
