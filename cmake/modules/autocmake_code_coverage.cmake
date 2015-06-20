@@ -1,3 +1,20 @@
+#.rst:
+#
+# Enables code coverage by appending corresponding compiler flags.
+#
+# Variables modified (provided the corresponding language is enabled)::
+#
+#   CMAKE_Fortran_FLAGS
+#   CMAKE_C_FLAGS
+#   CMAKE_CXX_FLAGS
+#
+# Example autocmake.cfg entry::
+#
+#   [coverage]
+#   source: https://github.com/scisoft/autocmake/raw/master/modules/code_coverage.cmake
+#   docopt: --coverage Enable code coverage [default: False].
+#   define: '-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage']
+
 option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
 
 if(ENABLE_CODE_COVERAGE)

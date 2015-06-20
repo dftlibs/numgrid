@@ -1,19 +1,27 @@
-function(guard_against_in_source in_source_dir in_binary_dir)
-    if(${in_source_dir} STREQUAL ${in_binary_dir})
-        message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
-    endif()
-endfunction()
+#.rst:
+#
+# Provides safeguards against in-source builds and bad build types.
+#
+# Variables used::
+#
+#   PROJECT_SOURCE_DIR
+#   PROJECT_BINARY_DIR
+#   CMAKE_BUILD_TYPE
+#
+# Example autocmake.cfg entry::
+#
+#   [safeguards]
+#   source: https://github.com/scisoft/autocmake/raw/master/modules/safeguards.cmake
 
-function(guard_against_bad_build_types in_build_type)
-    string(TOLOWER "${in_build_type}" cmake_build_type_tolower)
-    string(TOUPPER "${in_build_type}" cmake_build_type_toupper)
+if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
+    message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
+endif()
 
-    if(    NOT cmake_build_type_tolower STREQUAL "debug"
-       AND NOT cmake_build_type_tolower STREQUAL "release"
-       AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
-        message(FATAL_ERROR "Unknown build type \"${in_build_type}\". Allowed values are Debug, Release, RelWithDebInfo (case-insensitive).")
-    endif()
-endfunction()
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
+string(TOUPPER "${CMAKE_BUILD_TYPE}" cmake_build_type_toupper)
 
-guard_against_in_source(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
-guard_against_bad_build_types(${CMAKE_BUILD_TYPE})
+if(    NOT cmake_build_type_tolower STREQUAL "debug"
+   AND NOT cmake_build_type_tolower STREQUAL "release"
+   AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
+    message(FATAL_ERROR "Unknown build type \"${CMAKE_BUILD_TYPE}\". Allowed values are Debug, Release, RelWithDebInfo (case-insensitive).")
+endif()

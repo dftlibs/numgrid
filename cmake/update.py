@@ -159,30 +159,22 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('# set minimum cmake version')
     s.append('cmake_minimum_required(VERSION 2.8 FATAL_ERROR)')
 
-    s.append('\n')
+    s.append('\n# project name')
     s.append('project(%s)' % project_name)
 
-    s.append('\n')
-    s.append('# do not rebuild if rules (compiler flags) change')
+    s.append('\n# do not rebuild if rules (compiler flags) change')
     s.append('set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)')
 
-    s.append('\n')
+    s.append('\n# if CMAKE_BUILD_TYPE undefined, we set it to Debug')
     s.append('if(NOT CMAKE_BUILD_TYPE)')
     s.append('    set(CMAKE_BUILD_TYPE "Debug")')
     s.append('endif()')
 
-    s.append('\n')
-    s.append('# python interpreter is required at many')
-    s.append('# places during configuration and build')
-    s.append('find_package(PythonInterp REQUIRED)')
-
-    s.append('\n')
-    s.append('# directory which holds enabled cmake modules')
+    s.append('\n# directory which holds enabled cmake modules')
     s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}')
     s.append('    ${PROJECT_SOURCE_DIR}/%s)' % os.path.join(relative_path, 'modules'))
 
-    s.append('\n')
-    s.append('# included cmake modules')
+    s.append('\n# included cmake modules')
     for m in list_of_modules:
         s.append('include(autocmake_%s)' % os.path.splitext(m)[0])
 
