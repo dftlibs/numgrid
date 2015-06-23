@@ -113,7 +113,7 @@ def gen_setup(config, relative_path):
 
     s.append("\nsys.path.append('%s')" % os.path.join(relative_path, 'lib'))
     s.append('from config import configure')
-    s.append('from docopt import docopt')
+    s.append('import docopt')
 
     s.append('\n\noptions = """')
     s.append('Usage:')
@@ -140,7 +140,12 @@ def gen_setup(config, relative_path):
 
     s.append(gen_cmake_command(config))
 
-    s.append("\n\narguments = docopt(options, argv=None)")
+    s.append("\n\ntry:")
+    s.append("    arguments = docopt.docopt(options, argv=None)")
+    s.append("except docopt.DocoptExit:")
+    s.append(r"    sys.stderr.write('ERROR: bad input to %s\n' % sys.argv[0])")
+    s.append("    sys.stderr.write(options)")
+    s.append("    sys.exit(-1)")
     s.append("\nroot_directory = os.path.dirname(os.path.realpath(__file__))")
     s.append("build_path = arguments['<builddir>']")
     s.append("cmake_command = '%s %s' % (gen_cmake_command(options, arguments), root_directory)")

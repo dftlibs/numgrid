@@ -9,7 +9,7 @@ import sys
 
 sys.path.append('cmake/lib')
 from config import configure
-from docopt import docopt
+import docopt
 
 
 options = """
@@ -46,7 +46,12 @@ def gen_cmake_command(options, arguments):
     return ' '.join(command)
 
 
-arguments = docopt(options, argv=None)
+try:
+    arguments = docopt.docopt(options, argv=None)
+except docopt.DocoptExit:
+    sys.stderr.write('ERROR: bad input to %s\n' % sys.argv[0])
+    sys.stderr.write(options)
+    sys.exit(-1)
 
 root_directory = os.path.dirname(os.path.realpath(__file__))
 build_path = arguments['<builddir>']
