@@ -9,17 +9,16 @@ from collections import OrderedDict
 # for compatibility with Python < 2.7
 if sys.version_info[0] > 2:
     from configparser import RawConfigParser
-else:
-    from ConfigParser import RawConfigParser
-
-if sys.version_info[0] > 2:
     import urllib.request
+
     class URLopener(urllib.request.FancyURLopener):
         def http_error_default(self, url, fp, errcode, errmsg, headers):
             sys.stderr.write("ERROR: could not fetch %s\n" % url)
             sys.exit(-1)
 else:
+    from ConfigParser import RawConfigParser
     import urllib
+
     class URLopener(urllib.FancyURLopener):
         def http_error_default(self, url, fp, errcode, errmsg, headers):
             sys.stderr.write("ERROR: could not fetch %s\n" % url)
@@ -46,9 +45,9 @@ def print_progress_bar(text, done, total, width):
     """
     Print progress bar.
     """
-    n = int(float(width)*float(done)/float(total))
-    sys.stdout.write("\r%s [%s%s] (%i/%i)" % (text, '#'*n,
-                                              ' '*(width-n), done, total))
+    n = int(float(width) * float(done) / float(total))
+    sys.stdout.write("\r%s [%s%s] (%i/%i)" % (text, '#' * n,
+                                              ' ' * (width - n), done, total))
     sys.stdout.flush()
 
 
@@ -62,7 +61,7 @@ def align_options(options):
             l = len(opt[0])
     s = []
     for opt in options:
-        s.append('  %s%s  %s' % (opt[0], ' '*(l - len(opt[0])), opt[1]))
+        s.append('  %s%s  %s' % (opt[0], ' ' * (l - len(opt[0])), opt[1]))
     return '\n'.join(s)
 
 
@@ -93,6 +92,7 @@ def gen_cmake_command(config):
                 s.append('    command.append(%s)' % definition)
 
     s.append("    command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])")
+    s.append("    command.append('-G \"%s\"' % arguments['--generator'])")
 
     s.append("\n    return ' '.join(command)")
 
@@ -130,6 +130,7 @@ def gen_setup(config, relative_path):
                 options.append([first, rest])
 
     options.append(['--type=<TYPE>', 'Set the CMake build type (debug, release, or relwithdeb) [default: release].'])
+    options.append(['--generator=<STRING>', 'Set the CMake build system generator [default: Unix Makefiles].'])
     options.append(['--show', 'Show CMake command and exit.'])
     options.append(['<builddir>', 'Build directory.'])
     options.append(['-h --help', 'Show this screen.'])
@@ -182,7 +183,10 @@ def gen_cmakelists(config, relative_path, list_of_modules):
 
     s.append('\n# directory which holds enabled cmake modules')
     s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}')
-    s.append('    ${PROJECT_SOURCE_DIR}/%s)' % os.path.join(relative_path, 'modules'))
+
+    # we need the same separator since CMake apparently corrects for it
+    # therefore we do not use os.path.join
+    s.append('    ${PROJECT_SOURCE_DIR}/%s/modules)' % relative_path)
 
     s.append('\n# included cmake modules')
     for m in list_of_modules:

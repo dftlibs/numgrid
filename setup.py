@@ -24,6 +24,7 @@ Options:
   --extra-cxx-flags=<EXTRA_CXXFLAGS>  Extra C++ compiler flags [default: ''].
   --coverage                          Enable code coverage [default: False].
   --type=<TYPE>                       Set the CMake build type (debug, release, or relwithdeb) [default: release].
+  --generator=<STRING>                Set the CMake build system generator [default: Unix Makefiles].
   --show                              Show CMake command and exit.
   <builddir>                          Build directory.
   -h --help                           Show this screen.
@@ -42,6 +43,7 @@ def gen_cmake_command(options, arguments):
     command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
     command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
+    command.append('-G "%s"' % arguments['--generator'])
 
     return ' '.join(command)
 
