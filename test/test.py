@@ -2,36 +2,42 @@
 Unit tests.
 """
 import sys
-BUILD_DIR = sys.argv[-1]
-sys.path.append(BUILD_DIR)
-
 import os
 import subprocess
 import pytest
-from numgrid import lib
 
-#-------------------------------------------------------------------------------
+BUILD_DIR = sys.argv[-1]
+sys.path.append(BUILD_DIR)
+
+# ------------------------------------------------------------------------------
+
 
 @pytest.fixture(scope='function')
 def context(request):
     """
     Add context to test functions.
     """
+    from numgrid import lib
     ctx = lib.numgrid_new()
+
     def cleanup():
         """
         Clean up the context.
         """
         lib.numgrid_free(ctx)
+
     request.addfinalizer(cleanup)
     return ctx
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def test_h2o_grid(context):
     """
     Test H2O grid generation.
     """
+    from numgrid import lib
+
     radial_precision = 1.0e-12
     min_num_angular_points = 86
     max_num_angular_points = 302
@@ -95,23 +101,21 @@ def test_h2o_grid(context):
                            1.220e-01,
                            7.270e-01]
 
-    ierr = lib.numgrid_generate(
-               context,
-               radial_precision,
-               min_num_angular_points,
-               max_num_angular_points,
-               num_centers,
-               center_coordinates,
-               center_elements,
-               num_outer_centers,
-               outer_center_coordinates,
-               outer_center_elements,
-               num_shells,
-               shell_centers,
-               shell_l_quantum_numbers,
-               shell_num_primitives,
-               primitive_exponents
-           )
+    ierr = lib.numgrid_generate(context,
+                                radial_precision,
+                                min_num_angular_points,
+                                max_num_angular_points,
+                                num_centers,
+                                center_coordinates,
+                                center_elements,
+                                num_outer_centers,
+                                outer_center_coordinates,
+                                outer_center_elements,
+                                num_shells,
+                                shell_centers,
+                                shell_l_quantum_numbers,
+                                shell_num_primitives,
+                                primitive_exponents)
 
     num_points = lib.numgrid_get_num_points(context)
     assert num_points == 46220
@@ -129,7 +133,8 @@ def test_h2o_grid(context):
             error /= reference_grid[i]
         assert abs(error) < 1.0e-6
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def test_leaks():
     """
@@ -142,7 +147,7 @@ def test_leaks():
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE).communicate()[1]
-    if not 'All heap blocks were freed -- no leaks are possible' in res:
+    if 'All heap blocks were freed -- no leaks are possible' not in res:
         assert 'definitely lost: 0 bytes in 0 blocks' in res
         assert 'indirectly lost: 0 bytes in 0 blocks' in res
         assert 'possibly lost: 0 bytes in 0 blocks' in res

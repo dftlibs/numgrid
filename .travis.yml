@@ -12,6 +12,7 @@ script:
   - make
   - make test
   - cd ..
+  - pep8 --ignore=E501 test/test.py
   - py.test -vv test/test.py build
 after_success:
   - coveralls -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" -E ".*src/lebedev/.*.cpp.*"

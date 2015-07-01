@@ -93,15 +93,15 @@ min_num_angular_points = 86
 max_num_angular_points = 302
 
 num_centers = 3
-center_coordinates = [0.000000e+00,
-                      0.000000e+00,
-                      0.000000e+00,
-                      5.516800e-01,
-                      7.734000e-01,
-                      0.000000e+00,
-                      5.516800e-01,
-                      -7.734000e-01,
-                      0.000000e+00]
+center_coordinates = [0.0000e+00,
+                      0.0000e+00,
+                      0.0000e+00,
+                      5.5168e-01,
+                      7.7340e-01,
+                      0.0000e+00,
+                      5.5168e-01,
+                      -7.734e-01,
+                      0.0000e+00]
 center_elements = [8, 1, 1]
 
 num_outer_centers = 0
@@ -113,30 +113,29 @@ shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
 shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
 shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
 
-primitive_exponents = [1.172000e+04,
-                       1.759000e+03,
+primitive_exponents = [1.172e+04,
+                       1.759e+03,
+                       4.008e+02,
                        ...  # we skip many numbers here for brevity
-                       7.270000e-01]
+                       7.270e-01]
 
 context = lib.numgrid_new()
 
-ierr = lib.numgrid_generate(
-           context,
-           radial_precision,
-           min_num_angular_points,
-           max_num_angular_points,
-           num_centers,
-           center_coordinates,
-           center_elements,
-           num_outer_centers,
-           outer_center_coordinates,
-           outer_center_elements,
-           num_shells,
-           shell_centers,
-           shell_l_quantum_numbers,
-           shell_num_primitives,
-           primitive_exponents
-       )
+ierr = lib.numgrid_generate(context,
+                            radial_precision,
+                            min_num_angular_points,
+                            max_num_angular_points,
+                            num_centers,
+                            center_coordinates,
+                            center_elements,
+                            num_outer_centers,
+                            outer_center_coordinates,
+                            outer_center_elements,
+                            num_shells,
+                            shell_centers,
+                            shell_l_quantum_numbers,
+                            shell_num_primitives,
+                            primitive_exponents)
 
 num_points = lib.numgrid_get_num_points(context)
 
