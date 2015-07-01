@@ -1,5 +1,5 @@
-
-[![Build Status](https://travis-ci.org/bast/numgrid.svg?branch=master)](https://travis-ci.org/bast/numgrid/builds) [![Coverage Status](https://coveralls.io/repos/bast/numgrid/badge.png?branch=master)](https://coveralls.io/r/bast/numgrid?branch=master)
+[![Build Status](https://travis-ci.org/bast/numgrid.svg?branch=master)](https://travis-ci.org/bast/numgrid/builds)
+[![Coverage Status](https://coveralls.io/repos/bast/numgrid/badge.png?branch=master)](https://coveralls.io/r/bast/numgrid?branch=master)
 
 ![alt text](https://github.com/bast/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
