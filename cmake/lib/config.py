@@ -44,18 +44,44 @@ def setup_build_path(build_path):
         os.makedirs(build_path, 0o755)
 
 
+def test_adapt_cmake_command_to_platform():
+
+    cmake_command = "FC=foo CC=bar CXX=RABOOF cmake -DTHIS -DTHAT='this and that cmake' .."
+    res = adapt_cmake_command_to_platform(cmake_command, 'linux')
+    assert res == cmake_command
+    res = adapt_cmake_command_to_platform(cmake_command, 'win32')
+    assert res == "set FC=foo && set CC=bar && set CXX=RABOOF && cmake -DTHIS -DTHAT='this and that cmake' .."
+
+    cmake_command = "cmake -DTHIS -DTHAT='this and that cmake' .."
+    res = adapt_cmake_command_to_platform(cmake_command, 'linux')
+    assert res == cmake_command
+    res = adapt_cmake_command_to_platform(cmake_command, 'win32')
+    assert res == cmake_command
+
+
+def adapt_cmake_command_to_platform(cmake_command, platform):
+    """
+    Adapt CMake command to MS Windows platform.
+    """
+    if platform == 'win32':
+        pos = cmake_command.find('cmake')
+        s = ['set %s &&' % e for e in cmake_command[:pos].split()]
+        s.append(cmake_command[pos:])
+        return ' '.join(s)
+    else:
+        return cmake_command
+
+
 def run_cmake(command, build_path, default_build_path):
     """
     Execute CMake command.
     """
     topdir = os.getcwd()
     os.chdir(build_path)
-    p = subprocess.Popen(
-            command,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE
-        )
+    p = subprocess.Popen(command,
+                         shell=True,
+                         stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE)
     s = p.communicate()[0].decode('UTF-8')
     # print cmake output to screen
     print(s)
@@ -114,6 +140,8 @@ def configure(root_directory, build_path, cmake_command, only_show):
         build_path = default_build_path
     if not only_show:
         setup_build_path(build_path)
+
+    cmake_command = adapt_cmake_command_to_platform(cmake_command, sys.platform)
 
     print('%s\n' % cmake_command)
     if only_show:
