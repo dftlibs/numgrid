@@ -184,7 +184,7 @@ def gen_cmakelists(config, relative_path, modules):
     for directory in set([module.path for module in modules]):
         rel_cmake_module_path = os.path.join(relative_path, directory)
         # on windows cmake corrects this so we have to make it wrong again
-        rel_cmake_module_path.replace('\\', '/')
+        rel_cmake_module_path = rel_cmake_module_path.replace('\\', '/')
         s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/%s)' % rel_cmake_module_path)
 
     s.append('\n# included cmake modules')
