@@ -7,6 +7,7 @@ from collections import OrderedDict, namedtuple
 # we do not use the nicer sys.version_info.major
 # for compatibility with Python < 2.7
 if sys.version_info[0] > 2:
+    from io import StringIO
     from configparser import RawConfigParser
     import urllib.request
 
@@ -15,6 +16,7 @@ if sys.version_info[0] > 2:
             sys.stderr.write("ERROR: could not fetch %s\n" % url)
             sys.exit(-1)
 else:
+    from StringIO import StringIO
     from ConfigParser import RawConfigParser
     import urllib
 
@@ -25,6 +27,8 @@ else:
 
 
 AUTOCMAKE_GITHUB_URL = 'https://github.com/scisoft/autocmake'
+
+# ------------------------------------------------------------------------------
 
 
 def fetch_url(src, dst):
@@ -39,6 +43,8 @@ def fetch_url(src, dst):
     opener = URLopener()
     opener.retrieve(src, dst)
 
+# ------------------------------------------------------------------------------
+
 
 def print_progress_bar(text, done, total, width):
     """
@@ -48,6 +54,8 @@ def print_progress_bar(text, done, total, width):
     sys.stdout.write("\r%s [%s%s] (%i/%i)" % (text, '#' * n,
                                               ' ' * (width - n), done, total))
     sys.stdout.flush()
+
+# ------------------------------------------------------------------------------
 
 
 def align_options(options):
@@ -62,6 +70,8 @@ def align_options(options):
     for opt in options:
         s.append('  %s%s  %s' % (opt[0], ' ' * (l - len(opt[0])), opt[1]))
     return '\n'.join(s)
+
+# ------------------------------------------------------------------------------
 
 
 def gen_cmake_command(config):
@@ -96,6 +106,8 @@ def gen_cmake_command(config):
     s.append("\n    return ' '.join(command)")
 
     return '\n'.join(s)
+
+# ------------------------------------------------------------------------------
 
 
 def gen_setup(config, relative_path):
@@ -153,6 +165,8 @@ def gen_setup(config, relative_path):
 
     return s
 
+# ------------------------------------------------------------------------------
+
 
 def gen_cmakelists(config, relative_path, modules):
     """
@@ -193,6 +207,8 @@ def gen_cmakelists(config, relative_path, modules):
 
     return s
 
+# ------------------------------------------------------------------------------
+
 
 def fetch_modules(config, relative_path):
     """
@@ -223,13 +239,27 @@ def fetch_modules(config, relative_path):
                         name = 'autocmake_%s' % module_name
                         dst = os.path.join(download_directory, 'autocmake_%s' % module_name)
                         fetch_url(src, dst)
+                        file_name = dst
                     else:
                         if os.path.exists(src):
                             path = os.path.dirname(src)
                             name = module_name
+                            file_name = src
                         else:
                             sys.stderr.write("ERROR: %s does not exist\n" % src)
                             sys.exit(-1)
+                    # if auto is true we infer configuration
+                    # from the module documentation
+                    if config.has_option(section, 'auto'):
+                        if config.get(section, 'auto') == 'true':
+                            with open(file_name, 'r') as f:
+                                config_docopt, config_define, config_export = parse_cmake_module(f.read())
+                                if config_docopt:
+                                    config.set(section, 'docopt', config_docopt)
+                                if config_define:
+                                    config.set(section, 'define', config_define)
+                                if config_export:
+                                    config.set(section, 'export', config_export)
                     modules.append(Module(path=path, name=name))
                 i += 1
                 print_progress_bar(
@@ -241,6 +271,8 @@ def fetch_modules(config, relative_path):
         print('')
 
     return modules
+
+# ------------------------------------------------------------------------------
 
 
 def main(argv):
@@ -310,6 +342,75 @@ def main(argv):
     s = gen_setup(config, relative_path)
     with open(os.path.join(project_root, 'setup.py'), 'w') as f:
         f.write('%s\n' % '\n'.join(s))
+
+# ------------------------------------------------------------------------------
+
+
+def parse_cmake_module(s_in):
+
+    s_out = []
+    is_rst_line = False
+    for line in s_in.split('\n'):
+        if is_rst_line:
+            if len(line) > 0:
+                if line[0] != '#':
+                    is_rst_line = False
+            else:
+                is_rst_line = False
+        if is_rst_line:
+            s_out.append(line[2:])
+        if '#.rst:' in line:
+            is_rst_line = True
+
+    autocmake_entry = '\n'.join(s_out).split('Example autocmake.cfg entry::')[1]
+    autocmake_entry = autocmake_entry.replace('\n  ', '\n')
+
+    buf = StringIO(autocmake_entry)
+    config = RawConfigParser(dict_type=OrderedDict)
+    config.readfp(buf)
+
+    config_docopt = None
+    config_define = None
+    config_export = None
+    for section in config.sections():
+        if config.has_option(section, 'docopt'):
+            config_docopt = config.get(section, 'docopt')
+        if config.has_option(section, 'define'):
+            config_define = config.get(section, 'define')
+        if config.has_option(section, 'export'):
+            config_export = config.get(section, 'export')
+
+    return config_docopt, config_define, config_export
+
+# ------------------------------------------------------------------------------
+
+
+def test_parse_cmake_module():
+
+    s = '''#.rst:
+#
+# Foo ...
+#
+# Example autocmake.cfg entry::
+#
+#   [cxx]
+#   source: https://github.com/scisoft/autocmake/raw/master/modules/cxx.cmake
+#   docopt: --cxx=<CXX> C++ compiler [default: g++].
+#           --extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: ''].
+#   export: 'CXX=%s' % arguments['--cxx']
+#   define: '-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags']
+
+enable_language(CXX)
+
+if(NOT DEFINED CMAKE_C_COMPILER_ID)
+    message(FATAL_ERROR "CMAKE_C_COMPILER_ID variable is not defined!")
+endif()'''
+
+    config_docopt, config_define, config_export = parse_cmake_module(s)
+
+    assert config_docopt == "--cxx=<CXX> C++ compiler [default: g++].\n--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
+
+# ------------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
