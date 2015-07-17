@@ -2,8 +2,7 @@
 
 import os
 import sys
-import shutil
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 
 # we do not use the nicer sys.version_info.major
 # for compatibility with Python < 2.7
@@ -155,7 +154,7 @@ def gen_setup(config, relative_path):
     return s
 
 
-def gen_cmakelists(config, relative_path, list_of_modules):
+def gen_cmakelists(config, relative_path, modules):
     """
     Generate CMakeLists.txt.
     """
@@ -181,62 +180,67 @@ def gen_cmakelists(config, relative_path, list_of_modules):
     s.append('    set(CMAKE_BUILD_TYPE "Debug")')
     s.append('endif()')
 
-    s.append('\n# directory which holds enabled cmake modules')
-    s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}')
-
-    # we need the same separator since CMake apparently corrects for it
-    # therefore we do not use os.path.join
-    s.append('    ${PROJECT_SOURCE_DIR}/%s/modules)' % relative_path)
+    s.append('\n# directories which hold enabled cmake modules')
+    for directory in set([module.path for module in modules]):
+        rel_cmake_module_path = os.path.join(relative_path, directory)
+        # on windows cmake corrects this so we have to make it wrong again
+        rel_cmake_module_path.replace('\\', '/')
+        s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/%s)' % rel_cmake_module_path)
 
     s.append('\n# included cmake modules')
-    for m in list_of_modules:
-        s.append('include(autocmake_%s)' % os.path.splitext(m)[0])
+    for module in modules:
+        s.append('include(%s)' % os.path.splitext(module.name)[0])
 
     return s
 
 
-def fetch_modules(config, module_directory):
+def fetch_modules(config, relative_path):
     """
-    Fetch modules either from remote URLs or from relative paths
-    and save them to module_directory from which they will
+    Assemble modules which will
     be included in CMakeLists.txt.
     """
-    if not os.path.exists(module_directory):
-        os.makedirs(module_directory)
+
+    download_directory = 'downloaded'
+    if not os.path.exists(download_directory):
+        os.makedirs(download_directory)
 
     l = list(filter(lambda x: config.has_option(x, 'source'),
                     config.sections()))
     n = len(l)
 
-    list_of_modules = []
+    modules = []
+    Module = namedtuple('Module', 'path name')
 
     if n > 0:  # otherwise division by zero in print_progress_bar
         i = 0
-        print_progress_bar(text='- fetching modules:', done=0, total=n, width=30)
+        print_progress_bar(text='- assembling modules:', done=0, total=n, width=30)
         for section in config.sections():
             if config.has_option(section, 'source'):
                 for src in config.get(section, 'source').split('\n'):
                     module_name = os.path.basename(src)
-                    list_of_modules.append(module_name)
-                    dst = os.path.join(module_directory, 'autocmake_%s' % module_name)
                     if 'http' in src:
+                        path = download_directory
+                        name = 'autocmake_%s' % module_name
+                        dst = os.path.join(download_directory, 'autocmake_%s' % module_name)
                         fetch_url(src, dst)
                     else:
                         if os.path.exists(src):
-                            shutil.copyfile(src, dst)
+                            path = os.path.dirname(src)
+                            name = module_name
                         else:
                             sys.stderr.write("ERROR: %s does not exist\n" % src)
                             sys.exit(-1)
+                    modules.append(Module(path=path, name=name))
                 i += 1
                 print_progress_bar(
-                    text='- fetching modules:',
+                    text='- assembling modules:',
                     done=i,
                     total=n,
                     width=30
                 )
         print('')
 
-    return list_of_modules
+    return modules
 
 
 def main(argv):
@@ -289,15 +293,15 @@ def main(argv):
     config = RawConfigParser(dict_type=OrderedDict)
     config.read('autocmake.cfg')
 
-    # fetch modules from the web or from relative paths
-    list_of_modules = fetch_modules(config, module_directory='modules')
-
     # get relative path from setup.py script to this directory
     relative_path = os.path.relpath(os.path.abspath('.'), project_root)
 
+    # fetch modules from the web or from relative paths
+    modules = fetch_modules(config, relative_path)
+
     # create CMakeLists.txt
     print('- generating CMakeLists.txt')
-    s = gen_cmakelists(config, relative_path, list_of_modules)
+    s = gen_cmakelists(config, relative_path, modules)
     with open(os.path.join(project_root, 'CMakeLists.txt'), 'w') as f:
         f.write('%s\n' % '\n'.join(s))
 
