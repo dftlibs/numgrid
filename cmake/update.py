@@ -60,7 +60,7 @@ def print_progress_bar(text, done, total, width):
 
 def align_options(options):
     """
-    Indendts flags and aligns help texts.
+    Indents flags and aligns help texts.
     """
     l = 0
     for opt in options:

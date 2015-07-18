@@ -42,6 +42,7 @@ def gen_cmake_command(options, arguments):
     command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])
     command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
+    command.append('-DGOOGLETEST_ROOT=external/googletest')
     command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
     command.append('-G "%s"' % arguments['--generator'])
 
