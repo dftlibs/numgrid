@@ -204,7 +204,7 @@ def gen_cmakelists(config, relative_path, modules):
     s.append('    set(CMAKE_BUILD_TYPE "Debug")')
     s.append('endif()')
 
-    s.append('\n# directories which hold enabled cmake modules')
+    s.append('\n# directories which hold included cmake modules')
     for directory in set([module.path for module in modules]):
         rel_cmake_module_path = os.path.join(relative_path, directory)
         # on windows cmake corrects this so we have to make it wrong again
