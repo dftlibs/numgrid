@@ -6,9 +6,9 @@ install:
   - sudo pip install pep8
   - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
   - sudo apt-get update
-  - sudo apt-get install gcc-4.9 g++-4.9 valgrind
+  - sudo apt-get install gcc-4.9 g++-4.9 gfortran-4.9 valgrind
 script:
-  - python setup.py --type=debug --coverage
+  - python setup.py --fc=gfortran-4.9 --cc=gcc --cxx=g++ --type=debug --coverage
   - cd build
   - make
   - make test

@@ -1,17 +1,31 @@
+include(CTest)
+enable_testing()
+
 add_executable(
-    unit_tests
+    cpp_test
     test/main.cpp
     test/test.cpp
     )
 
 target_link_libraries(
-    unit_tests
+    cpp_test
     googletest
     numgrid
     pthread
     )
 
-include(CTest)
-enable_testing()
+add_test(cpp_test ${PROJECT_BINARY_DIR}/bin/cpp_test)
 
-add_test(unit ${PROJECT_BINARY_DIR}/bin/unit_tests)
+if(ENABLE_FC_SUPPORT)
+    add_executable(
+        fortran_test
+        test/test.F90
+        )
+
+    target_link_libraries(
+        fortran_test
+        numgrid_fortran
+        )
+
+    add_test(fortran_test ${PROJECT_BINARY_DIR}/bin/fortran_test)
+endif()

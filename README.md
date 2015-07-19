@@ -13,19 +13,25 @@
 
 Numgrid is a library that produces numerical integration grid for molecules
 based on atom coordinates, atom types, and basis set information.
+Numgrid can be built with C, Fortran, and Python bindings.
 
 
 # Contributing
 
-Yes please!
+Yes please! Please follow [this excellent
+guide](http://www.contribution-guide.org).  We do not require any formal
+copyright assignment or contributor license agreement. Any contributions
+intentionally sent upstream are presumed to be offered under terms of the
+OSI-approved BSD 3-clause License.
 
 
 # Requirements
 
 - CMake
 - C and C++ compiler
-- [CFFI](https://cffi.readthedocs.org) (you need it if you want to access the Python interface)
-- [py.test](http://pytest.org) (you only need it to test the Python interface)
+- Fortran compiler (to build the optional Fortran interface)
+- [CFFI](https://cffi.readthedocs.org) (to access the optional Python interface)
+- [py.test](http://pytest.org) (to test the optional Python interface)
 
 
 # Building and testing
@@ -33,7 +39,7 @@ Yes please!
 ```
 git clone --recursive https://github.com/bast/numgrid.git
 cd numgrid
-python setup.py --cc=gcc --cxx=g++
+python setup.py --fc=gfortran --cc=gcc --cxx=g++
 cd build
 make
 make test
