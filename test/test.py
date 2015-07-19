@@ -143,7 +143,7 @@ def test_leaks():
     res = subprocess.Popen(
         [
             'valgrind',
-            os.path.join(BUILD_DIR, 'bin', 'unit_tests')
+            os.path.join(BUILD_DIR, 'bin', 'cpp_test')
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE).communicate()[1]
