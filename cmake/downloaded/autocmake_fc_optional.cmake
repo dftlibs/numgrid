@@ -1,6 +1,6 @@
 #.rst:
 #
-# Adds Fortran support.
+# Adds optional Fortran support.
 # Appends EXTRA_FCFLAGS to CMAKE_Fortran_FLAGS.
 # If environment variable FCFLAGS is set, then the FCFLAGS are used
 # and no other flags are used or appended.
