@@ -17,10 +17,8 @@
 #
 #   CXXFLAGS
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [cxx]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/cxx.cmake
 #   docopt: --cxx=<CXX> C++ compiler [default: g++].
 #           --extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: ''].
 #   export: 'CXX=%s' % arguments['--cxx']

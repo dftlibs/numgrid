@@ -7,11 +7,6 @@
 #   PROJECT_SOURCE_DIR
 #   PROJECT_BINARY_DIR
 #   CMAKE_BUILD_TYPE
-#
-# Example autocmake.cfg entry::
-#
-#   [safeguards]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/safeguards.cmake
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
     message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")

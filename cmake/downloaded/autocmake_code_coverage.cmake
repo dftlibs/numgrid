@@ -8,10 +8,8 @@
 #   CMAKE_C_FLAGS
 #   CMAKE_CXX_FLAGS
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [coverage]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/code_coverage.cmake
 #   docopt: --coverage Enable code coverage [default: False].
 #   define: '-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage']
 

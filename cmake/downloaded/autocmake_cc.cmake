@@ -17,10 +17,8 @@
 #
 #   CFLAGS
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [cc]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/cc.cmake
 #   docopt: --cc=<CC> C compiler [default: gcc].
 #           --extra-cc-flags=<EXTRA_CFLAGS> Extra C compiler flags [default: ''].
 #   export: 'CC=%s' % arguments['--cc']

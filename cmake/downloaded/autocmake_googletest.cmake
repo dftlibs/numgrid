@@ -6,10 +6,8 @@
 #
 #   GOOGLETEST_ROOT
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [googletest]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/googletest.cmake
 #   define: '-DGOOGLETEST_ROOT=external/googletest'
 
 set(GOOGLETEST_ROOT external/googletest CACHE STRING "Google Test source root")

@@ -258,18 +258,22 @@ def fetch_modules(config, relative_path):
                         else:
                             sys.stderr.write("ERROR: %s does not exist\n" % src)
                             sys.exit(-1)
-                    # if auto is true we infer configuration
+
+                    # unless config is 'custom' we infer configuration
                     # from the module documentation
-                    if config.has_option(section, 'auto'):
-                        if config.get(section, 'auto') == 'true':
-                            with open(file_name, 'r') as f:
-                                config_docopt, config_define, config_export = parse_cmake_module(f.read())
-                                if config_docopt:
-                                    config.set(section, 'docopt', config_docopt)
-                                if config_define:
-                                    config.set(section, 'define', config_define)
-                                if config_export:
-                                    config.set(section, 'export', config_export)
+                    parse_doc = True
+                    if config.has_option(section, 'config'):
+                        if config.get(section, 'config') == 'custom':
+                            parse_doc = False
+                    if parse_doc:
+                        with open(file_name, 'r') as f:
+                            config_docopt, config_define, config_export = parse_cmake_module(f.read())
+                            if config_docopt:
+                                config.set(section, 'docopt', config_docopt)
+                            if config_define:
+                                config.set(section, 'define', config_define)
+                            if config_export:
+                                config.set(section, 'export', config_export)
                     modules.append(Module(path=path, name=name))
                 i += 1
                 print_progress_bar(
@@ -358,6 +362,13 @@ def main(argv):
 
 def parse_cmake_module(s_in):
 
+    config_docopt = None
+    config_define = None
+    config_export = None
+
+    if 'autocmake.cfg configuration::' not in s_in:
+        return config_docopt, config_define, config_export
+
     s_out = []
     is_rst_line = False
     for line in s_in.split('\n'):
@@ -372,16 +383,16 @@ def parse_cmake_module(s_in):
         if '#.rst:' in line:
             is_rst_line = True
 
-    autocmake_entry = '\n'.join(s_out).split('Example autocmake.cfg entry::')[1]
+    autocmake_entry = '\n'.join(s_out).split('autocmake.cfg configuration::')[1]
     autocmake_entry = autocmake_entry.replace('\n  ', '\n')
+
+    # we prepend a fake section heading so that we can parse it with configparser
+    autocmake_entry = '[foo]\n' + autocmake_entry
 
     buf = StringIO(autocmake_entry)
     config = RawConfigParser(dict_type=OrderedDict)
     config.readfp(buf)
 
-    config_docopt = None
-    config_define = None
-    config_export = None
     for section in config.sections():
         if config.has_option(section, 'docopt'):
             config_docopt = config.get(section, 'docopt')
@@ -401,10 +412,8 @@ def test_parse_cmake_module():
 #
 # Foo ...
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [cxx]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/cxx.cmake
 #   docopt: --cxx=<CXX> C++ compiler [default: g++].
 #           --extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: ''].
 #   export: 'CXX=%s' % arguments['--cxx']
@@ -419,6 +428,22 @@ endif()'''
     config_docopt, config_define, config_export = parse_cmake_module(s)
 
     assert config_docopt == "--cxx=<CXX> C++ compiler [default: g++].\n--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
+
+    s = '''#.rst:
+#
+# Foo ...
+#
+# Bar ...
+
+enable_language(CXX)
+
+if(NOT DEFINED CMAKE_C_COMPILER_ID)
+    message(FATAL_ERROR "CMAKE_C_COMPILER_ID variable is not defined!")
+endif()'''
+
+    config_docopt, config_define, config_export = parse_cmake_module(s)
+
+    assert config_docopt is None
 
 # ------------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@
 #
 #   CMAKE_Fortran_FLAGS
 #
-# Variables set::
+# Variables defined::
 #
 #   ENABLE_FC_SUPPORT
 #
@@ -26,10 +26,8 @@
 #
 #   FCFLAGS
 #
-# Example autocmake.cfg entry::
+# autocmake.cfg configuration::
 #
-#   [fc]
-#   source: https://github.com/scisoft/autocmake/raw/master/modules/fc.cmake
 #   docopt: --fc=<FC> Fortran compiler [default: gfortran].
 #           --extra-fc-flags=<EXTRA_FCFLAGS> Extra Fortran compiler flags [default: ''].
 #           --fc-support=<FC_SUPPORT> Toggle Fortran language support (ON/OFF) [default: ON].
