@@ -196,13 +196,22 @@ int Grid::generate(const double radial_precision,
 
         for (int icent = 0; icent < num_centers; icent++)
         {
+            int num_shells_on_this_center = 0;
             int l_max = 0;
             for (int ishell = 0; ishell < num_shells; ishell++)
             {
                 if ((shell_centers[ishell] - 1) == icent)
                 {
                     l_max = std::max(l_max, shell_l_quantum_numbers[ishell]);
+                    num_shells_on_this_center++;
                 }
+            }
+
+            // skip this center if there are no shells
+            if (num_shells_on_this_center == 0)
+            {
+                num_points_on_atom[icent] = 0;
+                continue;
             }
 
             // get extreme alpha values
