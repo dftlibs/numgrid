@@ -99,7 +99,7 @@ def run_cmake(command, build_path, default_build_path):
             shutil.rmtree(default_build_path)
     else:
         # configuration was successful
-        save_configure_command(sys.argv, build_path)
+        save_setup_command(sys.argv, build_path)
         print_build_help(build_path, default_build_path)
 
 
@@ -116,11 +116,11 @@ def print_build_help(build_path, default_build_path):
     print('   $ make')
 
 
-def save_configure_command(argv, build_path):
+def save_setup_command(argv, build_path):
     """
-    Save configure command to a file.
+    Save setup command to a file.
     """
-    file_name = os.path.join(build_path, 'configure_command')
+    file_name = os.path.join(build_path, 'setup_command')
     f = open(file_name, 'w')
     f.write(' '.join(argv[:]) + '\n')
     f.close()

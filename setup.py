@@ -29,6 +29,7 @@ Options:
   --type=<TYPE>                       Set the CMake build type (debug, release, or relwithdeb) [default: release].
   --generator=<STRING>                Set the CMake build system generator [default: Unix Makefiles].
   --show                              Show CMake command and exit.
+  --cmake-options=<OPTIONS>           Define options to CMake [default: None].
   <builddir>                          Build directory.
   -h --help                           Show this screen.
 """
@@ -51,6 +52,8 @@ def gen_cmake_command(options, arguments):
     command.append('-DGOOGLETEST_ROOT=external/googletest')
     command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
     command.append('-G "%s"' % arguments['--generator'])
+    if(arguments['--cmake-options']):
+        command.append('%s' % arguments['--cmake-options'])
 
     return ' '.join(command)
 
