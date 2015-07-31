@@ -207,14 +207,16 @@ def gen_cmakelists(config, relative_path, modules):
     s.append('    set(CMAKE_BUILD_TYPE "Debug")')
     s.append('endif()')
 
-    s.append('\n# directories which hold included cmake modules')
+    if len(modules) > 0:
+        s.append('\n# directories which hold included cmake modules')
     for directory in set([module.path for module in modules]):
         rel_cmake_module_path = os.path.join(relative_path, directory)
         # on windows cmake corrects this so we have to make it wrong again
         rel_cmake_module_path = rel_cmake_module_path.replace('\\', '/')
         s.append('set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/%s)' % rel_cmake_module_path)
 
-    s.append('\n# included cmake modules')
+    if len(modules) > 0:
+        s.append('\n# included cmake modules')
     for module in modules:
         s.append('include(%s)' % os.path.splitext(module.name)[0])
 
@@ -363,8 +365,20 @@ def main(argv):
     # create setup.py
     print('- generating setup.py')
     s = gen_setup(config, relative_path)
-    with open(os.path.join(project_root, 'setup.py'), 'w') as f:
+    file_path = os.path.join(project_root, 'setup.py')
+    with open(file_path, 'w') as f:
         f.write('%s\n' % '\n'.join(s))
+    if sys.platform != 'win32':
+        make_executable(file_path)
+
+# ------------------------------------------------------------------------------
+
+
+# http://stackoverflow.com/a/30463972
+def make_executable(path):
+    mode = os.stat(path).st_mode
+    mode |= (mode & 0o444) >> 2    # copy R bits to X
+    os.chmod(path, mode)
 
 # ------------------------------------------------------------------------------
 
