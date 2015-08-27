@@ -18,20 +18,21 @@ Usage:
   ./setup.py (-h | --help)
 
 Options:
-  --fc=<FC>                           Fortran compiler [default: gfortran].
-  --extra-fc-flags=<EXTRA_FCFLAGS>    Extra Fortran compiler flags [default: ''].
-  --fc-support=<FC_SUPPORT>           Toggle Fortran language support (ON/OFF) [default: ON].
-  --cc=<CC>                           C compiler [default: gcc].
-  --extra-cc-flags=<EXTRA_CFLAGS>     Extra C compiler flags [default: ''].
-  --cxx=<CXX>                         C++ compiler [default: g++].
-  --extra-cxx-flags=<EXTRA_CXXFLAGS>  Extra C++ compiler flags [default: ''].
-  --coverage                          Enable code coverage [default: False].
-  --type=<TYPE>                       Set the CMake build type (debug, release, or relwithdeb) [default: release].
-  --generator=<STRING>                Set the CMake build system generator [default: Unix Makefiles].
-  --show                              Show CMake command and exit.
-  --cmake-options=<OPTIONS>           Define options to CMake [default: None].
-  <builddir>                          Build directory.
-  -h --help                           Show this screen.
+  --fc=<FC>                              Fortran compiler [default: gfortran].
+  --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
+  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: ON].
+  --cc=<CC>                              C compiler [default: gcc].
+  --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
+  --cxx=<CXX>                            C++ compiler [default: g++].
+  --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
+  --coverage                             Enable code coverage [default: False].
+  --type=<TYPE>                          Set the CMake build type (debug, release, or relwithdeb) [default: release].
+  --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
+  --show                                 Show CMake command and exit.
+  --cmake-executable=<CMAKE_EXECUTABLE>  Set the CMake executable [default: cmake].
+  --cmake-options=<OPTIONS>              Define options to CMake [default: None].
+  <builddir>                             Build directory.
+  -h --help                              Show this screen.
 """
 
 
@@ -43,7 +44,7 @@ def gen_cmake_command(options, arguments):
     command.append('FC=%s' % arguments['--fc'])
     command.append('CC=%s' % arguments['--cc'])
     command.append('CXX=%s' % arguments['--cxx'])
-    command.append('cmake')
+    command.append('%s' % arguments['--cmake-executable'])
     command.append('-DEXTRA_FCFLAGS="%s"' % arguments['--extra-fc-flags'])
     command.append('-DENABLE_FC_SUPPORT="%s"' % arguments['--fc-support'])
     command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])

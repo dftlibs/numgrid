@@ -92,7 +92,7 @@ def gen_cmake_command(config):
             for env in config.get(section, 'export').split('\n'):
                 s.append('    command.append(%s)' % env)
 
-    s.append("    command.append('cmake')")
+    s.append("    command.append('%s' % arguments['--cmake-executable'])")
 
     # take care of cmake definitions
     for section in config.sections():
@@ -153,6 +153,7 @@ def gen_setup(config, relative_path):
     options.append(['--type=<TYPE>', 'Set the CMake build type (debug, release, or relwithdeb) [default: release].'])
     options.append(['--generator=<STRING>', 'Set the CMake build system generator [default: Unix Makefiles].'])
     options.append(['--show', 'Show CMake command and exit.'])
+    options.append(['--cmake-executable=<CMAKE_EXECUTABLE>', 'Set the CMake executable [default: cmake].'])
     options.append(['--cmake-options=<OPTIONS>', 'Define options to CMake [default: None].'])
     options.append(['<builddir>', 'Build directory.'])
     options.append(['-h --help', 'Show this screen.'])
@@ -323,6 +324,10 @@ def main(argv):
                 src='%s/raw/master/example/autocmake.cfg' % AUTOCMAKE_GITHUB_URL,
                 dst='autocmake.cfg'
             )
+        if not os.path.isfile('.gitignore'):
+            print('- creating .gitignore')
+            with open('.gitignore', 'w') as f:
+                f.write('*.pyc\n')
         print('- fetching lib/config.py')
         fetch_url(
             src='%s/raw/master/lib/config.py' % AUTOCMAKE_GITHUB_URL,
