@@ -81,17 +81,23 @@ def run_cmake(command, build_path, default_build_path):
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE)
-    s = p.communicate()[0].decode('UTF-8')
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    stdout_coded, stderr_coded = p.communicate()
+    stdout = stdout_coded.decode('UTF-8')
+    stderr = stderr_coded.decode('UTF-8')
+    if stderr:
+        sys.stderr.write(stderr)
+        sys.exit(1)
     # print cmake output to screen
-    print(s)
+    print(stdout)
     # write cmake output to file
     f = open('cmake_output', 'w')
-    f.write(s)
+    f.write(stdout)
     f.close()
     # change directory and return
     os.chdir(topdir)
-    if 'Configuring incomplete' in s:
+    if 'Configuring incomplete' in stdout:
         # configuration was not successful
         if (build_path == default_build_path):
             # remove build_path iff not set by the user

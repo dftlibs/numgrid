@@ -154,7 +154,7 @@ def gen_setup(config, relative_path):
     options.append(['--generator=<STRING>', 'Set the CMake build system generator [default: Unix Makefiles].'])
     options.append(['--show', 'Show CMake command and exit.'])
     options.append(['--cmake-executable=<CMAKE_EXECUTABLE>', 'Set the CMake executable [default: cmake].'])
-    options.append(['--cmake-options=<OPTIONS>', "Define options to CMake [default: '']."])
+    options.append(['--cmake-options=<STRING>', "Define options to CMake [default: '']."])
     options.append(['<builddir>', 'Build directory.'])
     options.append(['-h --help', 'Show this screen.'])
 

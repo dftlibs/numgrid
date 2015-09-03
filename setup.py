@@ -31,7 +31,7 @@ Options:
   --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
   --show                                 Show CMake command and exit.
   --cmake-executable=<CMAKE_EXECUTABLE>  Set the CMake executable [default: cmake].
-  --cmake-options=<OPTIONS>              Define options to CMake [default: ''].
+  --cmake-options=<STRING>               Define options to CMake [default: ''].
   <builddir>                             Build directory.
   -h --help                              Show this screen.
 """
