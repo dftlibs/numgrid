@@ -1,6 +1,7 @@
 #.rst:
 #
-# Add preprocessor definitions.
+# Add preprocessor definitions (example: --add-definitions="-DTHIS -DTHAT=137").
+# These are passed all the way down to the compiler.
 #
 # Variables used::
 #
