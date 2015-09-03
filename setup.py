@@ -25,6 +25,7 @@ Options:
   --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
   --cxx=<CXX>                            C++ compiler [default: g++].
   --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
+  --add-definitions=<STRING>             Add preprocesor definitions [default: ''].
   --coverage                             Enable code coverage [default: False].
   --type=<TYPE>                          Set the CMake build type (debug, release, or relwithdeb) [default: release].
   --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
@@ -49,6 +50,7 @@ def gen_cmake_command(options, arguments):
     command.append('-DENABLE_FC_SUPPORT="%s"' % arguments['--fc-support'])
     command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])
     command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
+    command.append('-DPREPROCESSOR_DEFINITIONS="%s"' % arguments['--add-definitions'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
     command.append('-DGOOGLETEST_ROOT=external/googletest')
     command.append('-DCMAKE_BUILD_TYPE=%s' % arguments['--type'])
