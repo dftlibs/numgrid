@@ -204,7 +204,11 @@ def gen_cmakelists(project_name, minimum_cmake_version, relative_path, modules):
 
     if len(modules) > 0:
         s.append('\n# directories which hold included cmake modules')
-    for directory in set([module.path for module in modules]):
+
+    module_paths = set([module.path for module in modules])
+    module_paths = list(module_paths)
+    module_paths.sort()  # we do this to always get the same order and to minimize diffs
+    for directory in module_paths:
         rel_cmake_module_path = os.path.join(relative_path, directory)
         # on windows cmake corrects this so we have to make it wrong again
         rel_cmake_module_path = rel_cmake_module_path.replace('\\', '/')
@@ -216,6 +220,21 @@ def gen_cmakelists(project_name, minimum_cmake_version, relative_path, modules):
         s.append('include(%s)' % os.path.splitext(module.name)[0])
 
     return s
+
+# ------------------------------------------------------------------------------
+
+
+def prepend_or_set(config, section, option, value):
+    """
+    If option is already set, then value is prepended.
+    If option is not set, then it is created and set to value.
+    This is used to prepend options with values which come from the module documentation.
+    """
+    if value:
+        if config.has_option(section, option):
+            value += '\n%s' % config.get(section, option)
+        config.set(section, option, value)
+    return config
 
 # ------------------------------------------------------------------------------
 
@@ -268,14 +287,10 @@ def fetch_modules(config, relative_path):
                     if parse_doc:
                         with open(file_name, 'r') as f:
                             config_docopt, config_define, config_export, config_fetch = parse_cmake_module(f.read())
-                            if config_docopt:
-                                config.set(section, 'docopt', config_docopt)
-                            if config_define:
-                                config.set(section, 'define', config_define)
-                            if config_export:
-                                config.set(section, 'export', config_export)
-                            if config_fetch:
-                                config.set(section, 'fetch', config_fetch)
+                            config = prepend_or_set(config, section, 'docopt', config_docopt)
+                            config = prepend_or_set(config, section, 'define', config_define)
+                            config = prepend_or_set(config, section, 'export', config_export)
+                            config = prepend_or_set(config, section, 'fetch', config_fetch)
                     modules.append(Module(path=path, name=name))
                 i += 1
                 print_progress_bar(
