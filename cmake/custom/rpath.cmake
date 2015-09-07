@@ -1,0 +1,5 @@
+if(APPLE)
+    if(NOT DEFINED CMAKE_MACOSX_RPATH)
+        set(CMAKE_MACOSX_RPATH ON)
+    endif()
+endif()

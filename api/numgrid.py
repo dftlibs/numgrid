@@ -3,6 +3,7 @@ Python handle to numgrid library.
 """
 
 import os
+import sys
 import subprocess
 from cffi import FFI
 
@@ -21,4 +22,9 @@ ffi.cdef(
         ],
         stdout=subprocess.PIPE).communicate()[0])
 
-lib = ffi.dlopen(os.path.join(BUILD_DIR, 'lib', 'libnumgrid.so'))
+if sys.platform == "darwin":
+    suffix = 'dylib'
+else:
+    suffix = 'so'
+
+lib = ffi.dlopen(os.path.join(BUILD_DIR, 'lib', 'libnumgrid.%s' % suffix))
