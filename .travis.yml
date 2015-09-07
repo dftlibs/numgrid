@@ -1,14 +1,37 @@
+sudo: false
 language: cpp
-install:
-  - sudo pip install cpp-coveralls
-  - sudo pip install pytest
-  - sudo pip install cffi
-  - sudo pip install pep8
-  - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo apt-get update
-  - sudo apt-get install gcc-4.9 g++-4.9 gfortran-4.9 valgrind
+env:
+  global:
+    - PYTHON_PACKAGES="pip setuptools pytest cffi pep8 cpp-coveralls"
+os:
+  - linux
+  - osx
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+      - gfortran-4.9
+      - valgrind
+      - cmake
+      - libblas-dev
+      - libblas3gf
+before_install:
+  - if test ${TRAVIS_OS_NAME} = osx; then brew update; fi
+  - if test ${TRAVIS_OS_NAME} = osx; then brew outdated xctool || brew upgrade xctool; fi
+  - if test ${TRAVIS_OS_NAME} = osx; then brew unlink gcc; fi
+  - if test ${TRAVIS_OS_NAME} = osx; then brew install python valgrind gcc; fi
+  - if test ${TRAVIS_OS_NAME} = osx; then brew linkapps python; fi
+before_script:
+  - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
+  - if test ${TRAVIS_OS_NAME} = linux;
+    then pip install --upgrade ${PYTHON_PACKAGES} --user `whoami`;
+    else sudo pip install --upgrade ${PYTHON_PACKAGES}; fi
 script:
-  - python setup.py --fc=gfortran-4.9 --cc=gcc --cxx=g++ --type=debug --coverage
+  - if test ${TRAVIS_OS_NAME} = linux; then python setup.py --cc=gcc --cxx=g++ --fc=gfortran-4.9 --coverage --type=debug;
+                                       else python setup.py --cc=gcc --cxx=g++ --fc=gfortran --coverage --type=debug; fi
   - cd build
   - make
   - make test
