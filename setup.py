@@ -7,6 +7,8 @@
 import os
 import sys
 
+sys.path.append('cmake/lib/docopt')
+
 sys.path.append('cmake/lib')
 from config import configure
 import docopt

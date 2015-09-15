@@ -132,6 +132,7 @@ def gen_setup(config, relative_path):
     s.append('\nimport os')
     s.append('import sys')
 
+    s.append("\nsys.path.append('%s')" % os.path.join(relative_path, 'lib', 'docopt'))
     s.append("\nsys.path.append('%s')" % os.path.join(relative_path, 'lib'))
     s.append('from config import configure')
     s.append('import docopt')
@@ -349,10 +350,10 @@ def main(argv):
             src='%s/raw/master/lib/config.py' % AUTOCMAKE_GITHUB_URL,
             dst='lib/config.py'
         )
-        print('- fetching lib/docopt.py')
+        print('- fetching lib/docopt/docopt.py')
         fetch_url(
-            src='https://github.com/docopt/docopt/raw/master/docopt.py',
-            dst='lib/docopt.py'
+            src='%s/raw/master/lib/docopt/docopt.py' % AUTOCMAKE_GITHUB_URL,
+            dst='lib/docopt/docopt.py'
         )
         print('- fetching update.py')
         fetch_url(
