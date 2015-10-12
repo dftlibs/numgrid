@@ -26,6 +26,7 @@ Options:
   --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
   --cxx=<CXX>                            C++ compiler [default: g++].
   --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
+  --ccache=<USE_CCACHE>                  Toggle use of ccache <ON/OFF> [default: ON].
   --add-definitions=<STRING>             Add preprocesor definitions [default: ''].
   --coverage                             Enable code coverage [default: False].
   --type=<TYPE>                          Set the CMake build type (debug, release, or relwithdeb) [default: release].
@@ -43,14 +44,15 @@ def gen_cmake_command(options, arguments):
     Generate CMake command based on options and arguments.
     """
     command = []
-    command.append('FC=%s' % arguments['--fc'])
-    command.append('CC=%s' % arguments['--cc'])
-    command.append('CXX=%s' % arguments['--cxx'])
+    command.append('FC="{0}"'.format(arguments['--fc']))
+    command.append('CC="{0}"'.format(arguments['--cc']))
+    command.append('CXX="{0}"'.format(arguments['--cxx']))
     command.append('%s' % arguments['--cmake-executable'])
-    command.append('-DEXTRA_FCFLAGS="%s"' % arguments['--extra-fc-flags'])
-    command.append('-DENABLE_FC_SUPPORT="%s"' % arguments['--fc-support'])
-    command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])
-    command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
+    command.append('-DEXTRA_FCFLAGS="{0}"'.format(arguments['--extra-fc-flags']))
+    command.append('-DENABLE_FC_SUPPORT="{0}"'.format(arguments['--fc-support']))
+    command.append('-DEXTRA_CFLAGS="{0}"'.format(arguments['--extra-cc-flags']))
+    command.append('-DEXTRA_CXXFLAGS="{0}"'.format(arguments['--extra-cxx-flags']))
+    command.append('-DUSE_CCACHE="{0}"'.format(arguments['--ccache']))
     command.append('-DPREPROCESSOR_DEFINITIONS="%s"' % arguments['--add-definitions'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
     command.append('-DGOOGLETEST_ROOT=external/googletest')
