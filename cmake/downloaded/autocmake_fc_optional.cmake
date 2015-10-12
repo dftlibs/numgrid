@@ -31,9 +31,9 @@
 #   docopt: --fc=<FC> Fortran compiler [default: gfortran].
 #           --extra-fc-flags=<EXTRA_FCFLAGS> Extra Fortran compiler flags [default: ''].
 #           --fc-support=<FC_SUPPORT> Toggle Fortran language support (ON/OFF) [default: ON].
-#   export: 'FC=%s' % arguments['--fc']
-#   define: '-DEXTRA_FCFLAGS="%s"' % arguments['--extra-fc-flags']
-#           '-DENABLE_FC_SUPPORT="%s"' % arguments['--fc-support']
+#   export: 'FC="{0}"'.format(arguments['--fc'])
+#   define: '-DEXTRA_FCFLAGS="{0}"'.format(arguments['--extra-fc-flags'])
+#           '-DENABLE_FC_SUPPORT="{0}"'.format(arguments['--fc-support'])
 
 option(ENABLE_FC_SUPPORT "Enable Fortran language support" ON)
 
