@@ -39,7 +39,7 @@ OSI-approved BSD 3-clause License.
 ```
 git clone --recursive https://github.com/bast/numgrid.git
 cd numgrid
-python setup.py --fc=gfortran --cc=gcc --cxx=g++
+./setup --fc=gfortran --cc=gcc --cxx=g++
 cd build
 make
 make test

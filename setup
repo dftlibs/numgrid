@@ -6,17 +6,17 @@
 import os
 import sys
 
-sys.path.append('cmake/lib/docopt')
-
-sys.path.append('cmake/lib')
-from config import configure
+sys.path.insert(0, 'cmake')
+sys.path.insert(0, 'cmake/lib')
+sys.path.insert(0, 'cmake/lib/docopt')
+import config
 import docopt
 
 
 options = """
 Usage:
-  ./setup.py [options] [<builddir>]
-  ./setup.py (-h | --help)
+  ./setup [options] [<builddir>]
+  ./setup (-h | --help)
 
 Options:
   --fc=<FC>                              Fortran compiler [default: gfortran].
@@ -43,14 +43,14 @@ def gen_cmake_command(options, arguments):
     Generate CMake command based on options and arguments.
     """
     command = []
-    command.append('FC=%s' % arguments['--fc'])
-    command.append('CC=%s' % arguments['--cc'])
-    command.append('CXX=%s' % arguments['--cxx'])
+    command.append('FC={0}'.format(arguments['--fc']))
+    command.append('CC={0}'.format(arguments['--cc']))
+    command.append('CXX={0}'.format(arguments['--cxx']))
     command.append('%s' % arguments['--cmake-executable'])
-    command.append('-DEXTRA_FCFLAGS="%s"' % arguments['--extra-fc-flags'])
-    command.append('-DENABLE_FC_SUPPORT="%s"' % arguments['--fc-support'])
-    command.append('-DEXTRA_CFLAGS="%s"' % arguments['--extra-cc-flags'])
-    command.append('-DEXTRA_CXXFLAGS="%s"' % arguments['--extra-cxx-flags'])
+    command.append('-DEXTRA_FCFLAGS="{0}"'.format(arguments['--extra-fc-flags']))
+    command.append('-DENABLE_FC_SUPPORT="{0}"'.format(arguments['--fc-support']))
+    command.append('-DEXTRA_CFLAGS="{0}"'.format(arguments['--extra-cc-flags']))
+    command.append('-DEXTRA_CXXFLAGS="{0}"'.format(arguments['--extra-cxx-flags']))
     command.append('-DPREPROCESSOR_DEFINITIONS="%s"' % arguments['--add-definitions'])
     command.append('-DENABLE_CODE_COVERAGE=%s' % arguments['--coverage'])
     command.append('-DGOOGLETEST_ROOT=external/googletest')
@@ -62,6 +62,7 @@ def gen_cmake_command(options, arguments):
     return ' '.join(command)
 
 
+# parse command line args
 try:
     arguments = docopt.docopt(options, argv=None)
 except docopt.DocoptExit:
@@ -69,7 +70,22 @@ except docopt.DocoptExit:
     sys.stderr.write(options)
     sys.exit(-1)
 
+
+# use extensions to validate/post-process args
+if config.module_exists('extensions'):
+    import extensions
+    arguments = extensions.postprocess_args(sys.argv, arguments)
+
+
 root_directory = os.path.dirname(os.path.realpath(__file__))
+
+
 build_path = arguments['<builddir>']
+
+
+# create cmake command
 cmake_command = '%s %s' % (gen_cmake_command(options, arguments), root_directory)
-configure(root_directory, build_path, cmake_command, arguments['--show'])
+
+
+# run cmake
+config.configure(root_directory, build_path, cmake_command, arguments['--show'])

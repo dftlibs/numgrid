@@ -30,8 +30,8 @@ before_script:
     then pip install --upgrade ${PYTHON_PACKAGES} --user `whoami`;
     else sudo pip install --upgrade ${PYTHON_PACKAGES}; fi
 script:
-  - if test ${TRAVIS_OS_NAME} = linux; then python setup.py --cc=gcc --cxx=g++ --fc=gfortran-4.9 --coverage --type=debug;
-                                       else python setup.py --cc=gcc --cxx=g++ --fc=gfortran --coverage --type=debug; fi
+  - if test ${TRAVIS_OS_NAME} = linux; then ./setup --cc=gcc --cxx=g++ --fc=gfortran-4.9 --coverage --type=debug;
+                                       else ./setup --cc=gcc --cxx=g++ --fc=gfortran --coverage --type=debug; fi
   - cd build
   - make
   - make test
