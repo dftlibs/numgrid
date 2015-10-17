@@ -4,7 +4,7 @@ import os
 import sys
 import datetime
 import ast
-from collections import OrderedDict, namedtuple
+import collections
 
 # we do not use the nicer sys.version_info.major
 # for compatibility with Python < 2.7
@@ -277,7 +277,9 @@ def fetch_modules(config, relative_path):
     n = len(l)
 
     modules = []
-    Module = namedtuple('Module', 'path name')
+    Module = collections.namedtuple('Module', 'path name')
+
+    warnings = []
 
     if n > 0:  # otherwise division by zero in print_progress_bar
         i = 0
@@ -310,12 +312,14 @@ def fetch_modules(config, relative_path):
 
                     # we infer config from the module documentation
                     with open(file_name, 'r') as f:
-                        config_docopt, config_define, config_export, config_fetch = parse_cmake_module(f.read(), defaults)
-                        config = prepend_or_set(config, section, 'docopt', config_docopt, defaults)
-                        config = prepend_or_set(config, section, 'define', config_define, defaults)
-                        config = prepend_or_set(config, section, 'export', config_export, defaults)
-                        if config_fetch:
-                            for src in config_fetch.split('\n'):
+                        parsed_config = parse_cmake_module(f.read(), defaults)
+                        if parsed_config['warning']:
+                            warnings.append('WARNING from {0}: {1}'.format(module_name, parsed_config['warning']))
+                        config = prepend_or_set(config, section, 'docopt', parsed_config['docopt'], defaults)
+                        config = prepend_or_set(config, section, 'define', parsed_config['define'], defaults)
+                        config = prepend_or_set(config, section, 'export', parsed_config['export'], defaults)
+                        if parsed_config['fetch']:
+                            for src in parsed_config['fetch'].split('\n'):
                                 dst = os.path.join(fetch_dst_directory, os.path.basename(src))
                                 fetch_url(src, dst)
 
@@ -334,6 +338,9 @@ def fetch_modules(config, relative_path):
                     dst = os.path.join(download_directory, os.path.basename(src))
                     fetch_url(src, dst)
         print('')
+
+    if warnings != []:
+        print('- %s' % '\n- '.join(warnings))
 
     return modules
 
@@ -398,7 +405,7 @@ def main(argv):
 
     # read config file
     print('- parsing autocmake.cfg')
-    config = ConfigParser(dict_type=OrderedDict)
+    config = ConfigParser(dict_type=collections.OrderedDict)
     config.read('autocmake.cfg')
 
     if not config.has_option('project', 'name'):
@@ -406,6 +413,9 @@ def main(argv):
         sys.stderr.write("       in autocmake.cfg under [project]\n")
         sys.exit(-1)
     project_name = config.get('project', 'name')
+    if ' ' in project_name.rstrip():
+        sys.stderr.write("ERROR: project name contains a space\n")
+        sys.exit(-1)
 
     if not config.has_option('project', 'min_cmake_version'):
         sys.stderr.write("ERROR: you have to specify the min_cmake_version for CMake\n")
@@ -453,13 +463,10 @@ def make_executable(path):
 
 def parse_cmake_module(s_in, defaults={}):
 
-    config_docopt = None
-    config_define = None
-    config_export = None
-    config_fetch = None
+    parsed_config = collections.defaultdict(lambda: None)
 
     if 'autocmake.cfg configuration::' not in s_in:
-        return config_docopt, config_define, config_export, config_fetch
+        return parsed_config
 
     s_out = []
     is_rst_line = False
@@ -482,20 +489,15 @@ def parse_cmake_module(s_in, defaults={}):
     autocmake_entry = '[foo]\n' + autocmake_entry
 
     buf = StringIO(autocmake_entry)
-    config = ConfigParser(dict_type=OrderedDict)
+    config = ConfigParser(dict_type=collections.OrderedDict)
     config.readfp(buf)
 
     for section in config.sections():
-        if config.has_option(section, 'docopt'):
-            config_docopt = config.get(section, 'docopt', 0, defaults)
-        if config.has_option(section, 'define'):
-            config_define = config.get(section, 'define', 0, defaults)
-        if config.has_option(section, 'export'):
-            config_export = config.get(section, 'export', 0, defaults)
-        if config.has_option(section, 'fetch'):
-            config_fetch = config.get(section, 'fetch', 0, defaults)
+        for s in ['docopt', 'define', 'export', 'fetch', 'warning']:
+            if config.has_option(section, s):
+                parsed_config[s] = config.get(section, s, 0, defaults)
 
-    return config_docopt, config_define, config_export, config_fetch
+    return parsed_config
 
 # ------------------------------------------------------------------------------
 
@@ -519,9 +521,8 @@ if(NOT DEFINED CMAKE_C_COMPILER_ID)
     message(FATAL_ERROR "CMAKE_C_COMPILER_ID variable is not defined!")
 endif()'''
 
-    config_docopt, config_define, config_export, config_fetch = parse_cmake_module(s)
-
-    assert config_docopt == "--cxx=<CXX> C++ compiler [default: g++].\n--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
+    parsed_config = parse_cmake_module(s)
+    assert parsed_config['docopt'] == "--cxx=<CXX> C++ compiler [default: g++].\n--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
 
     s = '''#.rst:
 #
@@ -535,9 +536,8 @@ if(NOT DEFINED CMAKE_C_COMPILER_ID)
     message(FATAL_ERROR "CMAKE_C_COMPILER_ID variable is not defined!")
 endif()'''
 
-    config_docopt, config_define, config_export, config_fetch = parse_cmake_module(s)
-
-    assert config_docopt is None
+    parsed_config = parse_cmake_module(s)
+    assert parsed_config['docopt'] is None
 
 # ------------------------------------------------------------------------------
 
