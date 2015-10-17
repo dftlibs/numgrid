@@ -1,42 +1,233 @@
-sudo: false
 language: cpp
+sudo: false
+
+cache:
+  ccache: true
+  directories:
+    - $HOME/.ccache
+
 env:
   global:
+    - USE_CCACHE=1
+    - CCACHE_COMPRESS=1
+    - CCACHE_MAXSIZE=200M
+    - CCACHE_CPP2=1
     - PYTHON_PACKAGES="pip setuptools pytest cffi pep8 cpp-coveralls"
-os:
-  - linux
-  - osx
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
-      - g++-4.9
-      - gfortran-4.9
-      - valgrind
-      - cmake
-      - libblas-dev
-      - libblas3gf
-before_install:
-  - if test ${TRAVIS_OS_NAME} = osx; then brew update; fi
-  - if test ${TRAVIS_OS_NAME} = osx; then brew outdated xctool || brew upgrade xctool; fi
-  - if test ${TRAVIS_OS_NAME} = osx; then brew unlink gcc; fi
-  - if test ${TRAVIS_OS_NAME} = osx; then brew install python valgrind gcc; fi
-  - if test ${TRAVIS_OS_NAME} = osx; then brew linkapps python; fi
+
+matrix:
+  include:
+
+    # 1/ Linux Clang Builds
+    - os: linux
+      compiler: clang
+      addons: &clang35
+        apt:
+          sources: ['llvm-toolchain-precise-3.5', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.5', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+      env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: clang
+      addons: *clang35
+      env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: clang
+      addons: &clang36
+        apt:
+          sources: ['llvm-toolchain-precise-3.6', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.6', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+      env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: clang
+      addons: *clang36
+      env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: clang
+      addons: &clang37
+        apt:
+          sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.7', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+      env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: clang
+      addons: *clang37
+      env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: clang
+      addons: &clang38
+        apt:
+          sources: ['llvm-toolchain-precise', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.8', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: clang
+      addons: *clang38
+      env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+
+    # 2/ Linux GCC Builds
+    - os: linux
+      compiler: gcc
+      addons: &gcc46
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.6', 'gcc-4.6', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.6']
+      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: gcc
+      addons: *gcc46
+      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='debug' COVERAGE=true
+
+    - os: linux
+      compiler: gcc
+      addons: &gcc47
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.7', 'gcc-4.7', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.7']
+      env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: gcc
+      addons: *gcc47
+      env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: gcc
+      addons: &gcc48
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8', 'gcc-4.8', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.8']
+      env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: gcc
+      addons: *gcc48
+      env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: gcc
+      addons: &gcc49
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'gcc-4.9', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.9']
+      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: gcc
+      addons: *gcc49
+      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug'
+
+
+    - os: linux
+      compiler: gcc
+      addons: &gcc5
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'gcc-5', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-5']
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='release'
+
+    - os: linux
+      compiler: gcc
+      addons: *gcc5
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='debug'
+
+
+    # 3/ OSX Clang Builds
+    - os: osx
+      osx_image: xcode6.4
+      compiler: clang
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+    - os: osx
+      osx_image: xcode6.4
+      compiler: clang
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+
+    # 4/ OSX GCC5 Builds
+    - os: osx
+      osx_image: xcode6.4
+      compiler: gcc
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+    - os: osx
+      osx_image: xcode6.4
+      compiler: gcc
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+
+    - os: osx
+      osx_image: xcode7
+      compiler: gcc
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+
+    - os: osx
+      osx_image: xcode7
+      compiler: gcc
+      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+
+install:
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+      pip install --upgrade ${PYTHON_PACKAGES} --user `whoami`
+    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew install cmake boost python gcc valgrind
+      pip install --upgrade ${PYTHON_PACKAGES}
+    fi
+
 before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - export CXX=${CXX_COMPILER}
+  - export CC=${C_COMPILER}
+  - export FC=${Fortran_COMPILER}
   - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-  - if test ${TRAVIS_OS_NAME} = linux;
-    then pip install --upgrade ${PYTHON_PACKAGES} --user `whoami`;
-    else sudo pip install --upgrade ${PYTHON_PACKAGES}; fi
-script:
-  - if test ${TRAVIS_OS_NAME} = linux; then ./setup --cc=gcc --cxx=g++ --fc=gfortran-4.9 --coverage --type=debug;
-                                       else ./setup --cc=gcc --cxx=g++ --fc=gfortran --coverage --type=debug; fi
+  - git submodule init
+  - git submodule update --init --recursive
+  - |
+    if [[ "${COVERAGE}" = true ]]; then
+      ./setup.py --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake' --coverage
+    else
+      ./setup.py --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake'
+    fi
   - cd build
-  - make
-  - make test
+
+script:
+  - make -j 2
+  - ctest -V -j 2
   - cd ..
   - pep8 --ignore=E501 test/test.py
   - py.test -vv test/test.py build
+
 after_success:
-  - coveralls -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" -E ".*src/lebedev/.*.cpp.*"
+  - |
+    if [[ "${COVERAGE}" = true ]]; then
+      coveralls -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" -E ".*src/lebedev/.*.cpp.*" || echo 'coveralls upload failed.'
+    fi
