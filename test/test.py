@@ -3,7 +3,6 @@ Unit tests.
 """
 import sys
 import os
-import subprocess
 import pytest
 
 BUILD_DIR = sys.argv[-1]
@@ -132,22 +131,3 @@ def test_h2o_grid(context):
         if abs(reference_grid[i]) > 1.0e-20:
             error /= reference_grid[i]
         assert abs(error) < 1.0e-6
-
-# ------------------------------------------------------------------------------
-
-
-def test_leaks():
-    """
-    Test memory leaks.
-    """
-    res = subprocess.Popen(
-        [
-            'valgrind',
-            os.path.join(BUILD_DIR, 'bin', 'cpp_test')
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE).communicate()[1]
-    if 'All heap blocks were freed -- no leaks are possible' not in res:
-        assert 'definitely lost: 0 bytes in 0 blocks' in res
-        assert 'indirectly lost: 0 bytes in 0 blocks' in res
-        assert 'possibly lost: 0 bytes in 0 blocks' in res

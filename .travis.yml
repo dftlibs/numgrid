@@ -23,7 +23,7 @@ matrix:
       addons: &clang35
         apt:
           sources: ['llvm-toolchain-precise-3.5', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.5', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+          packages: ['clang-3.5', 'libblas-dev', 'libblas3gf', 'gfortran']
       env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -37,7 +37,7 @@ matrix:
       addons: &clang36
         apt:
           sources: ['llvm-toolchain-precise-3.6', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.6', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+          packages: ['clang-3.6', 'libblas-dev', 'libblas3gf', 'gfortran']
       env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -51,7 +51,7 @@ matrix:
       addons: &clang37
         apt:
           sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.7', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+          packages: ['clang-3.7', 'libblas-dev', 'libblas3gf', 'gfortran']
       env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -65,7 +65,7 @@ matrix:
       addons: &clang38
         apt:
           sources: ['llvm-toolchain-precise', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran']
+          packages: ['clang-3.8', 'libblas-dev', 'libblas3gf', 'gfortran']
       env: CXX_COMPILER='clang++-3.8' C_COMPILER='clang-3.8' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -86,14 +86,14 @@ matrix:
     - os: linux
       compiler: gcc
       addons: *gcc46
-      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='debug' COVERAGE=true
+      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='debug' COVERAGE=true VALGRIND=true
 
     - os: linux
       compiler: gcc
       addons: &gcc47
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.7', 'gcc-4.7', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.7']
+          packages: ['g++-4.7', 'gcc-4.7', 'libblas-dev', 'libblas3gf', 'gfortran-4.7']
       env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='release'
 
     - os: linux
@@ -107,7 +107,7 @@ matrix:
       addons: &gcc48
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.8', 'gcc-4.8', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.8']
+          packages: ['g++-4.8', 'gcc-4.8', 'libblas-dev', 'libblas3gf', 'gfortran-4.8']
       env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='release'
 
     - os: linux
@@ -121,7 +121,7 @@ matrix:
       addons: &gcc49
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'gcc-4.9', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.9']
+          packages: ['g++-4.9', 'gcc-4.9', 'libblas-dev', 'libblas3gf', 'gfortran-4.9']
       env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='release'
 
     - os: linux
@@ -135,7 +135,7 @@ matrix:
       addons: &gcc5
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'gcc-5', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-5']
+          packages: ['g++-5', 'gcc-5', 'libblas-dev', 'libblas3gf', 'gfortran-5']
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='release'
 
     - os: linux
@@ -199,7 +199,7 @@ install:
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
       pip install --upgrade ${PYTHON_PACKAGES} --user `whoami`
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake boost python gcc valgrind
+      brew install cmake boost python gcc
       pip install --upgrade ${PYTHON_PACKAGES}
     fi
 
@@ -224,7 +224,12 @@ script:
   - ctest -V -j 2
   - cd ..
   - pep8 --ignore=E501 test/test.py
+  - pep8 --ignore=E501 test/valgrind.py
   - py.test -vv test/test.py build
+  - |
+    if [[ "${VALGRIND}" = true ]]; then
+      py.test -vv test/valgrind.py build
+    fi
 
 after_success:
   - |
