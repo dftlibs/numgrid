@@ -213,9 +213,9 @@ before_script:
   - git submodule update --init --recursive
   - |
     if [[ "${COVERAGE}" = true ]]; then
-      ./setup.py --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake' --coverage
+      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake' --coverage
     else
-      ./setup.py --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake'
+      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake'
     fi
   - cd build
 
