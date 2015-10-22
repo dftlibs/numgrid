@@ -16,6 +16,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # directories which hold included cmake modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/compilers)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/custom)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/downloaded)
 
@@ -25,7 +26,7 @@ include(autocmake_cc)
 include(autocmake_cxx)
 include(autocmake_GNU.CXX)
 include(autocmake_Intel.CXX)
-include(autocmake_Clang.CXX)
+include(Clang.CXX)
 include(autocmake_ccache)
 include(rpath)
 include(autocmake_definitions)
