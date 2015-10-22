@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/bast/numgrid.svg?branch=master)](https://travis-ci.org/bast/numgrid/builds)
-[![Coverage Status](https://coveralls.io/repos/bast/numgrid/badge.png?branch=master)](https://coveralls.io/r/bast/numgrid?branch=master)
+[![Build Status](https://travis-ci.org/dftlibs/numgrid.svg?branch=master)](https://travis-ci.org/dftlibs/numgrid/builds)
+[![Coverage Status](https://coveralls.io/repos/dftlibs/numgrid/badge.png?branch=master)](https://coveralls.io/r/dftlibs/numgrid?branch=master)
 
-![alt text](https://github.com/bast/numgrid/raw/master/img/truegrid.jpg "numgrid")
+![alt text](https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
-- [Build and test history](https://travis-ci.org/bast/numgrid/builds)
-- [Code coverage](https://coveralls.io/r/bast/numgrid)
+- [Build and test history](https://travis-ci.org/dftlibs/numgrid/builds)
+- [Code coverage](https://coveralls.io/r/dftlibs/numgrid)
 - Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
 - Built with [Autocmake](https://github.com/scisoft/autocmake)
 
@@ -37,7 +37,7 @@ OSI-approved BSD 3-clause License.
 # Building and testing
 
 ```
-git clone --recursive https://github.com/bast/numgrid.git
+git clone --recursive https://github.com/dftlibs/numgrid.git
 cd numgrid
 ./setup --fc=gfortran --cc=gcc --cxx=g++
 cd build
