@@ -8,7 +8,7 @@
 // H2O grid
 TEST(numgrid, h2o)
 {
-    double radial_precision = 1.000000e-12;
+    double radial_precision = 1.0e-12;
     int min_num_angular_points = 86;
     int max_num_angular_points = 302;
     int num_centers = 3;
@@ -139,7 +139,7 @@ TEST(numgrid, h2o)
         {
             double error = grid_pw[i++] - ref[j];
             if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
-            ASSERT_TRUE(fabs(error) < 1.0e-6);
+            ASSERT_TRUE(fabs(error) < 1.0e-5);
         }
     }
 
@@ -150,7 +150,7 @@ TEST(numgrid, h2o)
 // O grid in the presence of two H (in H2O)
 TEST(numgrid, o_in_h2o)
 {
-    double radial_precision = 1.000000e-12;
+    double radial_precision = 1.0e-12;
     int min_num_angular_points = 86;
     int max_num_angular_points = 302;
     int num_centers = 1;
@@ -251,7 +251,7 @@ TEST(numgrid, o_in_h2o)
         {
             double error = grid_pw[i++] - ref[j];
             if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
-            ASSERT_TRUE(fabs(error) < 1.0e-6);
+            ASSERT_TRUE(fabs(error) < 1.0e-5);
         }
         if (i == num_points*4) break;
     }
