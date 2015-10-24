@@ -138,7 +138,7 @@ TEST(numgrid, h2o)
         for (int j = 0; j < 4; j++)
         {
             double error = grid_pw[i++] - ref[j];
-            if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
+            if (fabs(ref[j]) > 1.0e-15) error /= ref[j];
             ASSERT_TRUE(fabs(error) < 1.0e-5);
         }
     }
@@ -250,7 +250,7 @@ TEST(numgrid, o_in_h2o)
         for (int j = 0; j < 4; j++)
         {
             double error = grid_pw[i++] - ref[j];
-            if (fabs(ref[j]) > 1.0e-20) error /= ref[j];
+            if (fabs(ref[j]) > 1.0e-15) error /= ref[j];
             ASSERT_TRUE(fabs(error) < 1.0e-5);
         }
         if (i == num_points*4) break;

@@ -170,7 +170,7 @@ program test
       read(io_unit, *) ref(1), ref(2), ref(3), ref(4)
       do j = 1, 4
          error = grid(k) - ref(j)
-         if (dabs(ref(j)) > 1.0e-20) error = error/ref(j)
+         if (dabs(ref(j)) > 1.0e-15) error = error/ref(j)
          if (dabs(error) > 1.0e-5) stop 1
          k = k + 1
       end do

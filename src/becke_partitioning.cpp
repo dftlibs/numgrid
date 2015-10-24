@@ -123,8 +123,17 @@ double get_becke_w(const double center_coordinates[],
 
                 f = f3(nu_ab);
 
-                pa[a] *= 0.5*(1.0 - f);
-                pa[b] *= 0.5*(1.0 + f);
+                if (fabs(1.0 - f) < SMALL)
+                {
+                    // if f == 1.0 we need to take care
+                    // otherwise we can get numerical problems
+                    pa[a] = 0.0;
+                }
+                else
+                {
+                    pa[a] *= 0.5*(1.0 - f);
+                    pa[b] *= 0.5*(1.0 + f);
+                }
             }
         }
     }
