@@ -3,6 +3,7 @@
 
 ![alt text](https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
+- [Authors](../master/AUTHORS.md)
 - [Build and test history](https://travis-ci.org/dftlibs/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/dftlibs/numgrid)
 - Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
