@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/dftlibs/numgrid.svg?branch=master)](https://travis-ci.org/dftlibs/numgrid/builds)
 [![Coverage Status](https://coveralls.io/repos/dftlibs/numgrid/badge.png?branch=master)](https://coveralls.io/r/dftlibs/numgrid?branch=master)
-[![License](https://img.shields.io/github/license/dftlibs/numgrid.svg)](../master/LICENSE)
+[![License](https://img.shields.io/badge/license-%20BSD--3-blue.svg)](../master/LICENSE)
 
 ![alt text](https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
