@@ -106,6 +106,8 @@ def gen_cmake_command(config):
     s.append("    command.append('-G \"%s\"' % arguments['--generator'])")
     s.append("    if arguments['--cmake-options'] != \"''\":")
     s.append("        command.append('%s' % arguments['--cmake-options'])")
+    s.append("    if arguments['--prefix']:")
+    s.append("        command.append('-DCMAKE_INSTALL_PREFIX=\"{0}\"'.format(arguments['--prefix']))")
 
     s.append("\n    return ' '.join(command)")
 
@@ -164,6 +166,7 @@ def gen_setup(config, relative_path, setup_script_name):
     options.append(['--show', 'Show CMake command and exit.'])
     options.append(['--cmake-executable=<CMAKE_EXECUTABLE>', 'Set the CMake executable [default: cmake].'])
     options.append(['--cmake-options=<STRING>', "Define options to CMake [default: '']."])
+    options.append(['--prefix=<PATH>', 'Set the install path for make install.'])
     options.append(['<builddir>', 'Build directory.'])
     options.append(['-h --help', 'Show this screen.'])
 
