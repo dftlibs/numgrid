@@ -8,9 +8,9 @@
 #
 # autocmake.cfg configuration::
 #
-#   define: '-DGOOGLETEST_ROOT=external/googletest'
+#   define: '-DGOOGLETEST_ROOT=external/googletest/googletest'
 
-set(GOOGLETEST_ROOT external/googletest CACHE STRING "Google Test source root")
+set(GOOGLETEST_ROOT external/googletest/googletest CACHE STRING "Google Test source root")
 
 message(STATUS "GOOGLETEST_ROOT set to ${GOOGLETEST_ROOT}")
 
