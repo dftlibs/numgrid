@@ -8,7 +8,7 @@
 - [Build and test history](https://travis-ci.org/dftlibs/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/dftlibs/numgrid)
 - Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPLv3)
-- Built with [Autocmake](https://github.com/scisoft/autocmake)
+- Built with [Autocmake](https://github.com/coderefinery/autocmake)
 
 
 # About
