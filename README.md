@@ -47,6 +47,7 @@ make
 make test
 ```
 
+
 # Primary test environments
 
 ## Continuous integration builds
@@ -78,12 +79,18 @@ All Travis CI builds on master use ccache to speed up execution.
   3. XCode 7.0 with Clang and GFortran 5.2
   4. XCode 7.0 with GCC 5.2
 
+
 # Parallelization
 
 The design decision was to not parallelize the library but rather parallelize
 over the generated points by the caller. This simplifies modularity and code
 reuse.  See also the section about "Distributed computation using 'outer
 centers'".
+
+
+# Units
+
+`center_coordinates` are understood to be in bohr.
 
 
 # Outer centers
