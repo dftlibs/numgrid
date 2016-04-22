@@ -19,7 +19,7 @@ double get_bragg_angstrom(const int charge)
     if (charge ==   7) return 0.65;
     if (charge ==   8) return 0.60;
     if (charge ==   9) return 0.50;
-    if (charge ==   0) return 0.45;
+    if (charge ==  10) return 0.45;
     if (charge ==  11) return 1.80;
     if (charge ==  12) return 1.50;
     if (charge ==  13) return 1.25;
