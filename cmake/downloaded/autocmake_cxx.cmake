@@ -17,12 +17,13 @@
 #
 #   CXXFLAGS
 #
-# autocmake.cfg configuration::
+# autocmake.yml configuration::
 #
-#   docopt: --cxx=<CXX> C++ compiler [default: g++].
-#           --extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: ''].
-#   export: 'CXX={0}'.format(arguments['--cxx'])
-#   define: '-DEXTRA_CXXFLAGS="{0}"'.format(arguments['--extra-cxx-flags'])
+#   docopt:
+#     - "--cxx=<CXX> C++ compiler [default: g++]."
+#     - "--extra-cxx-flags=<EXTRA_CXXFLAGS> Extra C++ compiler flags [default: '']."
+#   export: "'CXX={0}'.format(arguments['--cxx'])"
+#   define: "'-DEXTRA_CXXFLAGS=\"{0}\"'.format(arguments['--extra-cxx-flags'])"
 
 enable_language(CXX)
 

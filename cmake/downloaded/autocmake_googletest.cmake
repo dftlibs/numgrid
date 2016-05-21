@@ -6,9 +6,9 @@
 #
 #   GOOGLETEST_ROOT
 #
-# autocmake.cfg configuration::
+# autocmake.yml configuration::
 #
-#   define: '-DGOOGLETEST_ROOT=external/googletest/googletest'
+#   define: "'-DGOOGLETEST_ROOT=external/googletest/googletest'"
 
 set(GOOGLETEST_ROOT external/googletest/googletest CACHE STRING "Google Test source root")
 

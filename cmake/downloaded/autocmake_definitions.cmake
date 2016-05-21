@@ -7,10 +7,10 @@
 #
 #   PREPROCESSOR_DEFINITIONS
 #
-# autocmake.cfg configuration::
+# autocmake.yml configuration::
 #
-#   docopt: --add-definitions=<STRING> Add preprocesor definitions [default: ''].
-#   define: '-DPREPROCESSOR_DEFINITIONS="%s"' % arguments['--add-definitions']
+#   docopt: "--add-definitions=<STRING> Add preprocesor definitions [default: '']."
+#   define: "'-DPREPROCESSOR_DEFINITIONS=\"{0}\"'.format(arguments['--add-definitions'])"
 
 if(NOT "${PREPROCESSOR_DEFINITIONS}" STREQUAL "")
     add_definitions(${PREPROCESSOR_DEFINITIONS})
