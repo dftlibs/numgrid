@@ -2,3 +2,4 @@ cffi
 pytest
 pep8
 cpp-coveralls
+numpy
