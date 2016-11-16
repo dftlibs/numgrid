@@ -190,9 +190,6 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - pip install -r requirements.txt
-  - export CXX=${CXX_COMPILER}
-  - export CC=${C_COMPILER}
-  - export FC=${Fortran_COMPILER}
   - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
   - git submodule init
   - git submodule update --init --recursive
