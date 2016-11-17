@@ -20,32 +20,6 @@ matrix:
     # 1/ Linux Clang Builds
     - os: linux
       compiler: clang
-      addons: &clang35
-        apt:
-          sources: ['llvm-toolchain-precise-3.5', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.5', 'libblas-dev', 'libblas3gf', 'gfortran']
-      env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: clang
-      addons: *clang35
-      env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
-
-    - os: linux
-      compiler: clang
-      addons: &clang36
-        apt:
-          sources: ['llvm-toolchain-precise-3.6', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.6', 'libblas-dev', 'libblas3gf', 'gfortran']
-      env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: clang
-      addons: *clang36
-      env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
-
-    - os: linux
-      compiler: clang
       addons: &clang37
         apt:
           sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
@@ -58,19 +32,6 @@ matrix:
       env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
     # 2/ Linux GCC Builds
-    - os: linux
-      compiler: gcc
-      addons: &gcc46
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.6', 'gcc-4.6', 'valgrind', 'libblas-dev', 'libblas3gf', 'gfortran-4.6']
-      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: gcc
-      addons: *gcc46
-      env: CXX_COMPILER='g++-4.6' C_COMPILER='gcc-4.6' Fortran_COMPILER='gfortran-4.6' BUILD_TYPE='debug' COVERAGE=true VALGRIND=true
-
     - os: linux
       compiler: gcc
       addons: &gcc47
