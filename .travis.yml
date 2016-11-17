@@ -123,49 +123,47 @@ matrix:
       addons: *gcc5
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='debug'
 
-    # 3/ OSX Clang Builds
-    - os: osx
-      osx_image: xcode6.4
-      compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+#   # 3/ OSX Clang Builds
+#   - os: osx
+#     osx_image: xcode6.4
+#     compiler: clang
+#     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-    - os: osx
-      osx_image: xcode6.4
-      compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+#   - os: osx
+#     osx_image: xcode6.4
+#     compiler: clang
+#     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
+#   - os: osx
+#     osx_image: xcode7
+#     compiler: clang
+#     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+#   - os: osx
+#     osx_image: xcode7
+#     compiler: clang
+#     env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+#   # 4/ OSX GCC5 Builds
+#   - os: osx
+#     osx_image: xcode6.4
+#     compiler: gcc
+#     env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-    # 4/ OSX GCC5 Builds
-    - os: osx
-      osx_image: xcode6.4
-      compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+#   - os: osx
+#     osx_image: xcode6.4
+#     compiler: gcc
+#     env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
-    - os: osx
-      osx_image: xcode6.4
-      compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+#   - os: osx
+#     osx_image: xcode7
+#     compiler: gcc
+#     env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-
-    - os: osx
-      osx_image: xcode7
-      compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
-
-    - os: osx
-      osx_image: xcode7
-      compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+#   - os: osx
+#     osx_image: xcode7
+#     compiler: gcc
+#     env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
