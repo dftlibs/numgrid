@@ -153,6 +153,9 @@ install:
       CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
       mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+      cd ${TRAVIS_BUILD_DIR}
+      virtualenv venv
+      source venv/bin/activate
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew install cmake boost python gcc
     fi
