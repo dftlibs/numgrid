@@ -3,19 +3,19 @@
 
 #ifndef NUMGRID_API
 #  ifdef _WIN32
-#     if defined(NUMGRID_BUILD_SHARED) /* build dll */
-#         define NUMGRID_API __declspec(dllexport)
-#     elif !defined(NUMGRID_BUILD_STATIC) /* use dll */
-#         define NUMGRID_API __declspec(dllimport)
-#     else /* static library */
-#         define NUMGRID_API
-#     endif
+#    if defined(NUMGRID_BUILD_SHARED) /* build dll */
+#      define NUMGRID_API __declspec(dllexport)
+#    elif !defined(NUMGRID_BUILD_STATIC) /* use dll */
+#      define NUMGRID_API __declspec(dllimport)
+#    else /* static library */
+#      define NUMGRID_API
+#    endif
 #  else
-#     if __GNUC__ >= 4
-#         define NUMGRID_API __attribute__((visibility("default")))
-#     else
-#         define NUMGRID_API
-#     endif
+#    if __GNUC__ >= 4
+#      define NUMGRID_API __attribute__((visibility("default")))
+#    else
+#      define NUMGRID_API
+#    endif
 #  endif
 #endif
 
