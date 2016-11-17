@@ -23,7 +23,7 @@ matrix:
       addons: &clang37
         apt:
           sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.7', 'libblas-dev', 'libblas3gf', 'gfortran']
+          packages: ['clang-3.7', 'gfortran', 'cmake', 'python-virtualenv']
       env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -37,7 +37,7 @@ matrix:
       addons: &gcc47
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.7', 'gcc-4.7', 'libblas-dev', 'libblas3gf', 'gfortran-4.7']
+          packages: ['g++-4.7', 'gcc-4.7', 'gfortran-4.7', 'cmake', 'python-virtualenv']
       env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='release'
 
     - os: linux
@@ -50,7 +50,7 @@ matrix:
       addons: &gcc48
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.8', 'gcc-4.8', 'libblas-dev', 'libblas3gf', 'gfortran-4.8']
+          packages: ['g++-4.8', 'gcc-4.8', 'gfortran-4.8', 'cmake', 'python-virtualenv']
       env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='release'
 
     - os: linux
@@ -63,7 +63,7 @@ matrix:
       addons: &gcc49
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'gcc-4.9', 'libblas-dev', 'libblas3gf', 'gfortran-4.9']
+          packages: ['g++-4.9', 'gcc-4.9', 'gfortran-4.9', 'cmake', 'python-virtualenv']
       env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='release'
 
     - os: linux
@@ -76,7 +76,7 @@ matrix:
       addons: &gcc5
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'gcc-5', 'libblas-dev', 'libblas3gf', 'gfortran-5']
+          packages: ['g++-5', 'gcc-5', 'gfortran-5', 'cmake', 'python-virtualenv']
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='release'
 
     - os: linux
@@ -111,9 +111,6 @@ install:
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
       cd ${TRAVIS_BUILD_DIR}
       virtualenv venv
       source venv/bin/activate
