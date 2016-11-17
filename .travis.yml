@@ -34,32 +34,6 @@ matrix:
     # 2/ Linux GCC Builds
     - os: linux
       compiler: gcc
-      addons: &gcc47
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.7', 'gcc-4.7', 'gfortran-4.7', 'cmake', 'python-virtualenv']
-      env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: gcc
-      addons: *gcc47
-      env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='debug'
-
-    - os: linux
-      compiler: gcc
-      addons: &gcc48
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.8', 'gcc-4.8', 'gfortran-4.8', 'cmake', 'python-virtualenv']
-      env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: gcc
-      addons: *gcc48
-      env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='debug'
-
-    - os: linux
-      compiler: gcc
       addons: &gcc49
         apt:
           sources: ['ubuntu-toolchain-r-test']
