@@ -31,7 +31,6 @@ matrix:
       addons: *clang35
       env: CXX_COMPILER='clang++-3.5' C_COMPILER='clang-3.5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-
     - os: linux
       compiler: clang
       addons: &clang36
@@ -45,7 +44,6 @@ matrix:
       addons: *clang36
       env: CXX_COMPILER='clang++-3.6' C_COMPILER='clang-3.6' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
-
     - os: linux
       compiler: clang
       addons: &clang37
@@ -58,7 +56,6 @@ matrix:
       compiler: clang
       addons: *clang37
       env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
-
 
     # 2/ Linux GCC Builds
     - os: linux
@@ -87,7 +84,6 @@ matrix:
       addons: *gcc47
       env: CXX_COMPILER='g++-4.7' C_COMPILER='gcc-4.7' Fortran_COMPILER='gfortran-4.7' BUILD_TYPE='debug'
 
-
     - os: linux
       compiler: gcc
       addons: &gcc48
@@ -100,7 +96,6 @@ matrix:
       compiler: gcc
       addons: *gcc48
       env: CXX_COMPILER='g++-4.8' C_COMPILER='gcc-4.8' Fortran_COMPILER='gfortran-4.8' BUILD_TYPE='debug'
-
 
     - os: linux
       compiler: gcc
@@ -115,7 +110,6 @@ matrix:
       addons: *gcc49
       env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug'
 
-
     - os: linux
       compiler: gcc
       addons: &gcc5
@@ -128,7 +122,6 @@ matrix:
       compiler: gcc
       addons: *gcc5
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='debug'
-
 
     # 3/ OSX Clang Builds
     - os: osx
@@ -151,7 +144,6 @@ matrix:
       osx_image: xcode7
       compiler: clang
       env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
-
 
     # 4/ OSX GCC5 Builds
     - os: osx
@@ -191,7 +183,6 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - pip install -r requirements.txt
   - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-  - git submodule init
   - git submodule update --init --recursive
   - |
     if [[ "${COVERAGE}" = true ]]; then
