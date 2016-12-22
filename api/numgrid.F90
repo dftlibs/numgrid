@@ -73,12 +73,12 @@ contains
 
    function numgrid_get_grid(context) result(grid)
 
-      type(c_ptr), value      :: context
-      real(c_double), pointer :: grid(:)
+      type(c_ptr), value :: context
+      real(8), pointer   :: grid(:)
 
-      integer                 :: n
-      type(c_ptr)             :: c_p
-      real(c_double), pointer :: f_p(:)
+      integer          :: n
+      type(c_ptr)      :: c_p
+      real(8), pointer :: f_p(:)
 
       interface
          function c_numgrid_get_grid(context) result(grid) bind(C, name='numgrid_get_grid')
