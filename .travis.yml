@@ -73,12 +73,12 @@ matrix:
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
 
     - os: osx
       osx_image: xcode7
       compiler: gcc
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -89,7 +89,7 @@ install:
       virtualenv venv
       source venv/bin/activate
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake boost python gcc
+      brew install gcc
     fi
 
 before_script:
