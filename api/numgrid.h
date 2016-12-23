@@ -26,9 +26,13 @@ extern "C" {
 struct numgrid_context_s;
 typedef struct numgrid_context_s numgrid_context_t;
 
+/* create a new context */
 NUMGRID_API numgrid_context_t *numgrid_new();
+
+/* destroy the context and deallocates all data */
 NUMGRID_API void numgrid_free(numgrid_context_t *context);
 
+/* generate grid and hold it in memory for the lifetime of the context */
 NUMGRID_API int numgrid_generate(numgrid_context_t *context,
                                  const double radial_precision,
                                  const int    min_num_angular_points,
@@ -45,7 +49,10 @@ NUMGRID_API int numgrid_generate(numgrid_context_t *context,
                                  const int    shell_num_primitives[],
                                  const double primitive_exponents[]);
 
+/* get number of grid points */
 NUMGRID_API int numgrid_get_num_points(const numgrid_context_t *context);
+
+/* get the pointer to the memory which holds the grid */
 NUMGRID_API double *numgrid_get_grid(const numgrid_context_t *context);
 
 #ifdef __cplusplus
