@@ -13,11 +13,10 @@ add_library(
     becke_partitioning.h
     grid_radial.cpp
     grid_radial.h
-    lebedev
     parameters.h
-    lebedev/sphere_lebedev_rule.cpp
-    lebedev/sphere_lebedev_rule.h
     )
+
+add_subdirectory(lebedev)
 
 if(ENABLE_FC_SUPPORT)
     add_library(
