@@ -16,6 +16,11 @@ add_library(
     parameters.h
     )
 
+target_link_libraries(
+    numgrid
+    lebedev
+    )
+
 add_subdirectory(lebedev)
 
 if(ENABLE_FC_SUPPORT)
