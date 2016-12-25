@@ -111,10 +111,10 @@ script:
   - cd ..
   - pep8 --ignore=E501 test/test.py
   - pep8 --ignore=E501 test/valgrind.py
-  - py.test -vv test/test.py build
+  - PYTHONPATH=build py.test -vv test/test.py
   - |
     if [[ "${VALGRIND}" = true ]]; then
-      py.test -vv test/valgrind.py build
+      PYTHONPATH=build py.test -vv test/valgrind.py
     fi
 
 after_success:
