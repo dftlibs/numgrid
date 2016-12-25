@@ -93,16 +93,21 @@ def run_cmake(command, build_path, default_build_path):
     stdout_coded, stderr_coded = p.communicate()
     stdout = stdout_coded.decode('UTF-8')
     stderr = stderr_coded.decode('UTF-8')
+
+    # print cmake output to screen
+    print(stdout)
+
     if stderr:
         sys.stderr.write(stderr)
         sys.exit(1)
-    # print cmake output to screen
-    print(stdout)
+
     # write cmake output to file
     with open('cmake_output', 'w') as f:
         f.write(stdout)
+
     # change directory and return
     os.chdir(topdir)
+
     if 'Configuring incomplete' in stdout:
         # configuration was not successful
         if (build_path == default_build_path):

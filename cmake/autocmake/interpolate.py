@@ -3,7 +3,7 @@ def replace(s, d):
 
     if isinstance(s, str):
         for var in findall(r"%\(([A-Za-z0-9_]*)\)", s):
-            s = s.replace("%({})".format(var), str(d[var]))
+            s = s.replace("%({0})".format(var), str(d[var]))
     return s
 
 
