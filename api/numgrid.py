@@ -20,7 +20,7 @@ ffi.cdef(
             '-DNUMGRID_NOINCLUDE',
             os.path.join(BUILD_DIR, 'include', 'numgrid.h')
         ],
-        stdout=subprocess.PIPE).communicate()[0])
+        stdout=subprocess.PIPE).communicate()[0].decode('utf-8'))
 
 if sys.platform == "darwin":
     suffix = 'dylib'
