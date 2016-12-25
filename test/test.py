@@ -23,6 +23,7 @@ def test_h2o_grid(context):
     """
     Test H2O grid generation.
     """
+    import os
     from numgrid import lib
 
     radial_precision = 1.0e-12
