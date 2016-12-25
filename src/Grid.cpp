@@ -14,7 +14,6 @@
 #include "sphere_lebedev_rule.h"
 #include "grid_radial.h"
 #include "becke_partitioning.h"
-#include "MemAllocator.h"
 
 #include "numgrid.h"
 
@@ -39,7 +38,7 @@ void numgrid_free(numgrid_context_t *context)
 }
 Grid::~Grid()
 {
-    MemAllocator::deallocate(xyzw);
+    delete[] xyzw;
     nullify();
 }
 
@@ -153,14 +152,15 @@ int Grid::generate(const double radial_precision,
     int num_min_num_angular_points = get_closest_num_angular(min_num_angular_points);
     int num_max_num_angular_points = get_closest_num_angular(max_num_angular_points);
 
-    double *angular_x = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
-    double *angular_y = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
-    double *angular_z = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
-    double *angular_w = (double*) MemAllocator::allocate(MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID*sizeof(double));
+    double *angular_x = new double [MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID];
+    double *angular_y = new double [MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID];
+    double *angular_z = new double [MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID];
+    double *angular_w = new double [MAX_ANGULAR_ORDER*MAX_ANGULAR_GRID];
 
     int num_centers_total = num_centers + num_outer_centers;
-    double *center_coordinates_total = (double*) MemAllocator::allocate(3*num_centers_total*sizeof(double));
-    int *center_elements_total = (int*) MemAllocator::allocate(num_centers_total*sizeof(int));
+    double *center_coordinates_total = new double [3*num_centers_total];
+
+    int *center_elements_total = new int [num_centers_total];
 
     int i = 0;
     for (int icent = 0; icent < num_centers; icent++)
@@ -186,13 +186,13 @@ int Grid::generate(const double radial_precision,
         ld_by_order(lebedev_table[i], &angular_x[angular_off], &angular_y[angular_off], &angular_z[angular_off], &angular_w[angular_off]);
     }
 
-    int *num_points_on_atom = (int*) MemAllocator::allocate(num_centers*sizeof(int));
+    int *num_points_on_atom = new int [num_centers];
 
     // first round figures out dimensions
     // second round allocates and does the real work
     for (int iround = 0; iround < 2; iround++)
     {
-        double *pa_buffer = (double*) MemAllocator::allocate(num_centers_total*sizeof(double));
+        double *pa_buffer = new double [num_centers_total];
 
         for (int icent = 0; icent < num_centers; icent++)
         {
@@ -216,8 +216,8 @@ int Grid::generate(const double radial_precision,
 
             // get extreme alpha values
             double alpha_max = 0.0;
-            double *alpha_min = (double*) MemAllocator::allocate((l_max + 1)*sizeof(double));
-            bool *alpha_min_set = (bool*) MemAllocator::allocate((l_max + 1)*sizeof(bool));
+            double *alpha_min = new double [l_max + 1];
+            bool *alpha_min_set = new bool [l_max + 1];
             std::fill(&alpha_min[0],     &alpha_min[l_max + 1],     0.0);
             std::fill(&alpha_min_set[0], &alpha_min_set[l_max + 1], false);
 
@@ -259,8 +259,8 @@ int Grid::generate(const double radial_precision,
             }
             assert(r_outer > h);
 
-            MemAllocator::deallocate(alpha_min);
-            MemAllocator::deallocate(alpha_min_set);
+            delete[] alpha_min;
+            delete[] alpha_min_set;
 
             int ioff = 0;
 
@@ -326,7 +326,7 @@ int Grid::generate(const double radial_precision,
             }
         }
 
-        MemAllocator::deallocate(pa_buffer);
+        delete[] pa_buffer;
 
         if (iround == 0)
         {
@@ -336,19 +336,19 @@ int Grid::generate(const double radial_precision,
                 num_points += num_points_on_atom[icent];
             }
 
-            xyzw = (double*) MemAllocator::allocate(4*num_points*sizeof(double));
+            xyzw = new double [4*num_points];
         }
     }
 
-    MemAllocator::deallocate(num_points_on_atom);
+    delete[] num_points_on_atom;
 
-    MemAllocator::deallocate(angular_x);
-    MemAllocator::deallocate(angular_y);
-    MemAllocator::deallocate(angular_z);
-    MemAllocator::deallocate(angular_w);
+    delete[] angular_x;
+    delete[] angular_y;
+    delete[] angular_z;
+    delete[] angular_w;
 
-    MemAllocator::deallocate(center_coordinates_total);
-    MemAllocator::deallocate(center_elements_total);
+    delete[] center_coordinates_total;
+    delete[] center_elements_total;
 
     return 0;
 }

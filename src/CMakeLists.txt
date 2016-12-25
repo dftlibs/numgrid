@@ -10,7 +10,6 @@ add_library(
     becke_partitioning.cpp
     grid_radial.cpp
     Grid.cpp
-    MemAllocator.cpp
     lebedev/sphere_lebedev_rule.cpp
     )
 
