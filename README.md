@@ -33,7 +33,7 @@ Mozilla Public License Version 2.0.
 - C and C++ compiler
 - Fortran compiler (to build the optional Fortran interface)
 - [CFFI](https://cffi.readthedocs.org) (to access the optional Python interface)
-- [py.test](http://pytest.org) (to test the optional Python interface)
+- [pytest](http://pytest.org) (to test the optional Python interface)
 
 
 # Building and testing
@@ -106,15 +106,17 @@ min_num_angular_points = 86
 max_num_angular_points = 302
 
 num_centers = 3
-center_coordinates = [0.0000e+00,
-                      0.0000e+00,
-                      0.0000e+00,
-                      5.5168e-01,
-                      7.7340e-01,
-                      0.0000e+00,
-                      5.5168e-01,
-                      -7.734e-01,
-                      0.0000e+00]
+center_coordinates = [
+    0.0000e+00,
+    0.0000e+00,
+    0.0000e+00,
+    5.5168e-01,
+    7.7340e-01,
+    0.0000e+00,
+    5.5168e-01,
+    -7.734e-01,
+    0.0000e+00,
+]
 center_elements = [8, 1, 1]
 
 num_outer_centers = 0
@@ -126,11 +128,13 @@ shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
 shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
 shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
 
-primitive_exponents = [1.172e+04,
-                       1.759e+03,
-                       4.008e+02,
-                       ...  # we skip many numbers here for brevity
-                       7.270e-01]
+primitive_exponents = [
+    1.172e+04,
+    1.759e+03,
+    4.008e+02,
+    ...  # we skip many numbers here for brevity
+    7.270e-01,
+]
 
 context = lib.numgrid_new()
 
@@ -161,7 +165,7 @@ lib.numgrid_free(context)
 ## Testing the Python interface
 
 ```
-py.test test/test.py <build_dir>
+PYTHONPATH=<build_dir> py.test -vv test/test.py
 ```
 
 # Integration grid
