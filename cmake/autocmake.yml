@@ -17,8 +17,10 @@ modules:
     - 'compilers/Clang.CXX.cmake'
 - plugins:
   - source:
+    - '%(url_root)modules/python_interpreter.cmake'
     - '%(url_root)modules/ccache.cmake'
     - 'custom/rpath.cmake'
+    - 'custom/version.cmake'
     - '%(url_root)modules/definitions.cmake'
     - '%(url_root)modules/code_coverage.cmake'
     - '%(url_root)modules/safeguards.cmake'

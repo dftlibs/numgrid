@@ -1,4 +1,5 @@
 include_directories(
+    ${PROJECT_BINARY_DIR}
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/lebedev
     ${CMAKE_CURRENT_LIST_DIR}/../api
@@ -14,7 +15,10 @@ add_library(
     grid_radial.cpp
     grid_radial.h
     parameters.h
+    version.cpp
     )
+
+add_dependencies(numgrid version)
 
 target_link_libraries(
     numgrid

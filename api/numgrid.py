@@ -27,4 +27,14 @@ if sys.platform == "darwin":
 else:
     suffix = 'so'
 
-lib = ffi.dlopen(os.path.join(BUILD_DIR, 'lib', 'libnumgrid.%s' % suffix))
+_lib = ffi.dlopen(os.path.join(BUILD_DIR, 'lib', 'libnumgrid.%s' % suffix))
+
+# outward facing API
+numgrid_new = _lib.numgrid_new
+numgrid_free = _lib.numgrid_free
+numgrid_generate = _lib.numgrid_generate
+numgrid_get_num_points = _lib.numgrid_get_num_points
+numgrid_get_grid = _lib.numgrid_get_grid
+
+def numgrid_get_version():
+    return ffi.string(_lib.numgrid_get_version()).decode('utf-8')

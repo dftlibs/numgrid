@@ -6,14 +6,14 @@ def context(request):
     """
     Add context to test functions.
     """
-    from numgrid import lib
-    ctx = lib.numgrid_new()
+    from numgrid import numgrid_new, numgrid_free
+    ctx = numgrid_new()
 
     def cleanup():
         """
         Clean up the context.
         """
-        lib.numgrid_free(ctx)
+        numgrid_free(ctx)
 
     request.addfinalizer(cleanup)
     return ctx
@@ -24,7 +24,7 @@ def test_h2o_grid(context):
     Test H2O grid generation.
     """
     import os
-    from numgrid import lib
+    from numgrid import numgrid_generate, numgrid_get_num_points, numgrid_get_grid
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
@@ -93,23 +93,23 @@ def test_h2o_grid(context):
         7.270e-01,
     ]
 
-    ierr = lib.numgrid_generate(context,
-                                radial_precision,
-                                min_num_angular_points,
-                                max_num_angular_points,
-                                num_centers,
-                                center_coordinates,
-                                center_elements,
-                                num_outer_centers,
-                                outer_center_coordinates,
-                                outer_center_elements,
-                                num_shells,
-                                shell_centers,
-                                shell_l_quantum_numbers,
-                                shell_num_primitives,
-                                primitive_exponents)
+    ierr = numgrid_generate(context,
+                            radial_precision,
+                            min_num_angular_points,
+                            max_num_angular_points,
+                            num_centers,
+                            center_coordinates,
+                            center_elements,
+                            num_outer_centers,
+                            outer_center_coordinates,
+                            outer_center_elements,
+                            num_shells,
+                            shell_centers,
+                            shell_l_quantum_numbers,
+                            shell_num_primitives,
+                            primitive_exponents)
 
-    num_points = lib.numgrid_get_num_points(context)
+    num_points = numgrid_get_num_points(context)
     assert num_points == 46220
 
     here = os.path.abspath(os.path.dirname(__file__))
@@ -118,9 +118,15 @@ def test_h2o_grid(context):
         for line in f.readlines():
             for x in line.split():
                 reference_grid.append(float(x))
-    grid = lib.numgrid_get_grid(context)
+    grid = numgrid_get_grid(context)
     for i in range(num_points):
         error = grid[i] - reference_grid[i]
         if abs(reference_grid[i]) > 1.0e-20:
             error /= reference_grid[i]
         assert abs(error) < 1.0e-6
+
+
+def test_version():
+    from numgrid import numgrid_get_version
+
+    assert numgrid_get_version() == 'x.y.z'

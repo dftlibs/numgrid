@@ -26,6 +26,9 @@ extern "C" {
 struct numgrid_context_s;
 typedef struct numgrid_context_s numgrid_context_t;
 
+/* get version */
+NUMGRID_API char *numgrid_get_version();
+
 /* create a new context */
 NUMGRID_API numgrid_context_t *numgrid_new();
 

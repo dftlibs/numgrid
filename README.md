@@ -64,6 +64,13 @@ implementation
 ```
 
 
+## Obtain the API version
+
+```c
+char *numgrid_get_version();
+```
+
+
 ## Creating and destroying contexts
 
 Create a new context:
@@ -164,7 +171,7 @@ The Python interface is generated using [CFFI](https://cffi.readthedocs.org).
 As an example let us generate a grid for the water molecule:
 
 ```python
-from numgrid import lib
+import numgrid
 
 radial_precision = 1.0e-12
 min_num_angular_points = 86
@@ -201,29 +208,29 @@ primitive_exponents = [
     7.270e-01,
 ]
 
-context = lib.numgrid_new()
+context = numgrid.numgrid_new()
 
-ierr = lib.numgrid_generate(context,
-                            radial_precision,
-                            min_num_angular_points,
-                            max_num_angular_points,
-                            num_centers,
-                            center_coordinates,
-                            center_elements,
-                            num_outer_centers,
-                            outer_center_coordinates,
-                            outer_center_elements,
-                            num_shells,
-                            shell_centers,
-                            shell_l_quantum_numbers,
-                            shell_num_primitives,
-                            primitive_exponents)
+ierr = numgrid.numgrid_generate(context,
+                                radial_precision,
+                                min_num_angular_points,
+                                max_num_angular_points,
+                                num_centers,
+                                center_coordinates,
+                                center_elements,
+                                num_outer_centers,
+                                outer_center_coordinates,
+                                outer_center_elements,
+                                num_shells,
+                                shell_centers,
+                                shell_l_quantum_numbers,
+                                shell_num_primitives,
+                                primitive_exponents)
 
-num_points = lib.numgrid_get_num_points(context)
+num_points = numgrid.numgrid_get_num_points(context)
 
-grid = lib.numgrid_get_grid(context)
+grid = numgrid.numgrid_get_grid(context)
 
-lib.numgrid_free(context)
+numgrid.numgrid_free(context)
 ```
 
 
