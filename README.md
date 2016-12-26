@@ -1,13 +1,13 @@
 [![Build Status](https://travis-ci.org/dftlibs/numgrid.svg?branch=master)](https://travis-ci.org/dftlibs/numgrid/builds)
 [![Coverage Status](https://coveralls.io/repos/dftlibs/numgrid/badge.png?branch=master)](https://coveralls.io/r/dftlibs/numgrid?branch=master)
-[![License](https://img.shields.io/badge/license-%20BSD--3-blue.svg)](../master/LICENSE)
+[![License](https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg)](../master/LICENSE)
 
 ![alt text](https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
 - [Authors](../master/AUTHORS.md)
 - [Build and test history](https://travis-ci.org/dftlibs/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/dftlibs/numgrid)
-- Licensed under [BSD-3](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPL v3.0)
+- Licensed under [MPL v2.0](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPL v3.0)
 - Built with [Autocmake](https://github.com/coderefinery/autocmake)
 
 
@@ -24,7 +24,7 @@ Yes please! Please follow [this excellent
 guide](http://www.contribution-guide.org).  We do not require any formal
 copyright assignment or contributor license agreement. Any contributions
 intentionally sent upstream are presumed to be offered under terms of the
-OSI-approved BSD 3-clause License.
+Mozilla Public License Version 2.0.
 
 
 # Requirements
