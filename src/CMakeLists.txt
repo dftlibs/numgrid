@@ -26,7 +26,7 @@ add_subdirectory(lebedev)
 if(ENABLE_FC_SUPPORT)
     add_library(
         numgrid_fortran
-        ${CMAKE_CURRENT_LIST_DIR}/../api/numgrid.F90
+        ${CMAKE_CURRENT_LIST_DIR}/../api/numgrid.f90
         )
 
     target_link_libraries(

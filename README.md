@@ -54,7 +54,7 @@ We provide a context-aware C interface. In addition we also provide a Fortran
 and Python interfaces as thin layers on top of the C interface:
 
 ```
-Fortran: api/numgrid.F90
+Fortran: api/numgrid.f90
   \
    \     Python: api/numgrid.py
     \   /
