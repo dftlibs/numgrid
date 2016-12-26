@@ -80,6 +80,9 @@ void numgrid_free(numgrid_context_t *context);
 
 You can keep several contexts alive at the same time.
 
+
+## Generating the grid
+
 Generate grid and hold it in memory for the lifetime of the context (returns 0 if the call
 completed without errors):
 
@@ -100,6 +103,9 @@ int numgrid_generate(numgrid_context_t *context,
                      const int    shell_num_primitives[],
                      const double primitive_exponents[]);
 ```
+
+
+## How to query the grid
 
 Get number of grid points:
 
