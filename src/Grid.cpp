@@ -25,9 +25,9 @@
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
 
 
-numgrid_context_t *numgrid_new()
+context_t *new_context()
 {
-    return AS_TYPE(numgrid_context_t, new Grid());
+    return AS_TYPE(context_t, new Grid());
 }
 Grid::Grid()
 {
@@ -35,7 +35,7 @@ Grid::Grid()
 }
 
 
-void numgrid_free(numgrid_context_t *context)
+void free_context(context_t *context)
 {
     if (!context) return;
     delete AS_TYPE(Grid, context);
@@ -47,7 +47,7 @@ Grid::~Grid()
 }
 
 
-int numgrid_get_num_points(const numgrid_context_t *context)
+int get_num_points(const context_t *context)
 {
     return AS_CTYPE(Grid, context)->get_num_points();
 }
@@ -57,7 +57,7 @@ int Grid::get_num_points() const
 }
 
 
-double *numgrid_get_grid(const numgrid_context_t *context)
+double *get_grid(const context_t *context)
 {
     return AS_CTYPE(Grid, context)->get_grid();
 }
@@ -107,7 +107,7 @@ int Grid::get_angular_order(int n) const
 }
 
 
-int numgrid_generate(numgrid_context_t *context,
+int generate_grid(context_t *context,
                      const double radial_precision,
                      const int    min_num_angular_points,
                      const int    max_num_angular_points,

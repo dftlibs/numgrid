@@ -30,11 +30,11 @@ else:
 _lib = ffi.dlopen(os.path.join(BUILD_DIR, 'lib', 'libnumgrid.%s' % suffix))
 
 # outward facing API
-numgrid_new = _lib.numgrid_new
-numgrid_free = _lib.numgrid_free
-numgrid_generate = _lib.numgrid_generate
-numgrid_get_num_points = _lib.numgrid_get_num_points
-numgrid_get_grid = _lib.numgrid_get_grid
+new_context = _lib.new_context
+free_context = _lib.free_context
+generate_grid = _lib.generate_grid
+get_num_points = _lib.get_num_points
+get_grid = _lib.get_grid
 
-def numgrid_get_version():
-    return ffi.string(_lib.numgrid_get_version()).decode('utf-8')
+def get_version():
+    return ffi.string(_lib.get_version()).decode('utf-8')

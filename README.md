@@ -67,7 +67,7 @@ implementation
 ## Obtain the API version
 
 ```c
-char *numgrid_get_version();
+char *get_version();
 ```
 
 
@@ -76,13 +76,13 @@ char *numgrid_get_version();
 Create a new context:
 
 ```c
-numgrid_context_t *numgrid_new();
+context_t *new_context();
 ```
 
 Destroy the context and deallocates all data:
 
 ```c
-void numgrid_free(numgrid_context_t *context);
+void free_context(context_t *context);
 ```
 
 You can keep several contexts alive at the same time.
@@ -94,21 +94,21 @@ Generate grid and hold it in memory for the lifetime of the context (returns 0 i
 completed without errors):
 
 ```c
-int numgrid_generate(numgrid_context_t *context,
-                     const double radial_precision,
-                     const int    min_num_angular_points,
-                     const int    max_num_angular_points,
-                     const int    num_centers,
-                     const double center_coordinates[],
-                     const int    center_elements[],
-                     const int    num_outer_centers,
-                     const double outer_center_coordinates[],
-                     const int    outer_center_elements[],
-                     const int    num_shells,
-                     const int    shell_centers[],
-                     const int    shell_l_quantum_numbers[],
-                     const int    shell_num_primitives[],
-                     const double primitive_exponents[]);
+int generate_grid(context_t *context,
+                  const double radial_precision,
+                  const int    min_num_angular_points,
+                  const int    max_num_angular_points,
+                  const int    num_centers,
+                  const double center_coordinates[],
+                  const int    center_elements[],
+                  const int    num_outer_centers,
+                  const double outer_center_coordinates[],
+                  const int    outer_center_elements[],
+                  const int    num_shells,
+                  const int    shell_centers[],
+                  const int    shell_l_quantum_numbers[],
+                  const int    shell_num_primitives[],
+                  const double primitive_exponents[]);
 ```
 
 
@@ -117,13 +117,13 @@ int numgrid_generate(numgrid_context_t *context,
 Get number of grid points:
 
 ```c
-int numgrid_get_num_points(const numgrid_context_t *context);
+int get_num_points(const context_t *context);
 ```
 
 Get the pointer to the memory which holds the grid:
 
 ```c
-double *numgrid_get_grid(const numgrid_context_t *context);
+double *get_grid(const context_t *context);
 ```
 
 The grid is saved in a one-dimensional array with the following ordering:
@@ -208,36 +208,36 @@ primitive_exponents = [
     7.270e-01,
 ]
 
-context = numgrid.numgrid_new()
+context = numgrid.new_context()
 
-ierr = numgrid.numgrid_generate(context,
-                                radial_precision,
-                                min_num_angular_points,
-                                max_num_angular_points,
-                                num_centers,
-                                center_coordinates,
-                                center_elements,
-                                num_outer_centers,
-                                outer_center_coordinates,
-                                outer_center_elements,
-                                num_shells,
-                                shell_centers,
-                                shell_l_quantum_numbers,
-                                shell_num_primitives,
-                                primitive_exponents)
+ierr = numgrid.generate_grid(context,
+                             radial_precision,
+                             min_num_angular_points,
+                             max_num_angular_points,
+                             num_centers,
+                             center_coordinates,
+                             center_elements,
+                             num_outer_centers,
+                             outer_center_coordinates,
+                             outer_center_elements,
+                             num_shells,
+                             shell_centers,
+                             shell_l_quantum_numbers,
+                             shell_num_primitives,
+                             primitive_exponents)
 
-num_points = numgrid.numgrid_get_num_points(context)
+num_points = numgrid.get_num_points(context)
 
-grid = numgrid.numgrid_get_grid(context)
+grid = numgrid.get_grid(context)
 
-numgrid.numgrid_free(context)
+numgrid.free_context(context)
 ```
 
 
 ## Testing the Python interface
 
 ```
-PYTHONPATH=<build_dir> py.test -vv test/test.py
+PYTHONPATH=<build_dir> pytest -vv test/test.py
 ```
 
 

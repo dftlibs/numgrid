@@ -5,7 +5,7 @@
 #include "numgrid.h"
 #include "version.h"
 
-char *numgrid_get_version()
+char *get_version()
 {
     return (char*)PROGRAM_VERSION;
 }
