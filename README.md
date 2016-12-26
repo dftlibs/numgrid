@@ -39,7 +39,7 @@ Mozilla Public License Version 2.0.
 # Building and testing
 
 ```
-git clone --recursive https://github.com/dftlibs/numgrid.git
+git clone https://github.com/dftlibs/numgrid.git
 cd numgrid
 ./setup --fc=gfortran --cc=gcc --cxx=g++
 cd build
@@ -48,20 +48,91 @@ make test
 ```
 
 
-# Parallelization
+# API
 
-The design decision was to not parallelize the library but rather parallelize
-over the generated points by the caller. This simplifies modularity and code
-reuse.  See also the section about "Distributed computation using 'outer
-centers'".
+We provide a context-aware C interface. In addition we also provide a Fortran
+and Python interfaces as thin layers on top of the C interface:
+
+```
+Fortran: api/numgrid.F90
+  \
+   \     Python: api/numgrid.py
+    \   /
+  C interface: api/numgrid.h
+      |
+implementation
+```
 
 
-# Units
+## Creating and destroying contexts
 
-`center_coordinates` are understood to be in bohr.
+Create a new context:
+
+```c
+numgrid_context_t *numgrid_new();
+```
+
+Destroy the context and deallocates all data:
+
+```c
+void numgrid_free(numgrid_context_t *context);
+```
+
+You can keep several contexts alive at the same time.
+
+Generate grid and hold it in memory for the lifetime of the context (returns 0 if the call
+completed without errors):
+
+```c
+int numgrid_generate(numgrid_context_t *context,
+                     const double radial_precision,
+                     const int    min_num_angular_points,
+                     const int    max_num_angular_points,
+                     const int    num_centers,
+                     const double center_coordinates[],
+                     const int    center_elements[],
+                     const int    num_outer_centers,
+                     const double outer_center_coordinates[],
+                     const int    outer_center_elements[],
+                     const int    num_shells,
+                     const int    shell_centers[],
+                     const int    shell_l_quantum_numbers[],
+                     const int    shell_num_primitives[],
+                     const double primitive_exponents[]);
+```
+
+Get number of grid points:
+
+```c
+int numgrid_get_num_points(const numgrid_context_t *context);
+```
+
+Get the pointer to the memory which holds the grid:
+
+```c
+double *numgrid_get_grid(const numgrid_context_t *context);
+```
+
+The grid is saved in a one-dimensional array with the following ordering:
+
+```
+point 1, x coordinate
+point 1, y coordinate
+point 1, z coordinate
+point 1, weight
+point 2, x coordinate
+point 2, y coordinate
+point 2, z coordinate
+point 2, weight
+...
+point N, x coordinate
+point N, y coordinate
+point N, z coordinate
+point N, weight
+```
 
 
-# Outer centers
+## Outer centers
 
 For very large molecules the caller may not want to generate the entire grid at
 once but perhaps only generate center by center or fragment by fragment
@@ -75,24 +146,12 @@ Another use-case for 'outer centers' is to create a grid with
 varying grid quality across the system/molecule.
 
 
-# Why is the grid basis set dependent?
+## Units
 
-The basis set (more precisely the Gaussian primitives/exponents) are used to
-generate the atomic radial grid range. This means that a more diffuse basis set
-generates a more diffuse radial grid.
-
-If you need a grid but you do not have a basis set or choose not to use a
-specific one, then you can feed the library with a fantasy basis set consisting
-of just two primitives. You can then adjust the range by making the exponents
-more steep or more diffuse.
+`center_coordinates` are understood to be in bohr.
 
 
-# API
-
-Use the [source](../master/api/numgrid.h) Luke!
-
-
-# Python interface
+## Python interface
 
 The Python interface is generated using [CFFI](https://cffi.readthedocs.org).
 
@@ -168,6 +227,15 @@ lib.numgrid_free(context)
 PYTHONPATH=<build_dir> py.test -vv test/test.py
 ```
 
+
+## Parallelization
+
+The design decision was to not parallelize the library but rather parallelize
+over the generated points by the caller. This simplifies modularity and code
+reuse.  See also the section about "Distributed computation using 'outer
+centers'".
+
+
 # Integration grid
 
 The molecular integration grid is generated from atom-centered
@@ -190,7 +258,16 @@ The radial grid is generated according to Lindh, Malmqvist, and Gagliardi,
 The motivation for this choice is the nice feature of the above scheme that the
 range of the radial grid is basis set dependent. The precision can be tuned
 with one single radial precision parameter.
-The smaller the radial precision, the better.
+The smaller the radial precision, the better quality grid you obtain.
+
+The basis set (more precisely the Gaussian primitives/exponents) are used to
+generate the atomic radial grid range. This means that a more diffuse basis set
+generates a more diffuse radial grid.
+
+If you need a grid but you do not have a basis set or choose not to use a
+specific one, then you can feed the library with a fantasy basis set consisting
+of just two primitives. You can then adjust the range by making the exponents
+more steep or more diffuse.
 
 
 ## Angular grid
