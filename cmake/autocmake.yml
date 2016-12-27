@@ -8,7 +8,6 @@ modules:
 - compilers:
   - source:
     - '%(url_root)modules/fc_optional.cmake'
-    - '%(url_root)modules/cc.cmake'
     - '%(url_root)modules/cxx.cmake'
 - flags:
   - source:

@@ -21,8 +21,6 @@ Options:
   --fc=<FC>                              Fortran compiler [default: gfortran].
   --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
   --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: ON].
-  --cc=<CC>                              C compiler [default: gcc].
-  --extra-cc-flags=<EXTRA_CFLAGS>        Extra C compiler flags [default: ''].
   --cxx=<CXX>                            C++ compiler [default: g++].
   --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
   --python=<PYTHON_INTERPRETER>          The Python interpreter (development version) to use. [default: ''].
@@ -46,12 +44,10 @@ def gen_cmake_command(options, arguments):
     """
     command = []
     command.append('FC={0}'.format(arguments['--fc']))
-    command.append('CC={0}'.format(arguments['--cc']))
     command.append('CXX={0}'.format(arguments['--cxx']))
     command.append(arguments['--cmake-executable'])
     command.append('-DEXTRA_FCFLAGS="{0}"'.format(arguments['--extra-fc-flags']))
     command.append('-DENABLE_FC_SUPPORT={0}'.format(arguments['--fc-support']))
-    command.append('-DEXTRA_CFLAGS="{0}"'.format(arguments['--extra-cc-flags']))
     command.append('-DEXTRA_CXXFLAGS="{0}"'.format(arguments['--extra-cxx-flags']))
     command.append('-DPYTHON_INTERPRETER="{0}"'.format(arguments['--python']))
     command.append('-DUSE_CCACHE={0}'.format(arguments['--ccache']))

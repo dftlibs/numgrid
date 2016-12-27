@@ -129,4 +129,4 @@ def test_h2o_grid(context):
 def test_version():
     import numgrid
 
-    assert numgrid.get_version() == '0.5.0'
+    assert numgrid.get_version() == '0.5.1-alpha'
