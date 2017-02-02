@@ -27,5 +27,4 @@ modules:
     - '%(url_root)modules/default_build_paths.cmake'
     - '%(url_root)modules/src.cmake'
     - '%(url_root)modules/export_header.cmake'
-    - 'custom/api.cmake'
     - 'custom/test.cmake'

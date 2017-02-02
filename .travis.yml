@@ -111,7 +111,7 @@ script:
   - cd ..
   - pep8 --ignore=E501 test/test.py
   - pep8 --ignore=E501 test/valgrind.py
-  - PYTHONPATH=build pytest -vv test/test.py
+  - NUMGRID_BUILD_DIR=$PWD/build PYTHONPATH=$PWD/api py.test -s -vv test/test.py
   - |
     if [[ "${VALGRIND}" = true ]]; then
       PYTHONPATH=build pytest -vv test/valgrind.py
