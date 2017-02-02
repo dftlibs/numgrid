@@ -1,3 +1,6 @@
+import sys
+
+
 def write_header(version, output_file_name):
     with open(output_file_name, 'w') as f:
         f.write('''#ifndef VERSION_H_INCLUDED
@@ -10,8 +13,6 @@ const char *PROGRAM_VERSION = "{0}";
 
 
 def main():
-    import sys
-
     version_file_name = sys.argv[-2]
     output_file_name = sys.argv[-1]
 
