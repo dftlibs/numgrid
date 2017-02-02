@@ -1,8 +1,7 @@
 include_directories(
     ${PROJECT_BINARY_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}/lebedev
-    ${CMAKE_CURRENT_LIST_DIR}/../api
+    ${PROJECT_SOURCE_DIR}/src/lebedev
+    ${PROJECT_SOURCE_DIR}/api
     )
 
 add_library(
