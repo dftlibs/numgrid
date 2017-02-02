@@ -6,28 +6,28 @@ module numgrid
 
    private
 
-   public new_context
-   public free_context
-   public generate_grid
-   public get_num_points
-   public get_grid
+   public numgrid_new_context
+   public numgrid_free_context
+   public numgrid_generate_grid
+   public numgrid_get_num_points
+   public numgrid_get_grid
 
-   interface new_context
-      function new_context() result(context) bind (C)
+   interface numgrid_new_context
+      function numgrid_new_context() result(context) bind (C)
          import :: c_ptr
          type(c_ptr) :: context
       end function
    end interface
 
-   interface free_context
-      subroutine free_context(context) bind (C)
+   interface numgrid_free_context
+      subroutine numgrid_free_context(context) bind (C)
          import :: c_ptr
          type(c_ptr), value :: context
       end subroutine
    end interface
 
-   interface generate_grid
-      subroutine generate_grid(context,                  &
+   interface numgrid_generate_grid
+      subroutine numgrid_generate_grid(context,                  &
                                radial_precision,         &
                                min_num_angular_points,   &
                                max_num_angular_points,   &
@@ -61,8 +61,8 @@ module numgrid
       end subroutine
    end interface
 
-   interface get_num_points
-      function get_num_points(context) result(num_points) bind (C)
+   interface numgrid_get_num_points
+      function numgrid_get_num_points(context) result(num_points) bind (C)
          import :: c_ptr, c_int
          type(c_ptr), value :: context
          integer(c_int)     :: num_points
@@ -71,7 +71,7 @@ module numgrid
 
 contains
 
-   function get_grid(context) result(grid)
+   function numgrid_get_grid(context) result(grid)
 
       type(c_ptr), value :: context
       real(8), pointer   :: grid(:)
@@ -81,7 +81,7 @@ contains
       real(8), pointer :: f_p(:)
 
       interface
-         function c_get_grid(context) result(grid) bind(C, name='get_grid')
+         function c_numgrid_get_grid(context) result(grid) bind(C, name='numgrid_get_grid')
             import :: c_ptr
             type(c_ptr), value :: context
             type(c_ptr)        :: grid
@@ -90,9 +90,9 @@ contains
 
       ! we need to do this because c_f_pointer needs
       ! to know the length
-      n = get_num_points(context)
+      n = numgrid_get_num_points(context)
 
-      c_p = c_get_grid(context)
+      c_p = c_numgrid_get_grid(context)
       call c_f_pointer(c_p, f_p, [n*4])
       grid => f_p
 

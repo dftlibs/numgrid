@@ -5,4 +5,4 @@
 #include "version.h"
 #include "numgrid.h"
 
-char *get_version() { return (char *)PROGRAM_VERSION; }
+char *numgrid_get_version() { return (char *)PROGRAM_VERSION; }

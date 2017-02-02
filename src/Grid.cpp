@@ -23,10 +23,10 @@
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
 
-context_t *new_context() { return AS_TYPE(context_t, new Grid()); }
+context_t *numgrid_new_context() { return AS_TYPE(context_t, new Grid()); }
 Grid::Grid() { nullify(); }
 
-void free_context(context_t *context)
+void numgrid_free_context(context_t *context)
 {
     if (!context)
         return;
@@ -38,17 +38,17 @@ Grid::~Grid()
     nullify();
 }
 
-int get_num_points(const context_t *context)
+int numgrid_get_num_points(const context_t *context)
 {
-    return AS_CTYPE(Grid, context)->get_num_points();
+    return AS_CTYPE(Grid, context)->numgrid_get_num_points();
 }
-int Grid::get_num_points() const { return num_points; }
+int Grid::numgrid_get_num_points() const { return num_points; }
 
-double *get_grid(const context_t *context)
+double *numgrid_get_grid(const context_t *context)
 {
-    return AS_CTYPE(Grid, context)->get_grid();
+    return AS_CTYPE(Grid, context)->numgrid_get_grid();
 }
-double *Grid::get_grid() const { return xyzw; }
+double *Grid::numgrid_get_grid() const { return xyzw; }
 
 void Grid::nullify()
 {
@@ -88,21 +88,21 @@ int Grid::get_angular_order(int n) const
     exit(-1);
 }
 
-int generate_grid(context_t *context,
-                  const double radial_precision,
-                  const int min_num_angular_points,
-                  const int max_num_angular_points,
-                  const int num_centers,
-                  const double center_coordinates[],
-                  const int center_elements[],
-                  const int num_outer_centers,
-                  const double outer_center_coordinates[],
-                  const int outer_center_elements[],
-                  const int num_shells,
-                  const int shell_centers[],
-                  const int shell_l_quantum_numbers[],
-                  const int shell_num_primitives[],
-                  const double primitive_exponents[])
+int numgrid_generate_grid(context_t *context,
+                          const double radial_precision,
+                          const int min_num_angular_points,
+                          const int max_num_angular_points,
+                          const int num_centers,
+                          const double center_coordinates[],
+                          const int center_elements[],
+                          const int num_outer_centers,
+                          const double outer_center_coordinates[],
+                          const int outer_center_elements[],
+                          const int num_shells,
+                          const int shell_centers[],
+                          const int shell_l_quantum_numbers[],
+                          const int shell_num_primitives[],
+                          const double primitive_exponents[])
 {
     return AS_TYPE(Grid, context)
         ->generate(radial_precision,

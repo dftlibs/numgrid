@@ -140,9 +140,9 @@ program test
    primitive_exponents(36) = 1.220d-01
    primitive_exponents(37) = 7.270d-01
 
-   context = new_context()
+   context = numgrid_new_context()
 
-   call generate_grid(context,                  &
+   call numgrid_generate_grid(context,                  &
                       radial_precision,         &
                       min_num_angular_points,   &
                       max_num_angular_points,   &
@@ -158,11 +158,11 @@ program test
                       shell_num_primitives,     &
                       primitive_exponents)
 
-   num_points = get_num_points(context)
+   num_points = numgrid_get_num_points(context)
 
    if (num_points /= 46220) stop 1
 
-   grid => get_grid(context)
+   grid => numgrid_get_grid(context)
 
    open(unit=io_unit, file='../test/referece_grid.txt', access='sequential', action='read')
    k = 1
@@ -184,6 +184,6 @@ program test
    deallocate(shell_num_primitives)
    deallocate(primitive_exponents)
 
-   call free_context(context)
+   call numgrid_free_context(context)
 
 end program

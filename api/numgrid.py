@@ -44,13 +44,13 @@ _lib = _get_lib_handle(
 
 
 # outward facing API
-new_context = _lib.new_context
-free_context = _lib.free_context
-generate_grid = _lib.generate_grid
-get_num_points = _lib.get_num_points
-get_grid = _lib.get_grid
+new_context = _lib.numgrid_new_context
+free_context = _lib.numgrid_free_context
+generate_grid = _lib.numgrid_generate_grid
+get_num_points = _lib.numgrid_get_num_points
+get_grid = _lib.numgrid_get_grid
 
 
 def get_version():
     ffi = FFI()
-    return ffi.string(_lib.get_version()).decode('utf-8')
+    return ffi.string(_lib.numgrid_get_version()).decode('utf-8')

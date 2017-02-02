@@ -67,7 +67,7 @@ implementation
 ## Obtain the API version
 
 ```c
-char *get_version();
+char *numgrid_get_version();
 ```
 
 
@@ -76,13 +76,13 @@ char *get_version();
 Create a new context:
 
 ```c
-context_t *new_context();
+context_t *numgrid_new_context();
 ```
 
 Destroy the context and deallocates all data:
 
 ```c
-void free_context(context_t *context);
+void numgrid_free_context(context_t *context);
 ```
 
 You can keep several contexts alive at the same time.
@@ -94,21 +94,21 @@ Generate grid and hold it in memory for the lifetime of the context (returns 0 i
 completed without errors):
 
 ```c
-int generate_grid(context_t *context,
-                  const double radial_precision,
-                  const int    min_num_angular_points,
-                  const int    max_num_angular_points,
-                  const int    num_centers,
-                  const double center_coordinates[],
-                  const int    center_elements[],
-                  const int    num_outer_centers,
-                  const double outer_center_coordinates[],
-                  const int    outer_center_elements[],
-                  const int    num_shells,
-                  const int    shell_centers[],
-                  const int    shell_l_quantum_numbers[],
-                  const int    shell_num_primitives[],
-                  const double primitive_exponents[]);
+int numgrid_generate_grid(context_t *context,
+                          const double radial_precision,
+                          const int    min_num_angular_points,
+                          const int    max_num_angular_points,
+                          const int    num_centers,
+                          const double center_coordinates[],
+                          const int    center_elements[],
+                          const int    num_outer_centers,
+                          const double outer_center_coordinates[],
+                          const int    outer_center_elements[],
+                          const int    num_shells,
+                          const int    shell_centers[],
+                          const int    shell_l_quantum_numbers[],
+                          const int    shell_num_primitives[],
+                          const double primitive_exponents[]);
 ```
 
 
@@ -117,13 +117,13 @@ int generate_grid(context_t *context,
 Get number of grid points:
 
 ```c
-int get_num_points(const context_t *context);
+int numgrid_get_num_points(const context_t *context);
 ```
 
 Get the pointer to the memory which holds the grid:
 
 ```c
-double *get_grid(const context_t *context);
+double *numgrid_get_grid(const context_t *context);
 ```
 
 The grid is saved in a one-dimensional array with the following ordering:

@@ -26,8 +26,8 @@ class Grid
                  const int shell_num_primitives[],
                  const double primitive_exponents[]);
 
-    int get_num_points() const;
-    double *get_grid() const;
+    int numgrid_get_num_points() const;
+    double *numgrid_get_grid() const;
 
   private:
     Grid(const Grid &rhs);            // not implemented

@@ -108,9 +108,9 @@ TEST(numgrid, h2o)
     primitive_exponents[35] = 1.220e-01;
     primitive_exponents[36] = 7.270e-01;
 
-    context_t *context = new_context();
+    context_t *context = numgrid_new_context();
 
-    int ierr = generate_grid(context,
+    int ierr = numgrid_generate_grid(context,
                              radial_precision,
                              min_num_angular_points,
                              max_num_angular_points,
@@ -126,10 +126,10 @@ TEST(numgrid, h2o)
                              shell_num_primitives,
                              primitive_exponents);
 
-    int num_points = get_num_points(context);
+    int num_points = numgrid_get_num_points(context);
     ASSERT_EQ(num_points, 46220);
 
-    double *grid_pw = (double*) get_grid(context);
+    double *grid_pw = (double*) numgrid_get_grid(context);
     std::ifstream infile("../test/referece_grid.txt");
     int i = 0;
     double ref[4];
@@ -143,7 +143,7 @@ TEST(numgrid, h2o)
         }
     }
 
-    free_context(context);
+    numgrid_free_context(context);
 }
 
 
@@ -220,9 +220,9 @@ TEST(numgrid, o_in_h2o)
     primitive_exponents[23] = 2.753e-01;
     primitive_exponents[24] = 1.185e+00;
 
-    context_t *context = new_context();
+    context_t *context = numgrid_new_context();
 
-    int ierr = generate_grid(context,
+    int ierr = numgrid_generate_grid(context,
                              radial_precision,
                              min_num_angular_points,
                              max_num_angular_points,
@@ -238,10 +238,10 @@ TEST(numgrid, o_in_h2o)
                              shell_num_primitives,
                              primitive_exponents);
 
-    int num_points = get_num_points(context);
+    int num_points = numgrid_get_num_points(context);
     ASSERT_EQ(num_points, 16364);
 
-    double *grid_pw = (double*) get_grid(context);
+    double *grid_pw = (double*) numgrid_get_grid(context);
     std::ifstream infile("../test/referece_grid.txt");
     int i = 0;
     double ref[4];
@@ -256,5 +256,5 @@ TEST(numgrid, o_in_h2o)
         if (i == num_points*4) break;
     }
 
-    free_context(context);
+    numgrid_free_context(context);
 }
