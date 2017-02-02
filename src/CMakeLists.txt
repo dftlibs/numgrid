@@ -39,3 +39,5 @@ if(ENABLE_FC_SUPPORT)
 endif()
 
 install(TARGETS numgrid LIBRARY DESTINATION lib)
+install(FILES ${PROJECT_BINARY_DIR}/include/numgrid.h DESTINATION include)
+install(FILES ${PROJECT_BINARY_DIR}/include/numgrid_export.h DESTINATION include)
