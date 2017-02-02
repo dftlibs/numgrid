@@ -1,8 +1,10 @@
 #ifndef NUMGRID_H_INCLUDED
 #define NUMGRID_H_INCLUDED
 
+#ifndef NUMGRID_API
 #include "numgrid_export.h"
 #define NUMGRID_API numgrid_EXPORT
+#endif
 
 #ifdef __cplusplus
 extern "C" {
