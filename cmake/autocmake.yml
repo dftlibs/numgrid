@@ -18,6 +18,7 @@ modules:
   - source:
     - '%(url_root)modules/python_interpreter.cmake'
     - '%(url_root)modules/ccache.cmake'
+    - 'custom/include_paths.cmake'
     - 'custom/rpath.cmake'
     - 'custom/version.cmake'
     - '%(url_root)modules/definitions.cmake'
@@ -25,5 +26,6 @@ modules:
     - '%(url_root)modules/safeguards.cmake'
     - '%(url_root)modules/default_build_paths.cmake'
     - '%(url_root)modules/src.cmake'
+    - '%(url_root)modules/export_header.cmake'
     - 'custom/api.cmake'
     - 'custom/test.cmake'
