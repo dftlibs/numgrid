@@ -124,14 +124,16 @@ contains
 
    end function
 
-   function string_length(p) bind(c, name="_local")
-      character(kind=c_char), intent(in) :: p(*)
-      integer(c_int) :: string_length
-      string_length = 0
-      do
-         if (p(string_length + 1) == achar(0)) return
-         string_length = string_length + 1
-      end do
-   end function
-
 end module
+
+function string_length(p) bind(c, name="_local")
+   use, intrinsic :: iso_c_binding, only: c_int, c_char
+   implicit none
+   character(kind=c_char), intent(in) :: p(*)
+   integer(c_int) :: string_length
+   string_length = 0
+   do
+      if (p(string_length + 1) == achar(0)) return
+      string_length = string_length + 1
+   end do
+end function
