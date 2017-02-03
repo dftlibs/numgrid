@@ -1,6 +1,6 @@
 module numgrid
 
-   use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_double, c_int, c_char
+   use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_double, c_int
 
    implicit none
 
@@ -9,7 +9,6 @@ module numgrid
    public numgrid_generate_grid
    public numgrid_get_num_points
    public numgrid_get_grid
-   public numgrid_get_version
 
    private
 
@@ -72,31 +71,6 @@ module numgrid
 
 contains
 
-   function numgrid_get_version() result(version)
-      character(:), allocatable :: version
-      interface
-         function c_numgrid_get_version() bind(c, name='numgrid_get_version')
-            import :: c_ptr
-            type(c_ptr) c_numgrid_get_version
-         end function
-         function return_string_len(p) bind(c, name="_local")
-            import :: c_ptr, c_int
-            integer(c_int) return_string_len
-            type(c_ptr), value :: p
-         end function
-      end interface
-
-      type(c_ptr) :: c_p
-      integer(c_int) :: rsl
-      character(kind=c_char), pointer :: f_p(:)
-      character(100) :: tmp  ! FIXME ugly limit but now don't know how to do it better
-
-      c_p = c_numgrid_get_version()
-      call c_f_pointer(c_p, f_p, [return_string_len(c_p)])
-      write(tmp, *) f_p
-      version = adjustl(trim(tmp))
-   end function
-
    function numgrid_get_grid(context) result(grid)
 
       type(c_ptr), value :: context
@@ -125,15 +99,3 @@ contains
    end function
 
 end module
-
-function string_length(p) bind(c, name="_local")
-   use, intrinsic :: iso_c_binding, only: c_int, c_char
-   implicit none
-   character(kind=c_char), intent(in) :: p(*)
-   integer(c_int) :: string_length
-   string_length = 0
-   do
-      if (p(string_length + 1) == achar(0)) return
-      string_length = string_length + 1
-   end do
-end function
