@@ -143,20 +143,20 @@ program test
    context = numgrid_new_context()
 
    call numgrid_generate_grid(context,                  &
-                      radial_precision,         &
-                      min_num_angular_points,   &
-                      max_num_angular_points,   &
-                      num_centers,              &
-                      center_coordinates,       &
-                      center_elements,          &
-                      num_outer_centers,        &
-                      outer_center_coordinates, &
-                      outer_center_elements,    &
-                      num_shells,               &
-                      shell_centers,            &
-                      shell_l_quantum_numbers,  &
-                      shell_num_primitives,     &
-                      primitive_exponents)
+                              radial_precision,         &
+                              min_num_angular_points,   &
+                              max_num_angular_points,   &
+                              num_centers,              &
+                              center_coordinates,       &
+                              center_elements,          &
+                              num_outer_centers,        &
+                              outer_center_coordinates, &
+                              outer_center_elements,    &
+                              num_shells,               &
+                              shell_centers,            &
+                              shell_l_quantum_numbers,  &
+                              shell_num_primitives,     &
+                              primitive_exponents)
 
    num_points = numgrid_get_num_points(context)
 
