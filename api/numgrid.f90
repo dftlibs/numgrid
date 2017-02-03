@@ -94,7 +94,7 @@ contains
       c_p = c_numgrid_get_version()
       call c_f_pointer(c_p, f_p, [return_string_len(c_p)])
       write(tmp, *) f_p
-      version = trim(tmp)
+      version = adjustl(trim(tmp))
    end function
 
    function numgrid_get_grid(context) result(grid)

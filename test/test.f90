@@ -160,6 +160,8 @@ program test
 
    num_points = numgrid_get_num_points(context)
 
+   if (numgrid_get_version() /= '0.5.1-alpha') stop 1
+
    if (num_points /= 46220) stop 1
 
    grid => numgrid_get_grid(context)
