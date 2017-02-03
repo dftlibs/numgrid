@@ -124,7 +124,7 @@ contains
 
    end function
 
-   pure function string_length(p) bind(c, name="_local")
+   function string_length(p) bind(c, name="_local")
       character(kind=c_char), intent(in) :: p(*)
       integer(c_int) :: string_length
       string_length = 0
