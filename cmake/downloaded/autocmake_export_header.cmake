@@ -1,6 +1,9 @@
 #.rst:
 #
 # Generates export header for your API using best practices.
+# This module wraps https://cmake.org/cmake/help/v3.0/module/GenerateExportHeader.html and
+# it is needed because of these, Very Good Indeed, reasons: https://gcc.gnu.org/wiki/Visibility.
+# If you are not afraid of jargon, please also have a look at https://www.akkadia.org/drepper/dsohowto.pdf.
 #
 # Variables used::
 #
