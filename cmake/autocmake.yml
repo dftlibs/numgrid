@@ -2,6 +2,8 @@ name: numgrid
 
 min_cmake_version: 2.8
 
+default_build_type: release
+
 url_root: https://github.com/coderefinery/autocmake/raw/master/
 
 modules:

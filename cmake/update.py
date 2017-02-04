@@ -147,6 +147,12 @@ def process_yaml(argv):
         sys.stderr.write("ERROR: you have to specify min_cmake_version in autocmake.yml\n")
         sys.exit(-1)
 
+    if 'default_build_type' in config:
+        default_build_type = config['default_build_type'].lower()
+    else:
+        sys.stderr.write("ERROR: you have to specify default_build_type in autocmake.yml\n")
+        sys.exit(-1)
+
     if 'setup_script' in config:
         setup_script_name = config['setup_script']
     else:
@@ -173,13 +179,13 @@ def process_yaml(argv):
 
     # create CMakeLists.txt
     print('- generating CMakeLists.txt')
-    s = gen_cmakelists(project_name, min_cmake_version, relative_path, modules)
+    s = gen_cmakelists(project_name, min_cmake_version, default_build_type, relative_path, modules)
     with open(os.path.join(project_root, 'CMakeLists.txt'), 'w') as f:
         f.write('{0}\n'.format('\n'.join(s)))
 
     # create setup script
     print('- generating setup script')
-    s = gen_setup(cleaned_config, relative_path, setup_script_name)
+    s = gen_setup(cleaned_config, default_build_type, relative_path, setup_script_name)
     file_path = os.path.join(project_root, setup_script_name)
     with open(file_path, 'w') as f:
         f.write('{0}\n'.format('\n'.join(s)))

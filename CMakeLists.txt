@@ -12,7 +12,7 @@ set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 
 # if CMAKE_BUILD_TYPE undefined, we set it to Debug
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 # directories which hold included cmake modules

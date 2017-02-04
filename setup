@@ -27,7 +27,7 @@ Options:
   --ccache=<USE_CCACHE>                  Toggle use of ccache <ON/OFF> [default: ON].
   --add-definitions=<STRING>             Add preprocesor definitions [default: ''].
   --coverage                             Enable code coverage [default: False].
-  --type=<TYPE>                          Set the CMake build type (debug, release, or relwithdeb) [default: release].
+  --type=<TYPE>                          Set the CMake build type (debug, release, relwithdebinfo, minsizerel) [default: release].
   --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
   --show                                 Show CMake command and exit.
   --cmake-executable=<CMAKE_EXECUTABLE>  Set the CMake executable [default: cmake].
