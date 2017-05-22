@@ -25,18 +25,18 @@
 #   export: "'CXX={0}'.format(arguments['--cxx'])"
 #   define: "'-DEXTRA_CXXFLAGS=\"{0}\"'.format(arguments['--extra-cxx-flags'])"
 
-enable_language(CXX)
-
-if(NOT DEFINED CMAKE_C_COMPILER_ID)
-    message(FATAL_ERROR "CMAKE_C_COMPILER_ID variable is not defined!")
+if(NOT DEFINED CMAKE_CXX_COMPILER_ID)
+    message(FATAL_ERROR "CMAKE_CXX_COMPILER_ID variable is not defined!")
 endif()
 
-if(NOT CMAKE_C_COMPILER_WORKS)
-    message(FATAL_ERROR "CMAKE_C_COMPILER_WORKS is false!")
+if(NOT CMAKE_CXX_COMPILER_WORKS)
+    message(FATAL_ERROR "CMAKE_CXX_COMPILER_WORKS is false!")
 endif()
 
 if(DEFINED EXTRA_CXXFLAGS)
+  if(NOT EXTRA_CXXFLAGS STREQUAL "")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXXFLAGS}")
+  endif()
 endif()
 
 if(DEFINED ENV{CXXFLAGS})
