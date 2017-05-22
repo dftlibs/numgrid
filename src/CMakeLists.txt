@@ -1,8 +1,7 @@
 include_directories(
-    ${PROJECT_BINARY_DIR}
-    ${PROJECT_SOURCE_DIR}/src/lebedev
-    ${PROJECT_SOURCE_DIR}/api
-    )
+  ${CMAKE_CURRENT_LIST_DIR}
+  ${PROJECT_SOURCE_DIR}/api
+  )
 
 add_library(
     numgrid

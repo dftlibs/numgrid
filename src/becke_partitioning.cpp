@@ -2,10 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include <cmath>
 #include <cstdlib>
-
-#include "math.h"
-#include "stdio.h"
+#include <cstdio>
 
 #include "becke_partitioning.h"
 #include "parameters.h"
@@ -229,7 +228,7 @@ double get_becke_w(const double center_coordinates[],
         vy = center_coordinates[a * 3 + 1] - y;
         vz = center_coordinates[a * 3 + 2] - z;
         dist_a = vx * vx + vy * vy + vz * vz;
-        dist_a = sqrt(dist_a);
+        dist_a = std::sqrt(dist_a);
 
         if (a != icent && dist_a > BECKE_CUTOFF)
         {
@@ -248,7 +247,7 @@ double get_becke_w(const double center_coordinates[],
                 vy = center_coordinates[b * 3 + 1] - y;
                 vz = center_coordinates[b * 3 + 2] - z;
                 dist_b = vx * vx + vy * vy + vz * vz;
-                dist_b = sqrt(dist_b);
+                dist_b = std::sqrt(dist_b);
 
                 R_b = get_bragg_angstrom(center_charge[b]);
 
@@ -258,7 +257,7 @@ double get_becke_w(const double center_coordinates[],
                 vz = center_coordinates[b * 3 + 2] -
                      center_coordinates[a * 3 + 2];
                 dist_ab = vx * vx + vy * vy + vz * vz;
-                dist_ab = sqrt(dist_ab);
+                dist_ab = std::sqrt(dist_ab);
 
                 // JCP 88, 2547 (1988), eq. 11
                 mu_ab = (dist_a - dist_b) / dist_ab;

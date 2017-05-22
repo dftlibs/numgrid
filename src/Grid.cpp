@@ -3,22 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // must be included before fstream (stdio)
+#include "../api/numgrid.h"
 #include "Grid.h"
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
 
-#include "math.h"
-
 #include "becke_partitioning.h"
 #include "grid_radial.h"
 #include "parameters.h"
-#include "sphere_lebedev_rule.h"
-
-#include "numgrid.h"
+#include "lebedev/sphere_lebedev_rule.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
@@ -335,7 +333,7 @@ int Grid::generate(const double radial_precision,
                                                   xyzw[4 * (ioff + iang) + 2]);
                         }
                         xyzw[4 * (ioff + iang) + 3] =
-                            4.0 * PI * angular_w[angular_off + iang] *
+                            4.0 * M_PI * angular_w[angular_off + iang] *
                             radial_w * becke_w;
                     }
                 }

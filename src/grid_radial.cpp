@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "math.h"
+#include <cmath>
 
 #include "grid_radial.h"
 #include "parameters.h"
@@ -14,10 +14,10 @@ double get_r_inner(const double max_error, const double alpha_inner)
     int m = 0;
     double d = 1.9;
 
-    double r = d - log(1.0 / max_error);
+    double r = d - std::log(1.0 / max_error);
     r = r * 2.0 / (m + 3.0);
-    r = exp(r) / (alpha_inner);
-    r = sqrt(r);
+    r = std::exp(r) / (alpha_inner);
+    r = std::sqrt(r);
 
     return r;
 }
@@ -38,11 +38,11 @@ double get_r_outer(const double max_error,
 
     (f > max_error) ? (sign = 1.0) : (sign = -1.0);
 
-    while (fabs(r_old - r) > SMALL)
+    while (std::fabs(r_old - r) > SMALL)
     {
         c = tgamma((m + 3.0) / 2.0);
-        a = pow(alpha_outer * r * r, (m + 1.0) / 2.0);
-        e = exp(-alpha_outer * r * r);
+        a = std::pow(alpha_outer * r * r, (m + 1.0) / 2.0);
+        e = std::exp(-alpha_outer * r * r);
         f = c * a * e;
 
         sign_old = sign;
@@ -72,13 +72,13 @@ double get_h(const double max_error, const int l, const double guess)
 
     (f > max_error) ? (sign = -1.0) : (sign = 1.0);
 
-    while (fabs(h_old - h) > SMALL)
+    while (std::fabs(h_old - h) > SMALL)
     {
-        c0 = 4.0 * sqrt(2.0) * PI;
+        c0 = 4.0 * std::sqrt(2.0) * M_PI;
         cm = tgamma(3.0 / 2.0) / tgamma((m + 3.0) / 2.0);
         p0 = 1.0 / h;
-        e0 = exp(-PI * PI / (2.0 * h));
-        pm = pow(PI / h, m / 2.0);
+        e0 = std::exp(-M_PI * M_PI / (2.0 * h));
+        pm = std::pow(M_PI / h, m / 2.0);
         rd0 = c0 * p0 * e0;
         f = cm * pm * rd0;
 
