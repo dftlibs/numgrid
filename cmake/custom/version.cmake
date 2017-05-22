@@ -1,3 +1,6 @@
+file(READ "${PROJECT_SOURCE_DIR}/VERSION" PROGRAM_VERSION)
+string(STRIP "${PROGRAM_VERSION}" PROGRAM_VERSION)
+
 add_custom_target(
     version
     ALL

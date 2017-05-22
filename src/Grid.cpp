@@ -2,17 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// must be included before fstream (stdio)
 #include "../api/numgrid.h"
 #include "Grid.h"
 
 #include <algorithm>
-#include <cassert>
 #include <cmath>
-#include <cstddef>
-#include <cstdlib>
-#include <fstream>
 
+#include "error_handling.h"
 #include "becke_partitioning.h"
 #include "grid_radial.h"
 #include "parameters.h"
@@ -42,11 +38,11 @@ int numgrid_get_num_points(const context_t *context)
 }
 int Grid::numgrid_get_num_points() const { return num_points; }
 
-double *numgrid_get_grid(const context_t *context)
+const double * const numgrid_get_grid(const context_t *context)
 {
     return AS_CTYPE(Grid, context)->numgrid_get_grid();
 }
-double *Grid::numgrid_get_grid() const { return xyzw; }
+const double * const Grid::numgrid_get_grid() const { return xyzw; }
 
 void Grid::nullify()
 {
@@ -70,8 +66,7 @@ int Grid::get_closest_num_angular(int n) const
             return m;
     }
 
-    fprintf(stderr, "ERROR: input n too high in get_closest_num_angular\n");
-    exit(-1);
+    NUMGRID_ERROR("Input n too high in get_closest_num_angular");
 }
 
 int Grid::get_angular_order(int n) const
@@ -82,8 +77,7 @@ int Grid::get_angular_order(int n) const
             return i;
     }
 
-    fprintf(stderr, "ERROR: no match found in get_angular_offset\n");
-    exit(-1);
+    NUMGRID_ERROR("No match found in get_angular_offset");
 }
 
 int numgrid_generate_grid(context_t *context,
@@ -255,13 +249,13 @@ int Grid::generate(const double radial_precision,
                             alpha_min[l],
                             l,
                             4.0 * get_bragg_angstrom(center_elements[icent])));
-                    assert(r_outer > r_inner);
+                    NUMGRID_ASSERT(r_outer > r_inner);
                     h = std::min(
                         h,
                         get_h(radial_precision, l, 0.1 * (r_outer - r_inner)));
                 }
             }
-            assert(r_outer > h);
+            NUMGRID_ASSERT(r_outer > h);
 
             delete[] alpha_min;
             delete[] alpha_min_set;

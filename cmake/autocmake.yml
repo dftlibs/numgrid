@@ -20,9 +20,11 @@ modules:
   - source:
     - '%(url_root)modules/python_interpreter.cmake'
     - '%(url_root)modules/ccache.cmake'
+    - 'custom/GNUdirs.cmake'
     - 'custom/include_paths.cmake'
     - 'custom/rpath.cmake'
     - 'custom/version.cmake'
+    - 'custom/export.cmake'
     - '%(url_root)modules/definitions.cmake'
     - '%(url_root)modules/code_coverage.cmake'
     - '%(url_root)modules/safeguards.cmake'

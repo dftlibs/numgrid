@@ -49,7 +49,7 @@ int numgrid_get_num_points(const context_t *context);
 
 /* get the pointer to the memory which holds the grid */
 NUMGRID_API
-double *numgrid_get_grid(const context_t *context);
+const double * const numgrid_get_grid(const context_t *context);
 
 #ifdef __cplusplus
 }

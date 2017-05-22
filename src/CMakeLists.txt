@@ -12,7 +12,6 @@ add_library(
     becke_partitioning.h
     grid_radial.cpp
     grid_radial.h
-    parameters.h
     version.cpp
     )
 
@@ -37,6 +36,10 @@ if(ENABLE_FC_SUPPORT)
         )
 endif()
 
-install(TARGETS numgrid LIBRARY DESTINATION lib)
-install(FILES ${PROJECT_BINARY_DIR}/include/numgrid.h DESTINATION include)
-install(FILES ${PROJECT_BINARY_DIR}/include/numgrid_export.h DESTINATION include)
+install(TARGETS numgrid
+        EXPORT "${PROJECT_NAME}Targets-shared"
+        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES ${PROJECT_SOURCE_DIR}/api/numgrid.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(FILES ${PROJECT_BINARY_DIR}/include/numgrid_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})

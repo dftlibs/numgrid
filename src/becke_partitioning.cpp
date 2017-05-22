@@ -3,195 +3,111 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include <cmath>
-#include <cstdlib>
-#include <cstdio>
 
+#include "error_handling.h"
 #include "becke_partitioning.h"
 #include "parameters.h"
 
 // we use the same values as the DIRAC15 code
 double get_bragg_angstrom(const int charge)
 {
-    if (charge == 1)
-        return 0.35;
-    if (charge == 2)
-        return 0.35;
-    if (charge == 3)
-        return 1.45;
-    if (charge == 4)
-        return 1.05;
-    if (charge == 5)
-        return 0.85;
-    if (charge == 6)
-        return 0.70;
-    if (charge == 7)
-        return 0.65;
-    if (charge == 8)
-        return 0.60;
-    if (charge == 9)
-        return 0.50;
-    if (charge == 10)
-        return 0.45;
-    if (charge == 11)
-        return 1.80;
-    if (charge == 12)
-        return 1.50;
-    if (charge == 13)
-        return 1.25;
-    if (charge == 14)
-        return 1.10;
-    if (charge == 15)
-        return 1.00;
-    if (charge == 16)
-        return 1.00;
-    if (charge == 17)
-        return 1.00;
-    if (charge == 18)
-        return 1.00;
-    if (charge == 19)
-        return 2.20;
-    if (charge == 20)
-        return 1.80;
-    if (charge == 21)
-        return 1.60;
-    if (charge == 22)
-        return 1.40;
-    if (charge == 23)
-        return 1.35;
-    if (charge == 24)
-        return 1.40;
-    if (charge == 25)
-        return 1.40;
-    if (charge == 26)
-        return 1.40;
-    if (charge == 27)
-        return 1.35;
-    if (charge == 28)
-        return 1.35;
-    if (charge == 29)
-        return 1.35;
-    if (charge == 30)
-        return 1.35;
-    if (charge == 31)
-        return 1.30;
-    if (charge == 32)
-        return 1.25;
-    if (charge == 33)
-        return 1.15;
-    if (charge == 34)
-        return 1.15;
-    if (charge == 35)
-        return 1.15;
-    if (charge == 36)
-        return 1.10;
-    if (charge == 37)
-        return 2.35;
-    if (charge == 38)
-        return 2.00;
-    if (charge == 39)
-        return 1.80;
-    if (charge == 40)
-        return 1.55;
-    if (charge == 41)
-        return 1.45;
-    if (charge == 42)
-        return 1.45;
-    if (charge == 43)
-        return 1.35;
-    if (charge == 44)
-        return 1.30;
-    if (charge == 45)
-        return 1.35;
-    if (charge == 46)
-        return 1.40;
-    if (charge == 47)
-        return 1.60;
-    if (charge == 48)
-        return 1.55;
-    if (charge == 49)
-        return 1.55;
-    if (charge == 50)
-        return 1.45;
-    if (charge == 51)
-        return 1.45;
-    if (charge == 52)
-        return 1.40;
-    if (charge == 53)
-        return 1.40;
-    if (charge == 54)
-        return 1.40;
-    if (charge == 55)
-        return 2.60;
-    if (charge == 56)
-        return 2.15;
-    if (charge == 57)
-        return 1.95;
-    if (charge == 58)
-        return 1.85;
-    if (charge == 59)
-        return 1.85;
-    if (charge == 60)
-        return 1.85;
-    if (charge == 61)
-        return 1.85;
-    if (charge == 62)
-        return 1.85;
-    if (charge == 63)
-        return 1.85;
-    if (charge == 64)
-        return 1.80;
-    if (charge == 65)
-        return 1.75;
-    if (charge == 66)
-        return 1.75;
-    if (charge == 67)
-        return 1.75;
-    if (charge == 68)
-        return 1.75;
-    if (charge == 69)
-        return 1.75;
-    if (charge == 70)
-        return 1.75;
-    if (charge == 71)
-        return 1.75;
-    if (charge == 72)
-        return 1.55;
-    if (charge == 73)
-        return 1.45;
-    if (charge == 74)
-        return 1.35;
-    if (charge == 75)
-        return 1.30;
-    if (charge == 76)
-        return 1.30;
-    if (charge == 77)
-        return 1.35;
-    if (charge == 78)
-        return 1.35;
-    if (charge == 79)
-        return 1.35;
-    if (charge == 80)
-        return 1.50;
-    if (charge == 81)
-        return 1.90;
-    if (charge == 82)
-        return 1.75;
-    if (charge == 83)
-        return 1.60;
-    if (charge == 84)
-        return 1.90;
-    if (charge == 85)
-        return 1.50;
-    if (charge == 86)
-        return 1.50;
-
-    fprintf(stderr, "ERROR: element not found in get_bragg_angstrom\n");
-    exit(-1);
+  double retval = 0.0;
+  std::ostringstream err_msg;
+  err_msg << "Bragg-Angstrom radius not found for element ";
+  switch(charge) {
+    case 1:  retval = 0.35; break;
+    case 2:  retval = 0.35; break;
+    case 3:  retval = 1.45; break;
+    case 4:  retval = 1.05; break;
+    case 5:  retval = 0.85; break;
+    case 6:  retval = 0.70; break;
+    case 7:  retval = 0.65; break;
+    case 8:  retval = 0.60; break;
+    case 9:  retval = 0.50; break;
+    case 10: retval = 0.45; break;
+    case 11: retval = 1.80; break;
+    case 12: retval = 1.50; break;
+    case 13: retval = 1.25; break;
+    case 14: retval = 1.10; break;
+    case 15: retval = 1.00; break;
+    case 16: retval = 1.00; break;
+    case 17: retval = 1.00; break;
+    case 18: retval = 1.00; break;
+    case 19: retval = 2.20; break;
+    case 20: retval = 1.80; break;
+    case 21: retval = 1.60; break;
+    case 22: retval = 1.40; break;
+    case 23: retval = 1.35; break;
+    case 24: retval = 1.40; break;
+    case 25: retval = 1.40; break;
+    case 26: retval = 1.40; break;
+    case 27: retval = 1.35; break;
+    case 28: retval = 1.35; break;
+    case 29: retval = 1.35; break;
+    case 30: retval = 1.35; break;
+    case 31: retval = 1.30; break;
+    case 32: retval = 1.25; break;
+    case 33: retval = 1.15; break;
+    case 34: retval = 1.15; break;
+    case 35: retval = 1.15; break;
+    case 36: retval = 1.10; break;
+    case 37: retval = 2.35; break;
+    case 38: retval = 2.00; break;
+    case 39: retval = 1.80; break;
+    case 40: retval = 1.55; break;
+    case 41: retval = 1.45; break;
+    case 42: retval = 1.45; break;
+    case 43: retval = 1.35; break;
+    case 44: retval = 1.30; break;
+    case 45: retval = 1.35; break;
+    case 46: retval = 1.40; break;
+    case 47: retval = 1.60; break;
+    case 48: retval = 1.55; break;
+    case 49: retval = 1.55; break;
+    case 50: retval = 1.45; break;
+    case 51: retval = 1.45; break;
+    case 52: retval = 1.40; break;
+    case 53: retval = 1.40; break;
+    case 54: retval = 1.40; break;
+    case 55: retval = 2.60; break;
+    case 56: retval = 2.15; break;
+    case 57: retval = 1.95; break;
+    case 58: retval = 1.85; break;
+    case 59: retval = 1.85; break;
+    case 60: retval = 1.85; break;
+    case 61: retval = 1.85; break;
+    case 62: retval = 1.85; break;
+    case 63: retval = 1.85; break;
+    case 64: retval = 1.80; break;
+    case 65: retval = 1.75; break;
+    case 66: retval = 1.75; break;
+    case 67: retval = 1.75; break;
+    case 68: retval = 1.75; break;
+    case 69: retval = 1.75; break;
+    case 70: retval = 1.75; break;
+    case 71: retval = 1.75; break;
+    case 72: retval = 1.55; break;
+    case 73: retval = 1.45; break;
+    case 74: retval = 1.35; break;
+    case 75: retval = 1.30; break;
+    case 76: retval = 1.30; break;
+    case 77: retval = 1.35; break;
+    case 78: retval = 1.35; break;
+    case 79: retval = 1.35; break;
+    case 80: retval = 1.50; break;
+    case 81: retval = 1.90; break;
+    case 82: retval = 1.75; break;
+    case 83: retval = 1.60; break;
+    case 84: retval = 1.90; break;
+    case 85: retval = 1.50; break;
+    case 86: retval = 1.50; break;
+    default: err_msg << charge; NUMGRID_ERROR(err_msg); break;
+  }
+  return retval;
 }
 
 // JCP 88, 2547 (1988), eq. 20
-double f3(const double x);
-double f3(const double x)
+inline double f3(const double x)
 {
     double f = x;
     for (int i = 0; i < BECKE_HARDNESS; i++)
@@ -262,7 +178,7 @@ double get_becke_w(const double center_coordinates[],
                 // JCP 88, 2547 (1988), eq. 11
                 mu_ab = (dist_a - dist_b) / dist_ab;
 
-                if (fabs(R_a - R_b) > SMALL)
+                if (std::fabs(R_a - R_b) > SMALL)
                 {
                     u_ab = (R_a + R_b) / (R_b - R_a);
                     a_ab = u_ab / (u_ab * u_ab - 1.0);
@@ -282,7 +198,7 @@ double get_becke_w(const double center_coordinates[],
 
                 f = f3(nu_ab);
 
-                if (fabs(1.0 - f) < SMALL)
+                if (std::fabs(1.0 - f) < SMALL)
                 {
                     // if f == 1.0 we need to take care
                     // otherwise we can get numerical problems
@@ -303,7 +219,7 @@ double get_becke_w(const double center_coordinates[],
         w += pa[a];
     }
 
-    if (fabs(w) > SMALL)
+    if (std::fabs(w) > SMALL)
     {
         return pa[icent] / w;
     }
