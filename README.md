@@ -234,6 +234,41 @@ numgrid.free_context(context)
 ```
 
 
+## Testing without a basis set
+
+Sometimes you need a grid for quick testing without specifying an explicit
+basis set. Here is an example for one center. Note that we only specify
+one steep and one diffuse exponent which will define the radial range:
+
+```python
+radial_precision = 1.0e-06
+min_num_angular_points = 86
+max_num_angular_points = 302
+
+num_centers = 1
+center_coordinates = [
+    0.0000e+00,
+    0.0000e+00,
+    0.0000e+00,
+]
+center_elements = [1]
+
+num_outer_centers = 0
+outer_center_coordinates = []
+outer_center_elements = []
+
+num_shells = 2
+shell_centers = [1, 1]
+shell_l_quantum_numbers = [0, 0]
+shell_num_primitives = [1, 1]
+
+primitive_exponents = [
+    1.0e+04,
+    1.0e-01,
+]
+```
+
+
 ## Testing the Python interface
 
 ```
