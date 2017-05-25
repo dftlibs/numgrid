@@ -32,7 +32,6 @@ if(ENABLE_UNIT_TESTS)
         cpp_test
         libgtest.a
         numgrid
-        lebedev
         pthread
         )
 
@@ -48,8 +47,7 @@ if(ENABLE_UNIT_TESTS)
 
         target_link_libraries(
             fortran_test
-            numgrid_fortran
-            lebedev
+            numgrid
             )
 
         add_test(fortran_test ${PROJECT_BINARY_DIR}/bin/fortran_test)

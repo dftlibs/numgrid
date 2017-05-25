@@ -30,6 +30,7 @@ Options:
   --includedir=<CMAKE_INSTALL_INCLUDEDIR>  C header files [default: include].
   --datadir=<CMAKE_INSTALL_DATADIR>        Read-only architecture-independent data root [default: share].
   --pydir=<PYMOD_INSTALL_LIBDIR>           Python modules [default: bin]
+  --static                                 Create only the static library [default: False].
   --add-definitions=<STRING>               Add preprocesor definitions [default: ''].
   --coverage                               Enable code coverage [default: False].
   --type=<TYPE>                            Set the CMake build type (debug, release, relwithdebinfo, minsizerel) [default: release].
@@ -61,6 +62,7 @@ def gen_cmake_command(options, arguments):
     command.append('-DCMAKE_INSTALL_INCLUDEDIR={0}'.format(arguments['--includedir']))
     command.append('-DCMAKE_INSTALL_DATADIR={0}'.format(arguments['--datadir']))
     command.append('-DPYMOD_INSTALL_LIBDIR={0}'.format(arguments['--pydir']))
+    command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DPREPROCESSOR_DEFINITIONS="{0}"'.format(arguments['--add-definitions']))
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
     command.append('-DCMAKE_BUILD_TYPE={0}'.format(arguments['--type']))
