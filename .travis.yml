@@ -120,7 +120,7 @@ script:
 after_success:
   - |
     if [[ "${COVERAGE}" = true ]]; then
-      coveralls -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" -E ".*src/lebedev/.*.cpp.*" || echo 'coveralls upload failed.'
+      coveralls -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*" || echo 'coveralls upload failed.'
     fi
 
 notifications:

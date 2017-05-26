@@ -1,6 +1,8 @@
 name: numgrid
 
-min_cmake_version: 2.8
+min_cmake_version: 3.0
+
+language: CXX
 
 default_build_type: release
 

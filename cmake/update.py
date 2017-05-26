@@ -141,6 +141,12 @@ def process_yaml(argv):
         sys.stderr.write("ERROR: project name contains a space\n")
         sys.exit(-1)
 
+    if 'language' in config:
+        project_language = ' '.join(config['language']) if isinstance(config['language'], list) else config['language']
+    else:
+        sys.stderr.write("ERROR: you have to specify the project language(s) in autocmake.yml\n")
+        sys.exit(-1)
+
     if 'min_cmake_version' in config:
         min_cmake_version = config['min_cmake_version']
     else:
@@ -179,7 +185,7 @@ def process_yaml(argv):
 
     # create CMakeLists.txt
     print('- generating CMakeLists.txt')
-    s = gen_cmakelists(project_name, min_cmake_version, default_build_type, relative_path, modules)
+    s = gen_cmakelists(project_name, project_language, min_cmake_version, default_build_type, relative_path, modules)
     with open(os.path.join(project_root, 'CMakeLists.txt'), 'w') as f:
         f.write('{0}\n'.format('\n'.join(s)))
 
