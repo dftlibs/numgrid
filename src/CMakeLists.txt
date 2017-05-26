@@ -1,7 +1,3 @@
-add_subdirectory(lebedev)
-
-include_directories(${CMAKE_CURRENT_LIST_DIR})
-
 add_library(_numgrid OBJECT
   Grid.cpp
   Grid.h
@@ -11,6 +7,8 @@ add_library(_numgrid OBJECT
   grid_radial.h
   version.cpp
   )
+target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
+add_dependencies(_numgrid version)
 set_target_properties(_numgrid PROPERTIES POSITION_INDEPENDENT_CODE 1)
 list(APPEND _objects
     $<TARGET_OBJECTS:_numgrid>
@@ -27,7 +25,6 @@ if(NOT STATIC_LIBRARY_ONLY)
     SHARED
     ${_objects}
     )
-  add_dependencies(${PROJECT_NAME}-shared version)
   set_target_properties(${PROJECT_NAME}-shared PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR}
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN 1
@@ -46,7 +43,6 @@ if(NOT SHARED_LIBRARY_ONLY)
     STATIC
     ${_objects}
     )
-  add_dependencies(${PROJECT_NAME}-static version)
   set_target_properties(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS -D${PROJECT_NAME}_STATIC_DEFINE
     OUTPUT_NAME "numgrid"
     EXPORT_NAME "numgrid"
