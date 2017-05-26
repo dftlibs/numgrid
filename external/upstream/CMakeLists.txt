@@ -1,5 +1,5 @@
 foreach(dir lebedev
-    #            gtest
+            gtest
 )
    add_subdirectory(${dir})
 endforeach()
