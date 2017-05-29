@@ -23,7 +23,7 @@ matrix:
       addons: &clang37
         apt:
           sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.7', 'gfortran', 'cmake', 'python-virtualenv']
+          packages: ['clang-3.7', 'gfortran', 'python-virtualenv']
       env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
 
     - os: linux
@@ -37,7 +37,7 @@ matrix:
       addons: &gcc49
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'gcc-4.9', 'gfortran-4.9', 'cmake', 'python-virtualenv']
+          packages: ['g++-4.9', 'gcc-4.9', 'gfortran-4.9', 'python-virtualenv']
       env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='release'
 
     - os: linux
@@ -50,7 +50,7 @@ matrix:
       addons: &gcc5
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'gcc-5', 'gfortran-5', 'cmake', 'python-virtualenv']
+          packages: ['g++-5', 'gcc-5', 'gfortran-5', 'python-virtualenv']
       env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='release'
 
     - os: linux
@@ -88,6 +88,9 @@ install:
       cd ${TRAVIS_BUILD_DIR}
       virtualenv venv
       source venv/bin/activate
+      curl https://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.tar.gz | tar xvz
+      export PATH=$PWD/cmake-3.8.0-Linux-x86_64/bin:$PATH
+      export LD_LIBARY_PATH=$PWD/cmake-3.8.0-Linux-x86_64/lib:$LD_LIBRARY_PATH
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew install gcc
     fi
@@ -95,8 +98,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - pip install -r requirements.txt
-  - export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH
-  - git submodule update --init --recursive
+  - export PATH=$HOME/.local/bin:$PATH
   - |
     if [[ "${COVERAGE}" = true ]]; then
       ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-Hprojects/CMake' --coverage
