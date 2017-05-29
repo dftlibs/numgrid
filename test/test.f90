@@ -164,7 +164,7 @@ program test
 
    grid => numgrid_get_grid(context)
 
-   open(unit=io_unit, file='../test/referece_grid.txt', access='sequential', action='read')
+   open(unit=io_unit, file='../test/reference_grid.txt', access='sequential', action='read')
    k = 1
    do i = 1, num_points
       read(io_unit, *) ref(1), ref(2), ref(3), ref(4)

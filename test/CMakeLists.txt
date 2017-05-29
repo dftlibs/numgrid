@@ -5,6 +5,9 @@ set(gtest_BINARY_DIR ${gtest_ROOT}/src/gtest-build/googlemock/gtest)
 include_directories(${gtest_SOURCE_DIR}/include)
 link_directories(${gtest_BINARY_DIR})
 
+# Copy reference file to ${PROJECT_BINARY_DIR}/test (aka ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY reference_grid.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 add_executable(
   cpp_test
   main.cpp
