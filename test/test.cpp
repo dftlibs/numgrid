@@ -130,7 +130,7 @@ TEST(numgrid, h2o)
     ASSERT_EQ(num_points, 46220);
 
     double *grid_pw = (double*) numgrid_get_grid(context);
-    std::ifstream infile("../test/referece_grid.txt");
+    std::ifstream infile("../test/reference_grid.txt");
     int i = 0;
     double ref[4];
     while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])
@@ -242,7 +242,7 @@ TEST(numgrid, o_in_h2o)
     ASSERT_EQ(num_points, 16364);
 
     double *grid_pw = (double*) numgrid_get_grid(context);
-    std::ifstream infile("../test/referece_grid.txt");
+    std::ifstream infile("../test/reference_grid.txt");
     int i = 0;
     double ref[4];
     while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])

@@ -54,7 +54,9 @@ if(ENABLE_FC_SUPPORT)
     endif()
 
     if(DEFINED EXTRA_FCFLAGS)
+      if(NOT EXTRA_FCFLAGS STREQUAL "")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${EXTRA_FCFLAGS}")
+      endif()
     endif()
 
     if(DEFINED ENV{FCFLAGS})

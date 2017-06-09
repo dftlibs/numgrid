@@ -114,7 +114,7 @@ def test_h2o_grid(context):
 
     here = os.path.abspath(os.path.dirname(__file__))
     reference_grid = []
-    with open(os.path.join(here, 'referece_grid.txt'), 'r') as f:
+    with open(os.path.join(here, 'reference_grid.txt'), 'r') as f:
         for line in f.readlines():
             for x in line.split():
                 reference_grid.append(float(x))
