@@ -5,7 +5,7 @@
 
 import os
 import sys
-assert sys.version_info >= (2, 6), 'Python >= 2.6 is required' 
+assert sys.version_info >= (2, 6), 'Python >= 2.6 is required'
 
 sys.path.insert(0, 'cmake')
 from autocmake import configure
