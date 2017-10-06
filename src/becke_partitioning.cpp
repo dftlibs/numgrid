@@ -146,11 +146,12 @@ double get_becke_w(const double center_coordinates[],
         dist_a = vx * vx + vy * vy + vz * vz;
         dist_a = std::sqrt(dist_a);
 
-        if (a != icent && dist_a > BECKE_CUTOFF)
-        {
-            pa[a] = 0.0;
-            continue;
-        }
+//      in principle good idea but fails for larger molecules containing diffuse sets
+//      if (a != icent && dist_a > BECKE_CUTOFF)
+//      {
+//          pa[a] = 0.0;
+//          continue;
+//      }
 
         R_a = get_bragg_angstrom(center_charge[a]);
 
