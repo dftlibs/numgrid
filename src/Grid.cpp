@@ -225,7 +225,7 @@ int Grid::generate(const double radial_precision,
 
                     for (int p = 0; p < shell_num_primitives[ishell]; p++)
                     {
-                        double e = primitive_exponents[n];
+                        double e = primitive_exponents[n + p];
                         alpha_max = std::max(
                             alpha_max, 2.0 * e); // factor 2.0 to match DIRAC
                         alpha_min[l] = std::min(alpha_min[l], e);
