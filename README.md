@@ -4,7 +4,6 @@
 
 ![alt text](https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg "numgrid")
 
-- [Authors](../master/AUTHORS.md)
 - [Build and test history](https://travis-ci.org/dftlibs/numgrid/builds)
 - [Code coverage](https://coveralls.io/r/dftlibs/numgrid)
 - Licensed under [MPL v2.0](../master/LICENSE) (except John Burkardt's Lebedev code which is redistributed under LGPL v3.0)
@@ -25,6 +24,24 @@ guide](http://www.contribution-guide.org).  We do not require any formal
 copyright assignment or contributor license agreement. Any contributions
 intentionally sent upstream are presumed to be offered under terms of the
 Mozilla Public License Version 2.0.
+
+
+## Authors
+
+- Radovan Bast
+
+
+## Contributors
+
+- Roberto Di Remigio (OS X testing, streamlined Travis testing)
+
+For a list of all the contributions see https://github.com/dftlibs/numgrid/contributors.
+
+
+## Acknowledgements
+
+- Simon Neville (reporting issues)
+- Jaime Axel Rosal Sandberg (reporting issues)
 
 
 # Requirements
