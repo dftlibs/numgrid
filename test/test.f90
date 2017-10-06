@@ -35,15 +35,15 @@ program test
 
    allocate(center_coordinates(num_centers*3))
 
-   center_coordinates(1) = 0.0000d+00
-   center_coordinates(2) = 0.0000d+00
-   center_coordinates(3) = 0.0000d+00
-   center_coordinates(4) = 5.5168d-01
-   center_coordinates(5) = 7.7340d-01
-   center_coordinates(6) = 0.0000d+00
-   center_coordinates(7) = 5.5168d-01
-   center_coordinates(8) = -7.734d-01
-   center_coordinates(9) = 0.0000d+00
+   center_coordinates(1) =  0.00d0
+   center_coordinates(2) =  0.00d0
+   center_coordinates(3) =  0.00d0
+   center_coordinates(4) =  1.43d0
+   center_coordinates(5) =  0.00d0
+   center_coordinates(6) =  1.10d0
+   center_coordinates(7) = -1.43d0
+   center_coordinates(8) =  0.00d0
+   center_coordinates(9) =  1.10d0
 
    allocate(center_elements(num_centers))
 

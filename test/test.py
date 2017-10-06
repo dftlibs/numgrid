@@ -32,16 +32,17 @@ def test_h2o_grid(context):
 
     num_centers = 3
     center_coordinates = [
-        0.0000e+00,
-        0.0000e+00,
-        0.0000e+00,
-        5.5168e-01,
-        7.7340e-01,
-        0.0000e+00,
-        5.5168e-01,
-        -7.734e-01,
-        0.0000e+00,
+        0.00,
+        0.00,
+        0.00,
+        1.43,
+        0.00,
+        1.10,
+       -1.43,
+        0.00,
+        1.10,
     ]
+
     center_elements = [8, 1, 1]
 
     num_outer_centers = 0
@@ -119,6 +120,12 @@ def test_h2o_grid(context):
             for x in line.split():
                 reference_grid.append(float(x))
     grid = numgrid.get_grid(context)
+#   with open(os.path.join(here, 'reference_grid.txt'), 'w') as f:
+#       for i in range(num_points):
+#           f.write('{0} {1} {2} {3}\n'.format(grid[4*i + 0],
+#                                              grid[4*i + 1],
+#                                              grid[4*i + 2],
+#                                              grid[4*i + 3]))
     for i in range(num_points):
         error = grid[i] - reference_grid[i]
         if abs(reference_grid[i]) > 1.0e-20:

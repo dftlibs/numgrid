@@ -196,15 +196,15 @@ max_num_angular_points = 302
 
 num_centers = 3
 center_coordinates = [
-    0.0000e+00,
-    0.0000e+00,
-    0.0000e+00,
-    5.5168e-01,
-    7.7340e-01,
-    0.0000e+00,
-    5.5168e-01,
-    -7.734e-01,
-    0.0000e+00,
+    0.00,
+    0.00,
+    0.00,
+    1.43,
+    0.00,
+    1.10,
+   -1.43,
+    0.00,
+    1.10,
 ]
 center_elements = [8, 1, 1]
 
@@ -264,9 +264,9 @@ max_num_angular_points = 302
 
 num_centers = 1
 center_coordinates = [
-    0.0000e+00,
-    0.0000e+00,
-    0.0000e+00,
+    0.0,
+    0.0,
+    0.0,
 ]
 center_elements = [1]
 
