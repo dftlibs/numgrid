@@ -38,11 +38,11 @@ int numgrid_get_num_points(const context_t *context)
 }
 int Grid::numgrid_get_num_points() const { return num_points; }
 
-const double * const numgrid_get_grid(const context_t *context)
+const double *const numgrid_get_grid(const context_t *context)
 {
     return AS_CTYPE(Grid, context)->numgrid_get_grid();
 }
-const double * const Grid::numgrid_get_grid() const { return xyzw; }
+const double *const Grid::numgrid_get_grid() const { return xyzw; }
 
 void Grid::nullify()
 {
