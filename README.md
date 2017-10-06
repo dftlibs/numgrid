@@ -355,10 +355,10 @@ For the minimum and maximum number of angular points the code will use the follo
 table and select the closest number with at least the desired precision:
 
 ```
-  {6,   14,   26,   38,   50,   74,   86,  110,  146,  170,
- 194,  230,  266,  302,  350,  434,  590,  770,  974, 1202,
-1454, 1730, 2030, 2354, 2702, 3074, 3470, 3890, 4334, 4802,
-4934, 5294, 5810}
+{6,    14,   26,   38,   50,   74,   86,   110,  146,
+ 170,  194,  230,  266,  302,  350,  434,  590,  770,
+ 974,  1202, 1454, 1730, 2030, 2354, 2702, 3074, 3470,
+ 3890, 4334, 4802, 5294, 5810}
 ```
 
 Taking the same number for the minimum and maximum number of angular points
