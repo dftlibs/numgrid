@@ -132,13 +132,13 @@ double get_becke_w2(const double center_coordinates[],
         return 1.0;
     }
 }
-double get_becke_w(const double x_coordinates_au[],
+
+double get_becke_w(const int num_centers,
+                   const int proton_charges[],
+                   const double x_coordinates_au[],
                    const double y_coordinates_au[],
                    const double z_coordinates_au[],
-                   const int center_charge[],
-                   double pa[],
-                   const int icent,
-                   const int num_centers,
+                   const int center_index,
                    const double x,
                    const double y,
                    const double z)
@@ -148,6 +148,8 @@ double get_becke_w(const double x_coordinates_au[],
     double f;
     double dist_a, dist_b, dist_ab;
     double vx, vy, vz;
+
+    double *pa = new double[num_centers];
 
     for (int a = 0; a < num_centers; a++)
     {
@@ -169,7 +171,7 @@ double get_becke_w(const double x_coordinates_au[],
         //          continue;
         //      }
 
-        R_a = get_bragg_angstrom(center_charge[a]);
+        R_a = get_bragg_angstrom(proton_charges[a]);
 
         for (int b = 0; b < a; b++)
         {
@@ -182,7 +184,7 @@ double get_becke_w(const double x_coordinates_au[],
                 dist_b = vx * vx + vy * vy + vz * vz;
                 dist_b = std::sqrt(dist_b);
 
-                R_b = get_bragg_angstrom(center_charge[b]);
+                R_b = get_bragg_angstrom(proton_charges[b]);
 
                 vx = x_coordinates_au[b] - x_coordinates_au[a];
                 vy = y_coordinates_au[b] - y_coordinates_au[a];
@@ -234,12 +236,13 @@ double get_becke_w(const double x_coordinates_au[],
         w += pa[a];
     }
 
+    double res = 1.0;
     if (std::fabs(w) > SMALL)
     {
-        return pa[icent] / w;
+        res = pa[center_index] / w;
     }
-    else
-    {
-        return 1.0;
-    }
+
+    delete[] pa;
+
+    return res;
 }

@@ -189,8 +189,6 @@ void AtomGrid::get_grid_points(const int num_centers,
                                double grid_z_au[],
                                double grid_w[]) const
 {
-    double *pa_buffer = new double[num_centers];
-
     for (int ipoint = 0; ipoint < num_atom_grid_points; ipoint++)
     {
         grid_x_au[ipoint] =
@@ -205,13 +203,12 @@ void AtomGrid::get_grid_points(const int num_centers,
         // no point in partitioning the space
         if (num_centers > 1)
         {
-            becke_w = get_becke_w(x_coordinates_au,
+            becke_w = get_becke_w(num_centers,
+                                  proton_charges,
+                                  x_coordinates_au,
                                   y_coordinates_au,
                                   z_coordinates_au,
-                                  proton_charges,
-                                  pa_buffer,
                                   center_index,
-                                  num_centers,
                                   grid_x_au[ipoint],
                                   grid_y_au[ipoint],
                                   grid_z_au[ipoint]);
@@ -219,6 +216,4 @@ void AtomGrid::get_grid_points(const int num_centers,
 
         grid_w[ipoint] = atom_grid_w[ipoint] * becke_w;
     }
-
-    delete[] pa_buffer;
 }
