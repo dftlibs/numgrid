@@ -2,17 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "../api/numgrid.h"
 #include "Grid.h"
+#include "../api/numgrid.h"
 
 #include <algorithm>
 #include <cmath>
 
-#include "error_handling.h"
 #include "becke_partitioning.h"
+#include "error_handling.h"
 #include "grid_radial.h"
-#include "parameters.h"
 #include "lebedev/sphere_lebedev_rule.h"
+#include "parameters.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
@@ -50,10 +50,10 @@ void Grid::nullify()
     num_points = -1;
 }
 
-int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,  146,
-                         170,  194,  230,  266,  302,  350,  434,  590,  770,
-                         974,  1202, 1454, 1730, 2030, 2354, 2702, 3074, 3470,
-                         3890, 4334, 4802, 5294, 5810};
+int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,
+                         146,  170,  194,  230,  266,  302,  350,  434,
+                         590,  770,  974,  1202, 1454, 1730, 2030, 2354,
+                         2702, 3074, 3470, 3890, 4334, 4802, 5294, 5810};
 
 int Grid::get_closest_num_angular(int n) const
 {
