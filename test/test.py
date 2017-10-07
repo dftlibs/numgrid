@@ -22,6 +22,7 @@ def test_h2o_grid():
             reference_grid_y_au.append(float(y))
             reference_grid_z_au.append(float(z))
             reference_grid_w.append(float(w))
+    reference_num_points = [16364, 14928, 14928]
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
@@ -29,88 +30,34 @@ def test_h2o_grid():
 
     num_centers = 3
     proton_charges = [8, 1, 1]
-    num_shells = 12
-    shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-    shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
-    shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
-    primitive_exponents = [
-        1.172e+04,
-        1.759e+03,
-        4.008e+02,
-        1.137e+02,
-        3.703e+01,
-        1.327e+01,
-        5.025e+00,
-        1.013e+00,
-        3.023e-01,
-        1.172e+04,
-        1.759e+03,
-        4.008e+02,
-        1.137e+02,
-        3.703e+01,
-        1.327e+01,
-        5.025e+00,
-        1.013e+00,
-        3.023e-01,
-        3.023e-01,
-        1.770e+01,
-        3.854e+00,
-        1.046e+00,
-        2.753e-01,
-        2.753e-01,
-        1.185e+00,
-        1.301e+01,
-        1.962e+00,
-        4.446e-01,
-        1.220e-01,
-        1.220e-01,
-        7.270e-01,
-        1.301e+01,
-        1.962e+00,
-        4.446e-01,
-        1.220e-01,
-        1.220e-01,
-        7.270e-01,
-    ]
-
-    reference_num_points = [16364, 14928, 14928]
 
     x_coordinates_au = [0.0, 1.43, -1.43]
     y_coordinates_au = [0.0, 0.0, 0.0]
     z_coordinates_au = [0.0, 1.1, 1.1]
 
+    # cc-pVDZ
+    alpha_max = [11720.0, 13.01, 13.01]
+    max_l_quantum_numbers = [2, 1, 1]
+    alpha_min = [[0.3023, 0.2753, 1.185],  # oxygen
+                 [0.122, 0.727],  # hydrogen
+                 [0.122, 0.727]]  # hydrogen
+
     offset = 0
-    for i in range(num_centers):
-        _num_shells = 0
-        _shell_l_quantum_numbers = []
-        _shell_num_primitives = []
-        _primitive_exponents = []
-        k = 0
-        for j, center in enumerate(shell_centers):
-            if i == center - 1:
-                _num_shells += 1
-                _shell_l_quantum_numbers.append(shell_l_quantum_numbers[j])
-                _shell_num_primitives.append(shell_num_primitives[j])
-                for ip in range(shell_num_primitives[j]):
-                    _primitive_exponents.append(primitive_exponents[k])
-                    k += 1
-            else:
-                k += shell_num_primitives[j]
+    for center_index in range(num_centers):
         context = numgrid.new_atom_grid(radial_precision,
                                         min_num_angular_points,
                                         max_num_angular_points,
-                                        proton_charges[i],
-                                        _num_shells,
-                                        _shell_l_quantum_numbers,
-                                        _shell_num_primitives,
-                                        _primitive_exponents)
+                                        proton_charges[center_index],
+                                        alpha_max[center_index],
+                                        max_l_quantum_numbers[center_index],
+                                        alpha_min[center_index])
 
         num_points = numgrid.get_num_grid_points(context)
-        assert num_points == reference_num_points[i]
+        assert num_points == reference_num_points[center_index]
 
         x, y, z, w = numgrid.get_grid_points(context,
                                              num_centers,
-                                             i,
+                                             center_index,
                                              x_coordinates_au,
                                              y_coordinates_au,
                                              z_coordinates_au,
@@ -127,5 +74,4 @@ def test_h2o_grid():
 
 
 def test_version():
-    from numgrid import get_version
-    assert get_version() == '1.0.0-alpha'
+    assert numgrid.get_version() == '1.0.0-alpha'

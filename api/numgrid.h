@@ -27,10 +27,9 @@ context_t *numgrid_new_atom_grid(const double radial_precision,
                                  const int min_num_angular_points,
                                  const int max_num_angular_points,
                                  const int proton_charge,
-                                 const int num_shells,
-                                 const int shell_l_quantum_numbers[],
-                                 const int shell_num_primitives[],
-                                 const double primitive_exponents[]);
+                                 const double alpha_max,
+                                 const int max_l_quantum_number,
+                                 const double alpha_min[]);
 
 /* get number of grid points on current atom */
 NUMGRID_API

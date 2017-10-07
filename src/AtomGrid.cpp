@@ -47,29 +47,26 @@ context_t *numgrid_new_atom_grid(const double radial_precision,
                                  const int min_num_angular_points,
                                  const int max_num_angular_points,
                                  const int proton_charge,
-                                 const int num_shells,
-                                 const int shell_l_quantum_numbers[],
-                                 const int shell_num_primitives[],
-                                 const double primitive_exponents[])
+                                 const double alpha_max,
+                                 const int max_l_quantum_number,
+                                 const double alpha_min[])
 {
     return AS_TYPE(context_t,
                    new AtomGrid(radial_precision,
                                 min_num_angular_points,
                                 max_num_angular_points,
                                 proton_charge,
-                                num_shells,
-                                shell_l_quantum_numbers,
-                                shell_num_primitives,
-                                primitive_exponents));
+                                alpha_max,
+                                max_l_quantum_number,
+                                alpha_min));
 }
 AtomGrid::AtomGrid(const double radial_precision,
                    const int min_num_angular_points,
                    const int max_num_angular_points,
                    const int proton_charge,
-                   const int num_shells,
-                   const int shell_l_quantum_numbers[],
-                   const int shell_num_primitives[],
-                   const double primitive_exponents[])
+                   const double alpha_max,
+                   const int max_l_quantum_number,
+                   const double alpha_min[])
 {
     int min_num_angular_points_closest =
         get_closest_num_angular(min_num_angular_points);
@@ -93,45 +90,11 @@ AtomGrid::AtomGrid(const double radial_precision,
                     &angular_w[angular_off]);
     }
 
-    int l_max = 0;
-    for (int ishell = 0; ishell < num_shells; ishell++)
-    {
-        l_max = std::max(l_max, shell_l_quantum_numbers[ishell]);
-    }
-
-    // get extreme alpha values
-    double alpha_max = 0.0;
-    double *alpha_min = new double[l_max + 1];
-    bool *alpha_min_set = new bool[l_max + 1];
-    std::fill(&alpha_min[0], &alpha_min[l_max + 1], 0.0);
-    std::fill(&alpha_min_set[0], &alpha_min_set[l_max + 1], false);
-
-    int n = 0;
-    for (int ishell = 0; ishell < num_shells; ishell++)
-    {
-        int l = shell_l_quantum_numbers[ishell];
-
-        if (!alpha_min_set[l])
-        {
-            alpha_min[l] = std::numeric_limits<float>::max();
-            alpha_min_set[l] = true;
-        }
-
-        for (int p = 0; p < shell_num_primitives[ishell]; p++)
-        {
-            double e = primitive_exponents[n + p];
-            alpha_max =
-                std::max(alpha_max, 2.0 * e); // factor 2.0 to match DIRAC
-            alpha_min[l] = std::min(alpha_min[l], e);
-        }
-        n += shell_num_primitives[ishell];
-    }
-
     // obtain radial parameters
-    double r_inner = get_r_inner(radial_precision, alpha_max);
+    double r_inner = get_r_inner(radial_precision, alpha_max*2.0); // factor 2.0 to match DIRAC
     double h = std::numeric_limits<float>::max();
     double r_outer = 0.0;
-    for (int l = 0; l <= l_max; l++)
+    for (int l = 0; l <= max_l_quantum_number; l++)
     {
         if (alpha_min[l] > 0.0)
         {
@@ -147,9 +110,6 @@ AtomGrid::AtomGrid(const double radial_precision,
         }
     }
     NUMGRID_ASSERT(r_outer > h);
-
-    delete[] alpha_min;
-    delete[] alpha_min_set;
 
     num_atom_grid_points = 0;
 
@@ -258,6 +218,7 @@ void AtomGrid::get_grid_points(const int num_centers,
             atom_grid_z_au[ipoint] + z_coordinates_au[center_index];
 
         double becke_w = 1.0;
+
         // if there are no other centers
         // no point in partitioning the space
         if (num_centers > 1)
