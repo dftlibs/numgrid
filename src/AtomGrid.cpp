@@ -1,10 +1,10 @@
 #include "AtomGrid.h"
 #include "becke_partitioning.h"
+#include "bragg.h"
 #include "error_handling.h"
 #include "grid_radial.h"
 #include "lebedev/sphere_lebedev_rule.h"
 #include "parameters.h"
-#include "bragg.h"
 #include <cmath>
 
 int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,
@@ -178,16 +178,16 @@ AtomGrid::~AtomGrid()
 
 int AtomGrid::get_num_grid_points() const { return num_atom_grid_points; }
 
-void AtomGrid::get_grid_points(double grid_x_au[],
-                               double grid_y_au[],
-                               double grid_z_au[],
-                               double grid_w[],
+void AtomGrid::get_grid_points(const int num_centers,
                                const int center_index,
-                               const int num_centers,
                                const double x_coordinates_au[],
                                const double y_coordinates_au[],
                                const double z_coordinates_au[],
-                               const int proton_charges[]) const
+                               const int proton_charges[],
+                               double grid_x_au[],
+                               double grid_y_au[],
+                               double grid_z_au[],
+                               double grid_w[]) const
 {
     double *pa_buffer = new double[num_centers];
 
