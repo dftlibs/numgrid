@@ -1,260 +1,112 @@
-#include <fstream>
-#include <cmath>
 #include "gtest/gtest.h"
+#include <cmath>
+#include <fstream>
 
 #include "numgrid.h"
 
-
-// H2O grid
 TEST(numgrid, h2o)
 {
     double radial_precision = 1.0e-12;
     int min_num_angular_points = 86;
     int max_num_angular_points = 302;
+
     int num_centers = 3;
-    double center_coordinates[num_centers*3];
-    center_coordinates[0] =  0.00;
-    center_coordinates[1] =  0.00;
-    center_coordinates[2] =  0.00;
-    center_coordinates[3] =  1.43;
-    center_coordinates[4] =  0.00;
-    center_coordinates[5] =  1.10;
-    center_coordinates[6] = -1.43;
-    center_coordinates[7] =  0.00;
-    center_coordinates[8] =  1.10;
-    int center_elements[num_centers];
-    center_elements[0] = 8;
-    center_elements[1] = 1;
-    center_elements[2] = 1;
-    int num_outer_centers = 0;
-    double *outer_center_coordinates = NULL;
-    int *outer_center_elements = NULL;
-    int num_shells = 12;
-    int shell_centers[num_shells];
-    shell_centers[ 0] = 1;
-    shell_centers[ 1] = 1;
-    shell_centers[ 2] = 1;
-    shell_centers[ 3] = 1;
-    shell_centers[ 4] = 1;
-    shell_centers[ 5] = 1;
-    shell_centers[ 6] = 2;
-    shell_centers[ 7] = 2;
-    shell_centers[ 8] = 2;
-    shell_centers[ 9] = 3;
-    shell_centers[10] = 3;
-    shell_centers[11] = 3;
-    int shell_l_quantum_numbers[num_shells];
-    shell_l_quantum_numbers[ 0] = 0;
-    shell_l_quantum_numbers[ 1] = 0;
-    shell_l_quantum_numbers[ 2] = 0;
-    shell_l_quantum_numbers[ 3] = 1;
-    shell_l_quantum_numbers[ 4] = 1;
-    shell_l_quantum_numbers[ 5] = 2;
-    shell_l_quantum_numbers[ 6] = 0;
-    shell_l_quantum_numbers[ 7] = 0;
-    shell_l_quantum_numbers[ 8] = 1;
-    shell_l_quantum_numbers[ 9] = 0;
-    shell_l_quantum_numbers[10] = 0;
-    shell_l_quantum_numbers[11] = 1;
-    int shell_num_primitives[num_shells];
-    shell_num_primitives[ 0] = 9;
-    shell_num_primitives[ 1] = 9;
-    shell_num_primitives[ 2] = 1;
-    shell_num_primitives[ 3] = 4;
-    shell_num_primitives[ 4] = 1;
-    shell_num_primitives[ 5] = 1;
-    shell_num_primitives[ 6] = 4;
-    shell_num_primitives[ 7] = 1;
-    shell_num_primitives[ 8] = 1;
-    shell_num_primitives[ 9] = 4;
-    shell_num_primitives[10] = 1;
-    shell_num_primitives[11] = 1;
-    double primitive_exponents[37];
-    primitive_exponents[ 0] = 1.172e+04;
-    primitive_exponents[ 1] = 1.759e+03;
-    primitive_exponents[ 2] = 4.008e+02;
-    primitive_exponents[ 3] = 1.137e+02;
-    primitive_exponents[ 4] = 3.703e+01;
-    primitive_exponents[ 5] = 1.327e+01;
-    primitive_exponents[ 6] = 5.025e+00;
-    primitive_exponents[ 7] = 1.013e+00;
-    primitive_exponents[ 8] = 3.023e-01;
-    primitive_exponents[ 9] = 1.172e+04;
-    primitive_exponents[10] = 1.759e+03;
-    primitive_exponents[11] = 4.008e+02;
-    primitive_exponents[12] = 1.137e+02;
-    primitive_exponents[13] = 3.703e+01;
-    primitive_exponents[14] = 1.327e+01;
-    primitive_exponents[15] = 5.025e+00;
-    primitive_exponents[16] = 1.013e+00;
-    primitive_exponents[17] = 3.023e-01;
-    primitive_exponents[18] = 3.023e-01;
-    primitive_exponents[19] = 1.770e+01;
-    primitive_exponents[20] = 3.854e+00;
-    primitive_exponents[21] = 1.046e+00;
-    primitive_exponents[22] = 2.753e-01;
-    primitive_exponents[23] = 2.753e-01;
-    primitive_exponents[24] = 1.185e+00;
-    primitive_exponents[25] = 1.301e+01;
-    primitive_exponents[26] = 1.962e+00;
-    primitive_exponents[27] = 4.446e-01;
-    primitive_exponents[28] = 1.220e-01;
-    primitive_exponents[29] = 1.220e-01;
-    primitive_exponents[30] = 7.270e-01;
-    primitive_exponents[31] = 1.301e+01;
-    primitive_exponents[32] = 1.962e+00;
-    primitive_exponents[33] = 4.446e-01;
-    primitive_exponents[34] = 1.220e-01;
-    primitive_exponents[35] = 1.220e-01;
-    primitive_exponents[36] = 7.270e-01;
 
-    context_t *context = numgrid_new_context();
+    int proton_charges[3];
+    proton_charges[0] = 8;
+    proton_charges[1] = 1;
+    proton_charges[2] = 1;
 
-    int ierr = numgrid_generate_grid(context,
-                             radial_precision,
-                             min_num_angular_points,
-                             max_num_angular_points,
-                             num_centers,
-                             center_coordinates,
-                             center_elements,
-                             num_outer_centers,
-                             outer_center_coordinates,
-                             outer_center_elements,
-                             num_shells,
-                             shell_centers,
-                             shell_l_quantum_numbers,
-                             shell_num_primitives,
-                             primitive_exponents);
+    double x_coordinates_au[3];
+    x_coordinates_au[0] = 0.0;
+    x_coordinates_au[1] = 1.43;
+    x_coordinates_au[2] = -1.43;
 
-    int num_points = numgrid_get_num_points(context);
-    ASSERT_EQ(num_points, 46220);
+    double y_coordinates_au[3];
+    y_coordinates_au[0] = 0.0;
+    y_coordinates_au[1] = 0.0;
+    y_coordinates_au[2] = 0.0;
 
-    double *grid_pw = (double*) numgrid_get_grid(context);
+    double z_coordinates_au[3];
+    z_coordinates_au[0] = 0.0;
+    z_coordinates_au[1] = 1.1;
+    z_coordinates_au[2] = 1.1;
+
+    double alpha_max[3];
+    alpha_max[0] = 11720.0;
+    alpha_max[1] = 13.01;
+    alpha_max[2] = 13.01;
+
+    int max_l_quantum_numbers[3];
+    max_l_quantum_numbers[0] = 2;
+    max_l_quantum_numbers[1] = 1;
+    max_l_quantum_numbers[2] = 1;
+
+    double alpha_min[3][3];
+    alpha_min[0][0] = 0.3023;
+    alpha_min[0][1] = 0.2753;
+    alpha_min[0][2] = 1.185;
+    alpha_min[1][0] = 0.122;
+    alpha_min[1][1] = 0.727;
+    alpha_min[1][2] = 0.0; // not used
+    alpha_min[2][0] = 0.122;
+    alpha_min[2][1] = 0.727;
+    alpha_min[2][2] = 0.0; // not used
+
+    int reference_num_points[3];
+    reference_num_points[0] = 16364;
+    reference_num_points[1] = 14928;
+    reference_num_points[2] = 14928;
+
     std::ifstream infile("../test/reference_grid.txt");
-    int i = 0;
-    double ref[4];
-    while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])
+
+    for (int center_index = 0; center_index < num_centers; center_index++)
     {
-        for (int j = 0; j < 4; j++)
+        context_t *context =
+            numgrid_new_atom_grid(radial_precision,
+                                  min_num_angular_points,
+                                  max_num_angular_points,
+                                  proton_charges[center_index],
+                                  alpha_max[center_index],
+                                  max_l_quantum_numbers[center_index],
+                                  alpha_min[center_index]);
+
+        int num_points = numgrid_get_num_grid_points(context);
+        ASSERT_EQ(num_points, reference_num_points[center_index]);
+
+        double *grid_x_au = new double[num_points];
+        double *grid_y_au = new double[num_points];
+        double *grid_z_au = new double[num_points];
+        double *grid_w = new double[num_points];
+
+        numgrid_get_grid_points(context,
+                                num_centers,
+                                center_index,
+                                x_coordinates_au,
+                                y_coordinates_au,
+                                z_coordinates_au,
+                                proton_charges,
+                                grid_x_au,
+                                grid_y_au,
+                                grid_z_au,
+                                grid_w);
+
+        double x_ref, y_ref, z_ref, w_ref;
+        for (int ipoint = 0; ipoint < num_points; ipoint++)
         {
-            double error = grid_pw[i++] - ref[j];
-            if (fabs(ref[j]) > 1.0e-15) error /= ref[j];
-            ASSERT_TRUE(fabs(error) < 1.0e-5);
+            infile >> x_ref >> y_ref >> z_ref >> w_ref;
+
+            ASSERT_NEAR(x_ref, grid_x_au[ipoint], 1.0e-10);
+            ASSERT_NEAR(y_ref, grid_y_au[ipoint], 1.0e-10);
+            ASSERT_NEAR(z_ref, grid_z_au[ipoint], 1.0e-10);
+            ASSERT_NEAR(w_ref, grid_w[ipoint], 1.0e-10);
         }
+
+        delete[] grid_x_au;
+        delete[] grid_y_au;
+        delete[] grid_z_au;
+        delete[] grid_w;
+
+        numgrid_free_atom_grid(context);
     }
-
-    numgrid_free_context(context);
-}
-
-
-// O grid in the presence of two H (in H2O)
-TEST(numgrid, o_in_h2o)
-{
-    double radial_precision = 1.0e-12;
-    int min_num_angular_points = 86;
-    int max_num_angular_points = 302;
-    int num_centers = 1;
-    double center_coordinates[num_centers*3];
-    center_coordinates[0] = 0.0;
-    center_coordinates[1] = 0.0;
-    center_coordinates[2] = 0.0;
-    int center_elements[num_centers];
-    center_elements[0] = 8;
-    int num_outer_centers = 2;
-    double outer_center_coordinates[num_outer_centers*3];
-    outer_center_coordinates[0] =  1.43;
-    outer_center_coordinates[1] =  0.00;
-    outer_center_coordinates[2] =  1.10;
-    outer_center_coordinates[3] = -1.43;
-    outer_center_coordinates[4] =  0.00;
-    outer_center_coordinates[5] =  1.10;
-    int outer_center_elements[num_outer_centers];
-    outer_center_elements[0] = 1;
-    outer_center_elements[1] = 1;
-    int num_shells = 6;
-    int shell_centers[num_shells];
-    shell_centers[0] = 1;
-    shell_centers[1] = 1;
-    shell_centers[2] = 1;
-    shell_centers[3] = 1;
-    shell_centers[4] = 1;
-    shell_centers[5] = 1;
-    int shell_l_quantum_numbers[num_shells];
-    shell_l_quantum_numbers[0] = 0;
-    shell_l_quantum_numbers[1] = 0;
-    shell_l_quantum_numbers[2] = 0;
-    shell_l_quantum_numbers[3] = 1;
-    shell_l_quantum_numbers[4] = 1;
-    shell_l_quantum_numbers[5] = 2;
-    int shell_num_primitives[num_shells];
-    shell_num_primitives[0] = 9;
-    shell_num_primitives[1] = 9;
-    shell_num_primitives[2] = 1;
-    shell_num_primitives[3] = 4;
-    shell_num_primitives[4] = 1;
-    shell_num_primitives[5] = 1;
-    double primitive_exponents[25];
-    primitive_exponents[ 0] = 1.172e+04;
-    primitive_exponents[ 1] = 1.759e+03;
-    primitive_exponents[ 2] = 4.008e+02;
-    primitive_exponents[ 3] = 1.137e+02;
-    primitive_exponents[ 4] = 3.703e+01;
-    primitive_exponents[ 5] = 1.327e+01;
-    primitive_exponents[ 6] = 5.025e+00;
-    primitive_exponents[ 7] = 1.013e+00;
-    primitive_exponents[ 8] = 3.023e-01;
-    primitive_exponents[ 9] = 1.172e+04;
-    primitive_exponents[10] = 1.759e+03;
-    primitive_exponents[11] = 4.008e+02;
-    primitive_exponents[12] = 1.137e+02;
-    primitive_exponents[13] = 3.703e+01;
-    primitive_exponents[14] = 1.327e+01;
-    primitive_exponents[15] = 5.025e+00;
-    primitive_exponents[16] = 1.013e+00;
-    primitive_exponents[17] = 3.023e-01;
-    primitive_exponents[18] = 3.023e-01;
-    primitive_exponents[19] = 1.770e+01;
-    primitive_exponents[20] = 3.854e+00;
-    primitive_exponents[21] = 1.046e+00;
-    primitive_exponents[22] = 2.753e-01;
-    primitive_exponents[23] = 2.753e-01;
-    primitive_exponents[24] = 1.185e+00;
-
-    context_t *context = numgrid_new_context();
-
-    int ierr = numgrid_generate_grid(context,
-                             radial_precision,
-                             min_num_angular_points,
-                             max_num_angular_points,
-                             num_centers,
-                             center_coordinates,
-                             center_elements,
-                             num_outer_centers,
-                             outer_center_coordinates,
-                             outer_center_elements,
-                             num_shells,
-                             shell_centers,
-                             shell_l_quantum_numbers,
-                             shell_num_primitives,
-                             primitive_exponents);
-
-    int num_points = numgrid_get_num_points(context);
-    ASSERT_EQ(num_points, 16364);
-
-    double *grid_pw = (double*) numgrid_get_grid(context);
-    std::ifstream infile("../test/reference_grid.txt");
-    int i = 0;
-    double ref[4];
-    while (infile >> ref[0] >> ref[1] >> ref[2] >> ref[3])
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            double error = grid_pw[i++] - ref[j];
-            if (fabs(ref[j]) > 1.0e-15) error /= ref[j];
-            ASSERT_TRUE(fabs(error) < 1.0e-5);
-        }
-        if (i == num_points*4) break;
-    }
-
-    numgrid_free_context(context);
 }
