@@ -9,9 +9,9 @@
 #include <cmath>
 
 #include "becke_partitioning.h"
+#include "bragg.h"
 #include "error_handling.h"
 #include "grid_radial.h"
-#include "bragg.h"
 #include "lebedev/sphere_lebedev_rule.h"
 #include "parameters.h"
 

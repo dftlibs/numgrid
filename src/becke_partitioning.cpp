@@ -5,9 +5,9 @@
 #include <cmath>
 
 #include "becke_partitioning.h"
+#include "bragg.h"
 #include "error_handling.h"
 #include "parameters.h"
-#include "bragg.h"
 
 // JCP 88, 2547 (1988), eq. 20
 inline double f3(const double x)
