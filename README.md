@@ -17,14 +17,7 @@ based on atom coordinates, atom types, and basis set information.
 Numgrid can be built with C, Fortran, and Python bindings.
 
 
-# Contributing
-
-Yes please! Please follow [this excellent
-guide](http://www.contribution-guide.org).  We do not require any formal
-copyright assignment or contributor license agreement. Any contributions
-intentionally sent upstream are presumed to be offered under terms of the
-Mozilla Public License Version 2.0.
-
+# Who are the people behind this code?
 
 ## Authors
 
@@ -44,6 +37,15 @@ For a list of all the contributions see https://github.com/dftlibs/numgrid/contr
 - Jaime Axel Rosal Sandberg (reporting issues)
 
 
+## Would you like to contribute?
+
+Yes please! Please follow [this excellent
+guide](http://www.contribution-guide.org).  We do not require any formal
+copyright assignment or contributor license agreement. Any contributions
+intentionally sent upstream are presumed to be offered under terms of the
+Mozilla Public License Version 2.0.
+
+
 # Requirements
 
 - CMake
@@ -55,13 +57,34 @@ For a list of all the contributions see https://github.com/dftlibs/numgrid/contr
 
 # Building and testing
 
+Fetch the code:
+
 ```
 git clone https://github.com/dftlibs/numgrid.git
+```
+
+Install Python dependencies (optional):
+
+```
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Build the code:
+
+```
 cd numgrid
 ./setup --fc=gfortran --cc=gcc --cxx=g++
 cd build
 make
 make test
+```
+
+Test the Python interface (optional):
+
+```
+NUMGRID_BUILD_DIR=. PYTHONPATH=../api py.test -s -vv ../test/test.py
 ```
 
 
@@ -256,13 +279,6 @@ num_points = numgrid.get_num_points(context)
 grid = numgrid.get_grid(context)
 
 numgrid.free_context(context)
-```
-
-
-## Testing the Python interface
-
-```
-PYTHONPATH=<build_dir> pytest -vv test/test.py
 ```
 
 
