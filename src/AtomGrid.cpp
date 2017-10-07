@@ -46,9 +46,9 @@ AtomGrid::AtomGrid(const double radial_precision,
                    const int shell_num_primitives[],
                    const double primitive_exponents[])
 {
-    int num_min_num_angular_points = // FIXME rename
+    int min_num_angular_points_closest =
         get_closest_num_angular(min_num_angular_points);
-    int num_max_num_angular_points =
+    int max_num_angular_points_closest =
         get_closest_num_angular(max_num_angular_points);
 
     double *angular_x = new double[MAX_ANGULAR_ORDER * MAX_ANGULAR_GRID];
@@ -56,8 +56,8 @@ AtomGrid::AtomGrid(const double radial_precision,
     double *angular_z = new double[MAX_ANGULAR_ORDER * MAX_ANGULAR_GRID];
     double *angular_w = new double[MAX_ANGULAR_ORDER * MAX_ANGULAR_GRID];
 
-    for (int i = get_angular_order(num_min_num_angular_points);
-         i <= get_angular_order(num_max_num_angular_points);
+    for (int i = get_angular_order(min_num_angular_points_closest);
+         i <= get_angular_order(max_num_angular_points_closest);
          i++)
     {
         int angular_off = i * MAX_ANGULAR_GRID;
@@ -137,14 +137,14 @@ AtomGrid::AtomGrid(const double radial_precision,
         double radial_r = c * (exp((irad + 1) * h) - 1.0);
         double radial_w = (radial_r + c) * radial_r * radial_r * h;
 
-        int num_angular = num_max_num_angular_points;
+        int num_angular = max_num_angular_points_closest;
         if (radial_r < rb)
         {
             num_angular =
-                static_cast<int>(num_max_num_angular_points * (radial_r / rb));
+                static_cast<int>(max_num_angular_points_closest * (radial_r / rb));
             num_angular = get_closest_num_angular(num_angular);
-            if (num_angular < num_min_num_angular_points)
-                num_angular = num_min_num_angular_points;
+            if (num_angular < min_num_angular_points_closest)
+                num_angular = min_num_angular_points_closest;
         }
 
         int angular_off = get_angular_order(num_angular) * MAX_ANGULAR_GRID;
