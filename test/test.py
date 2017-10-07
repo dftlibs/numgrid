@@ -1,30 +1,11 @@
-import pytest
-
-
-@pytest.fixture(scope='function')
-def context(request):
-    """
-    Add context to test functions.
-    """
-    import numgrid
-    ctx = numgrid.new_context()
-
-    def cleanup():
-        """
-        Clean up the context.
-        """
-        numgrid.free_context(ctx)
-
-    request.addfinalizer(cleanup)
-    return ctx
-
-
-def test_h2o_grid(context):
+def test_h2o_grid():
     """
     Test H2O grid generation.
     """
     import os
     import numgrid
+
+    context = numgrid.new_context()
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
@@ -131,6 +112,8 @@ def test_h2o_grid(context):
         if abs(reference_grid[i]) > 1.0e-20:
             error /= reference_grid[i]
         assert abs(error) < 1.0e-6
+
+    numgrid.free_context(context)
 
 
 def test_version():
