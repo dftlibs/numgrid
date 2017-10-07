@@ -1,5 +1,4 @@
 add_library(_numgrid OBJECT
-  Grid.cpp
   AtomGrid.cpp
   becke_partitioning.cpp
   grid_radial.cpp
