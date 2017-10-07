@@ -1,3 +1,6 @@
+#include <cmath>
+
+#include "../api/numgrid.h"
 #include "AtomGrid.h"
 #include "becke_partitioning.h"
 #include "bragg.h"
@@ -5,7 +8,9 @@
 #include "grid_radial.h"
 #include "lebedev/sphere_lebedev_rule.h"
 #include "parameters.h"
-#include <cmath>
+
+#define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
+#define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
 
 int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,
                          146,  170,  194,  230,  266,  302,  350,  434,
@@ -37,6 +42,25 @@ int get_angular_order(int n)
     NUMGRID_ERROR("No match found in get_angular_offset");
 }
 
+context_t *numgrid_new_atom_grid(const double radial_precision,
+                                 const int min_num_angular_points,
+                                 const int max_num_angular_points,
+                                 const int proton_charge,
+                                 const int num_shells,
+                                 const int shell_l_quantum_numbers[],
+                                 const int shell_num_primitives[],
+                                 const double primitive_exponents[])
+{
+    return AS_TYPE(context_t,
+                   new AtomGrid(radial_precision,
+                                min_num_angular_points,
+                                max_num_angular_points,
+                                proton_charge,
+                                num_shells,
+                                shell_l_quantum_numbers,
+                                shell_num_primitives,
+                                primitive_exponents));
+}
 AtomGrid::AtomGrid(const double radial_precision,
                    const int min_num_angular_points,
                    const int max_num_angular_points,
@@ -140,8 +164,8 @@ AtomGrid::AtomGrid(const double radial_precision,
         int num_angular = max_num_angular_points_closest;
         if (radial_r < rb)
         {
-            num_angular =
-                static_cast<int>(max_num_angular_points_closest * (radial_r / rb));
+            num_angular = static_cast<int>(max_num_angular_points_closest *
+                                           (radial_r / rb));
             num_angular = get_closest_num_angular(num_angular);
             if (num_angular < min_num_angular_points_closest)
                 num_angular = min_num_angular_points_closest;
@@ -168,6 +192,12 @@ AtomGrid::AtomGrid(const double radial_precision,
     delete[] angular_w;
 }
 
+void numgrid_free_atom(context_t *context)
+{
+    if (!context)
+        return;
+    delete AS_TYPE(AtomGrid, context);
+}
 AtomGrid::~AtomGrid()
 {
     atom_grid_x_au.clear();
@@ -176,8 +206,36 @@ AtomGrid::~AtomGrid()
     atom_grid_w.clear();
 }
 
+int numgrid_get_num_grid_points(const context_t *context)
+{
+    return AS_CTYPE(AtomGrid, context)->get_num_grid_points();
+}
 int AtomGrid::get_num_grid_points() const { return num_atom_grid_points; }
 
+void numgrid_get_grid_points(const context_t *context,
+                             const int num_centers,
+                             const int center_index,
+                             const double x_coordinates_au[],
+                             const double y_coordinates_au[],
+                             const double z_coordinates_au[],
+                             const int proton_charges[],
+                             double grid_x_au[],
+                             double grid_y_au[],
+                             double grid_z_au[],
+                             double grid_w[])
+{
+    return AS_CTYPE(AtomGrid, context)
+        ->get_grid_points(num_centers,
+                          center_index,
+                          x_coordinates_au,
+                          y_coordinates_au,
+                          z_coordinates_au,
+                          proton_charges,
+                          grid_x_au,
+                          grid_y_au,
+                          grid_z_au,
+                          grid_w);
+}
 void AtomGrid::get_grid_points(const int num_centers,
                                const int center_index,
                                const double x_coordinates_au[],

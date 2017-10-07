@@ -21,6 +21,39 @@ char *numgrid_get_version();
 NUMGRID_API
 context_t *numgrid_new_context();
 
+/* create a new atom grid */
+NUMGRID_API
+context_t *numgrid_new_atom_grid(const double radial_precision,
+                                 const int min_num_angular_points,
+                                 const int max_num_angular_points,
+                                 const int proton_charge,
+                                 const int num_shells,
+                                 const int shell_l_quantum_numbers[],
+                                 const int shell_num_primitives[],
+                                 const double primitive_exponents[]);
+
+/* get number of grid points on current atom */
+NUMGRID_API
+int numgrid_get_num_grid_points(const context_t *context);
+
+/* get grid on current atom, scaled by becke partitioning */
+NUMGRID_API
+void numgrid_get_grid_points(const context_t *context,
+                             const int num_centers,
+                             const int center_index,
+                             const double x_coordinates_au[],
+                             const double y_coordinates_au[],
+                             const double z_coordinates_au[],
+                             const int proton_charges[],
+                             double grid_x_au[],
+                             double grid_y_au[],
+                             double grid_z_au[],
+                             double grid_w[]);
+
+/* destroy the atom and deallocate all data */
+NUMGRID_API
+void numgrid_free_atom_grid(context_t *context);
+
 /* destroy the context and deallocates all data */
 NUMGRID_API
 void numgrid_free_context(context_t *context);
@@ -49,7 +82,7 @@ int numgrid_get_num_points(const context_t *context);
 
 /* get the pointer to the memory which holds the grid */
 NUMGRID_API
-const double * const numgrid_get_grid(const context_t *context);
+const double *const numgrid_get_grid(const context_t *context);
 
 #ifdef __cplusplus
 }
