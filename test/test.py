@@ -10,11 +10,11 @@ def test_h2o_grid():
 
     # read reference grid from file
     # we will compare results against this file
-    _here = os.path.abspath(os.path.dirname(__file__))
     reference_grid_x_au = []
     reference_grid_y_au = []
     reference_grid_z_au = []
     reference_grid_w = []
+    _here = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(_here, 'reference_grid.txt'), 'r') as f:
         for line in f.read().splitlines():
             (x, y, z, w) = line.split()
@@ -35,12 +35,12 @@ def test_h2o_grid():
     y_coordinates_au = [0.0, 0.0, 0.0]
     z_coordinates_au = [0.0, 1.1, 1.1]
 
-    # cc-pVDZ
-    alpha_max = [11720.0, 13.01, 13.01]
-    max_l_quantum_numbers = [2, 1, 1]
-    alpha_min = [[0.3023, 0.2753, 1.185],  # oxygen
-                 [0.122, 0.727],  # hydrogen
-                 [0.122, 0.727]]  # hydrogen
+    # cc-pVDZ basis
+    alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
+    max_l_quantum_numbers = [2, 1, 1]  # O, H, H
+    alpha_min = [[0.3023, 0.2753, 1.185],  # O
+                 [0.122, 0.727],  # H
+                 [0.122, 0.727]]  # H
 
     offset = 0
     for center_index in range(num_centers):
