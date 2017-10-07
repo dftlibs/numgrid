@@ -4,6 +4,7 @@
 #include "grid_radial.h"
 #include "lebedev/sphere_lebedev_rule.h"
 #include "parameters.h"
+#include "bragg.h"
 #include <cmath>
 
 int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,
@@ -188,7 +189,6 @@ void AtomGrid::get_grid_points(double grid_x_au[],
                                const double z_coordinates_au[],
                                const int proton_charges[]) const
 {
-    double becke_w = 1.0;
     double *pa_buffer = new double[num_centers];
 
     for (int ipoint = 0; ipoint < num_atom_grid_points; ipoint++)
@@ -200,6 +200,9 @@ void AtomGrid::get_grid_points(double grid_x_au[],
         grid_z_au[ipoint] =
             atom_grid_z_au[ipoint] + z_coordinates_au[center_index];
 
+        double becke_w = 1.0;
+        // if there are no other centers
+        // no point in partitioning the space
         if (num_centers > 1)
         {
             becke_w = get_becke_w(x_coordinates_au,
@@ -216,5 +219,6 @@ void AtomGrid::get_grid_points(double grid_x_au[],
 
         grid_w[ipoint] = atom_grid_w[ipoint] * becke_w;
     }
+
     delete[] pa_buffer;
 }

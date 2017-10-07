@@ -4,6 +4,7 @@ add_library(_numgrid OBJECT
   becke_partitioning.cpp
   grid_radial.cpp
   version.cpp
+  bragg.cpp
   )
 target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
 add_dependencies(_numgrid version)
