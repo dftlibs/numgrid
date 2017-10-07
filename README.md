@@ -71,14 +71,21 @@ We provide a context-aware C interface. In addition we also provide a Fortran
 and Python interfaces as thin layers on top of the C interface:
 
 ```
-Fortran: api/numgrid.f90
+Python: api/numgrid.py
   \
-   \     Python: api/numgrid.py
+   \     Fortran: api/numgrid.f90
     \   /
   C interface: api/numgrid.h
       |
 implementation
 ```
+
+
+## What changed since v0.x?
+
+- Grid memory management is now client-side
+- Compute one center at a time
+- Full basis set does not need to be provided
 
 
 ## Obtain the API version
