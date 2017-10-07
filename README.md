@@ -33,7 +33,7 @@ Mozilla Public License Version 2.0.
 
 ## Contributors
 
-- Roberto Di Remigio (OS X testing, streamlined Travis testing)
+- Roberto Di Remigio (OS X testing, streamlined Travis testing, better C++)
 
 For a list of all the contributions see https://github.com/dftlibs/numgrid/contributors.
 
