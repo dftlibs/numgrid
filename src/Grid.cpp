@@ -50,10 +50,10 @@ void Grid::nullify()
     num_points = -1;
 }
 
-int lebedev_table[33] = {6,    14,   26,   38,   50,   74,   86,   110,
-                         146,  170,  194,  230,  266,  302,  350,  434,
-                         590,  770,  974,  1202, 1454, 1730, 2030, 2354,
-                         2702, 3074, 3470, 3890, 4334, 4802, 5294, 5810};
+int lebedev_table2[33] = {6,    14,   26,   38,   50,   74,   86,   110,
+                          146,  170,  194,  230,  266,  302,  350,  434,
+                          590,  770,  974,  1202, 1454, 1730, 2030, 2354,
+                          2702, 3074, 3470, 3890, 4334, 4802, 5294, 5810};
 
 int Grid::get_closest_num_angular(int n) const
 {
@@ -61,7 +61,7 @@ int Grid::get_closest_num_angular(int n) const
 
     for (int i = 0; i < MAX_ANGULAR_ORDER; i++)
     {
-        m = lebedev_table[i];
+        m = lebedev_table2[i];
         if (m >= n)
             return m;
     }
@@ -73,7 +73,7 @@ int Grid::get_angular_order(int n) const
 {
     for (int i = 0; i < MAX_ANGULAR_ORDER; i++)
     {
-        if (lebedev_table[i] == n)
+        if (lebedev_table2[i] == n)
             return i;
     }
 
@@ -168,7 +168,7 @@ int Grid::generate(const double radial_precision,
          i++)
     {
         int angular_off = i * MAX_ANGULAR_GRID;
-        ld_by_order(lebedev_table[i],
+        ld_by_order(lebedev_table2[i],
                     &angular_x[angular_off],
                     &angular_y[angular_off],
                     &angular_z[angular_off],
@@ -317,14 +317,14 @@ int Grid::generate(const double radial_precision,
                         double becke_w = 1.0;
                         if (num_centers_total > 1)
                         {
-                            becke_w = get_becke_w(center_coordinates_total,
-                                                  center_elements_total,
-                                                  pa_buffer,
-                                                  icent,
-                                                  num_centers_total,
-                                                  xyzw[4 * (ioff + iang)],
-                                                  xyzw[4 * (ioff + iang) + 1],
-                                                  xyzw[4 * (ioff + iang) + 2]);
+                            becke_w = get_becke_w2(center_coordinates_total,
+                                                   center_elements_total,
+                                                   pa_buffer,
+                                                   icent,
+                                                   num_centers_total,
+                                                   xyzw[4 * (ioff + iang)],
+                                                   xyzw[4 * (ioff + iang) + 1],
+                                                   xyzw[4 * (ioff + iang) + 2]);
                         }
                         xyzw[4 * (ioff + iang) + 3] =
                             4.0 * M_PI * angular_w[angular_off + iang] *
