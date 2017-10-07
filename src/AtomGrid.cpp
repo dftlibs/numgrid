@@ -91,7 +91,8 @@ AtomGrid::AtomGrid(const double radial_precision,
     }
 
     // obtain radial parameters
-    double r_inner = get_r_inner(radial_precision, alpha_max*2.0); // factor 2.0 to match DIRAC
+    double r_inner = get_r_inner(radial_precision,
+                                 alpha_max * 2.0); // factor 2.0 to match DIRAC
     double h = std::numeric_limits<float>::max();
     double r_outer = 0.0;
     for (int l = 0; l <= max_l_quantum_number; l++)
