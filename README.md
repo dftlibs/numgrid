@@ -67,7 +67,7 @@ make test
 
 # API
 
-We provide a context-aware C interface. In addition we also provide a Fortran
+The library provides a context-aware C interface. In addition it also provides a Fortran
 and Python interfaces as thin layers on top of the C interface:
 
 ```
@@ -87,7 +87,7 @@ implementation
 
 This was done to simplify memory management and avoid memory leaks and strange
 effects.  The client can now query the number of grid points before computing
-the grid for a certain atom type.
+the grid for a certain atom type. Sounds cumbersome but is not a problem in practice.
 
 
 ### Compute one center at a time
@@ -184,20 +184,6 @@ point N, weight
 ```
 
 
-## Outer centers
-
-For very large molecules the caller may not want to generate the entire grid at
-once but perhaps only generate center by center or fragment by fragment
-(however taking Becke partitioning into account) and possibly keep the centers
-or fragments on different parallel tasks or threads. This can be achieved by
-using 'outer centers'. The 'outer centers' with influence the active centers in
-the generation of the Becke partitioning weights but will not carry any grid
-points themselves. This can be used for multi-scale computations.
-
-Another use-case for 'outer centers' is to create a grid with
-varying grid quality across the system/molecule.
-
-
 ## Units
 
 `center_coordinates` are understood to be in bohr.
@@ -273,41 +259,6 @@ numgrid.free_context(context)
 ```
 
 
-## Testing without a basis set
-
-Sometimes you need a grid for quick testing without specifying an explicit
-basis set. Here is an example for one center. Note that we only specify
-one steep and one diffuse exponent which will define the radial range:
-
-```python
-radial_precision = 1.0e-06
-min_num_angular_points = 86
-max_num_angular_points = 302
-
-num_centers = 1
-center_coordinates = [
-    0.0,
-    0.0,
-    0.0,
-]
-center_elements = [1]
-
-num_outer_centers = 0
-outer_center_coordinates = []
-outer_center_elements = []
-
-num_shells = 2
-shell_centers = [1, 1]
-shell_l_quantum_numbers = [0, 0]
-shell_num_primitives = [1, 1]
-
-primitive_exponents = [
-    1.0e+04,
-    1.0e-01,
-]
-```
-
-
 ## Testing the Python interface
 
 ```
@@ -315,14 +266,14 @@ PYTHONPATH=<build_dir> pytest -vv test/test.py
 ```
 
 
-## Parallelization
+# Parallelization
 
 The design decision was to not parallelize the library but rather parallelize
 over the atom/basis types by the caller. This simplifies modularity and code
 reuse.
 
 
-# Integration grid
+# Space partitioning
 
 The molecular integration grid is generated from atom-centered
 grids by scaling the grid weights according
@@ -330,13 +281,8 @@ to the Becke partitioning scheme,
 [JCP 88, 2547 (1988)](http://dx.doi.org/10.1063/1.454033).
 The default Becke hardness is 3.
 
-Each atomic grid has radial shells with corresponding radial weights.  Each of
-the radial shells carries an angular grid with a certain number of angular
-points. The generating schemes for the radial and angular grids are outlined
-below.
 
-
-## Radial grid
+# Radial grid
 
 The radial grid is generated according to Lindh, Malmqvist, and Gagliardi,
 [TCA 106, 178 (2001)](http://dx.doi.org/10.1007/s002140100263).
@@ -356,7 +302,7 @@ of just two primitives. You can then adjust the range by making the exponents
 more steep or more diffuse.
 
 
-## Angular grid
+# Angular grid
 
 The angular grid is generated according to
 Lebedev and Laikov
