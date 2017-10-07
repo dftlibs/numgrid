@@ -1,6 +1,6 @@
 from pytest import approx
 import os
-from numgrid import new_atom_grid, get_num_grid_points, get_grid_points, free_atom_grid
+import numgrid
 
 
 def test_h2o_grid():
@@ -96,25 +96,25 @@ def test_h2o_grid():
                     k += 1
             else:
                 k += shell_num_primitives[j]
-        context = new_atom_grid(radial_precision,
-                                min_num_angular_points,
-                                max_num_angular_points,
-                                proton_charges[i],
-                                _num_shells,
-                                _shell_l_quantum_numbers,
-                                _shell_num_primitives,
-                                _primitive_exponents)
+        context = numgrid.new_atom_grid(radial_precision,
+                                        min_num_angular_points,
+                                        max_num_angular_points,
+                                        proton_charges[i],
+                                        _num_shells,
+                                        _shell_l_quantum_numbers,
+                                        _shell_num_primitives,
+                                        _primitive_exponents)
 
-        num_points = get_num_grid_points(context)
+        num_points = numgrid.get_num_grid_points(context)
         assert num_points == reference_num_points[i]
 
-        x, y, z, w = get_grid_points(context,
-                                     num_centers,
-                                     i,
-                                     x_coordinates_au,
-                                     y_coordinates_au,
-                                     z_coordinates_au,
-                                     proton_charges)
+        x, y, z, w = numgrid.get_grid_points(context,
+                                             num_centers,
+                                             i,
+                                             x_coordinates_au,
+                                             y_coordinates_au,
+                                             z_coordinates_au,
+                                             proton_charges)
 
         assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=1e-9)
         assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=1e-9)
@@ -123,7 +123,7 @@ def test_h2o_grid():
 
         offset += num_points
 
-        free_atom_grid(context)
+        numgrid.free_atom_grid(context)
 
 
 def test_version():
