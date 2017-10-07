@@ -1,10 +1,7 @@
 add_library(_numgrid OBJECT
   Grid.cpp
-  Grid.h
   becke_partitioning.cpp
-  becke_partitioning.h
   grid_radial.cpp
-  grid_radial.h
   version.cpp
   )
 target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
