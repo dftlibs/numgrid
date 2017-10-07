@@ -192,7 +192,7 @@ AtomGrid::AtomGrid(const double radial_precision,
     delete[] angular_w;
 }
 
-void numgrid_free_atom(context_t *context)
+void numgrid_free_atom_grid(context_t *context)
 {
     if (!context)
         return;
