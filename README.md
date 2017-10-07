@@ -83,9 +83,24 @@ implementation
 
 ## What changed since v0.x?
 
-- Grid memory management is now client-side
-- Compute one center at a time
-- Full basis set does not need to be provided
+### Grid memory management is now client-side
+
+This was done to simplify memory management and avoid memory leaks and strange
+effects.  The client can now query the number of grid points before computing
+the grid for a certain atom type.
+
+
+### Compute one center at a time
+
+Motivation was to simplify code and to make it possible to pre-compute a grid
+for a certain atom/basis type.  This also means that the code can be optimized
+and parallelized on the client side.
+
+
+### Full basis set does not need to be provided
+
+Great simplification. All that is needed now is the steepest exponent and a set
+of smallest exponents for each angular momentum.
 
 
 ## Obtain the API version
@@ -303,9 +318,8 @@ PYTHONPATH=<build_dir> pytest -vv test/test.py
 ## Parallelization
 
 The design decision was to not parallelize the library but rather parallelize
-over the generated points by the caller. This simplifies modularity and code
-reuse.  See also the section about "Distributed computation using 'outer
-centers'".
+over the atom/basis types by the caller. This simplifies modularity and code
+reuse.
 
 
 # Integration grid
