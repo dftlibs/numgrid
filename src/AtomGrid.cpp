@@ -1,4 +1,5 @@
 #include <cmath>
+#include <limits>
 
 #include "../api/numgrid.h"
 #include "AtomGrid.h"
@@ -112,7 +113,7 @@ AtomGrid::AtomGrid(const double radial_precision,
 
         if (!alpha_min_set[l])
         {
-            alpha_min[l] = 1.0e50;
+            alpha_min[l] = std::numeric_limits<float>::max();
             alpha_min_set[l] = true;
         }
 
@@ -128,7 +129,7 @@ AtomGrid::AtomGrid(const double radial_precision,
 
     // obtain radial parameters
     double r_inner = get_r_inner(radial_precision, alpha_max);
-    double h = 1.0e50;
+    double h = std::numeric_limits<float>::max();
     double r_outer = 0.0;
     for (int l = 0; l <= l_max; l++)
     {
