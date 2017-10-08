@@ -43,7 +43,7 @@ matrix:
     - os: linux
       compiler: gcc
       addons: *gcc49
-      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug'
+      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug' COVERAGE='true'
 
     - os: linux
       compiler: gcc
