@@ -104,7 +104,7 @@ implementation
 ```
 
 
-## What changed since v0.x?
+## What changed since v0.5?
 
 ### Grid memory management is now client-side
 
