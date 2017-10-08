@@ -191,40 +191,40 @@ int AtomGrid::get_num_radial_grid_points() const
     return num_radial_grid_points;
 }
 
-void numgrid_get_grid_points(const context_t *context,
-                             const int num_centers,
-                             const int center_index,
-                             const double x_coordinates_au[],
-                             const double y_coordinates_au[],
-                             const double z_coordinates_au[],
-                             const int proton_charges[],
-                             double grid_x_au[],
-                             double grid_y_au[],
-                             double grid_z_au[],
-                             double grid_w[])
+void numgrid_get_grid(const context_t *context,
+                      const int num_centers,
+                      const int center_index,
+                      const double x_coordinates_au[],
+                      const double y_coordinates_au[],
+                      const double z_coordinates_au[],
+                      const int proton_charges[],
+                      double grid_x_au[],
+                      double grid_y_au[],
+                      double grid_z_au[],
+                      double grid_w[])
 {
     return AS_CTYPE(AtomGrid, context)
-        ->get_grid_points(num_centers,
-                          center_index,
-                          x_coordinates_au,
-                          y_coordinates_au,
-                          z_coordinates_au,
-                          proton_charges,
-                          grid_x_au,
-                          grid_y_au,
-                          grid_z_au,
-                          grid_w);
+        ->get_grid(num_centers,
+                   center_index,
+                   x_coordinates_au,
+                   y_coordinates_au,
+                   z_coordinates_au,
+                   proton_charges,
+                   grid_x_au,
+                   grid_y_au,
+                   grid_z_au,
+                   grid_w);
 }
-void AtomGrid::get_grid_points(const int num_centers,
-                               const int center_index,
-                               const double x_coordinates_au[],
-                               const double y_coordinates_au[],
-                               const double z_coordinates_au[],
-                               const int proton_charges[],
-                               double grid_x_au[],
-                               double grid_y_au[],
-                               double grid_z_au[],
-                               double grid_w[]) const
+void AtomGrid::get_grid(const int num_centers,
+                        const int center_index,
+                        const double x_coordinates_au[],
+                        const double y_coordinates_au[],
+                        const double z_coordinates_au[],
+                        const int proton_charges[],
+                        double grid_x_au[],
+                        double grid_y_au[],
+                        double grid_z_au[],
+                        double grid_w[]) const
 {
     for (int ipoint = 0; ipoint < num_grid_points; ipoint++)
     {
@@ -256,14 +256,14 @@ void AtomGrid::get_grid_points(const int num_centers,
     }
 }
 
-void numgrid_get_radial_grid_points(const context_t *context,
-                                    double grid_r_au[],
-                                    double grid_w[])
+void numgrid_get_radial_grid(const context_t *context,
+                             double grid_r_au[],
+                             double grid_w[])
 {
     return AS_CTYPE(AtomGrid, context)
-        ->get_radial_grid_points(grid_r_au, grid_w);
+        ->get_radial_grid(grid_r_au, grid_w);
 }
-void AtomGrid::get_radial_grid_points(double grid_r_au[], double grid_w[]) const
+void AtomGrid::get_radial_grid(double grid_r_au[], double grid_w[]) const
 {
     for (int ipoint = 0; ipoint < num_radial_grid_points; ipoint++)
     {
@@ -272,22 +272,12 @@ void AtomGrid::get_radial_grid_points(double grid_r_au[], double grid_w[]) const
     }
 }
 
-void numgrid_get_angular_grid_points(const context_t *context,
-                                     const int num_angular_grid_points,
-                                     double grid_x_au[],
-                                     double grid_y_au[],
-                                     double grid_z_au[],
-                                     double grid_w[])
-{
-    return AS_CTYPE(AtomGrid, context)
-        ->get_angular_grid_points(
-            num_angular_grid_points, grid_x_au, grid_y_au, grid_z_au, grid_w);
-}
-void AtomGrid::get_angular_grid_points(const int num_angular_grid_points,
-                                       double grid_x_au[],
-                                       double grid_y_au[],
-                                       double grid_z_au[],
-                                       double grid_w[]) const
+// TODO this implementation should move to separate file
+void numgrid_get_angular_grid(const int num_angular_grid_points,
+                              double grid_x_au[],
+                              double grid_y_au[],
+                              double grid_z_au[],
+                              double grid_w[])
 {
     int i = get_angular_order(num_angular_grid_points);
     ld_by_order(lebedev_table[i], grid_x_au, grid_y_au, grid_z_au, grid_w);

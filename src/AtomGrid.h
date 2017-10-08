@@ -20,24 +20,18 @@ class AtomGrid
 
     int get_num_radial_grid_points() const;
 
-    void get_grid_points(const int num_centers,
-                         const int center_index,
-                         const double x_coordinates_au[],
-                         const double y_coordinates_au[],
-                         const double z_coordinates_au[],
-                         const int proton_charges[],
-                         double grid_x_au[],
-                         double grid_y_au[],
-                         double grid_z_au[],
-                         double grid_w[]) const;
+    void get_grid(const int num_centers,
+                  const int center_index,
+                  const double x_coordinates_au[],
+                  const double y_coordinates_au[],
+                  const double z_coordinates_au[],
+                  const int proton_charges[],
+                  double grid_x_au[],
+                  double grid_y_au[],
+                  double grid_z_au[],
+                  double grid_w[]) const;
 
-    void get_radial_grid_points(double grid_r_au[], double grid_w[]) const;
-
-    void get_angular_grid_points(const int num_angular_grid_points,
-                                 double grid_x_au[],
-                                 double grid_y_au[],
-                                 double grid_z_au[],
-                                 double grid_w[]) const;
+    void get_radial_grid(double grid_r_au[], double grid_w[]) const;
 
   private:
     AtomGrid(const AtomGrid &rhs);            // not implemented

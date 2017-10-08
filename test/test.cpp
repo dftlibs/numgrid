@@ -79,17 +79,17 @@ TEST(numgrid, h2o)
         double *grid_z_au = new double[num_points];
         double *grid_w = new double[num_points];
 
-        numgrid_get_grid_points(context,
-                                num_centers,
-                                center_index,
-                                x_coordinates_au,
-                                y_coordinates_au,
-                                z_coordinates_au,
-                                proton_charges,
-                                grid_x_au,
-                                grid_y_au,
-                                grid_z_au,
-                                grid_w);
+        numgrid_get_grid(context,
+                         num_centers,
+                         center_index,
+                         x_coordinates_au,
+                         y_coordinates_au,
+                         z_coordinates_au,
+                         proton_charges,
+                         grid_x_au,
+                         grid_y_au,
+                         grid_z_au,
+                         grid_w);
 
         double x_ref, y_ref, z_ref, w_ref;
         for (int ipoint = 0; ipoint < num_points; ipoint++)

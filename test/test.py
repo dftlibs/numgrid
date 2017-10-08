@@ -23,6 +23,7 @@ def test_h2o_grid():
             reference_grid_z_au.append(float(z))
             reference_grid_w.append(float(w))
     reference_num_points = [16364, 14928, 14928]
+    reference_num_radial_points = [106, 78, 78]
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
@@ -55,18 +56,27 @@ def test_h2o_grid():
         num_points = numgrid.get_num_grid_points(context)
         assert num_points == reference_num_points[center_index]
 
-        x, y, z, w = numgrid.get_grid_points(context,
-                                             num_centers,
-                                             center_index,
-                                             x_coordinates_au,
-                                             y_coordinates_au,
-                                             z_coordinates_au,
-                                             proton_charges)
+        num_radial_points = numgrid.get_num_radial_grid_points(context)
+        assert num_radial_points == reference_num_radial_points[center_index]
+
+        x, y, z, w = numgrid.get_grid(context,
+                                      num_centers,
+                                      center_index,
+                                      x_coordinates_au,
+                                      y_coordinates_au,
+                                      z_coordinates_au,
+                                      proton_charges)
 
         assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=1e-9)
         assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=1e-9)
         assert z == approx(reference_grid_z_au[offset:offset + num_points], rel=1e-9)
         assert w == approx(reference_grid_w[offset:offset + num_points], rel=1e-9)
+
+        # we only check that call works but for the moment do not verify results
+        r, w = numgrid.get_radial_grid(context)
+
+        # we only check that call works but for the moment do not verify results
+        x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
 
         offset += num_points
 

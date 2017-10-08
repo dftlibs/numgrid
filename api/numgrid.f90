@@ -7,7 +7,10 @@ module numgrid
    public numgrid_new_atom_grid
    public numgrid_free_atom_grid
    public numgrid_get_num_grid_points
-   public numgrid_get_grid_points
+   public numgrid_get_num_radial_grid_points
+   public numgrid_get_grid
+   public numgrid_get_radial_grid
+   public numgrid_get_angular_grid
 
    private
 
@@ -39,25 +42,33 @@ module numgrid
    end interface
 
    interface numgrid_get_num_grid_points
-      function numgrid_get_num_grid_points(context) result(num_points) bind (c)
+      function numgrid_get_num_grid_points(context) result(num_grid_points) bind (c)
          import :: c_ptr, c_int
          type(c_ptr), value :: context
-         integer(c_int)     :: num_points
+         integer(c_int)     :: num_grid_points
       end function
    end interface
 
-   interface numgrid_get_grid_points
-      subroutine numgrid_get_grid_points(context,          &
-                                         num_centers,      &
-                                         center_index,     &
-                                         x_coordinates_au, &
-                                         y_coordinates_au, &
-                                         z_coordinates_au, &
-                                         proton_charges,   &
-                                         grid_x_au,        &
-                                         grid_y_au,        &
-                                         grid_z_au,        &
-                                         grid_w) bind (c)
+   interface numgrid_get_num_radial_grid_points
+      function numgrid_get_num_radial_grid_points(context) result(num_radial_grid_points) bind (c)
+         import :: c_ptr, c_int
+         type(c_ptr), value :: context
+         integer(c_int)     :: num_radial_grid_points
+      end function
+   end interface
+
+   interface numgrid_get_grid
+      subroutine numgrid_get_grid(context,          &
+                                  num_centers,      &
+                                  center_index,     &
+                                  x_coordinates_au, &
+                                  y_coordinates_au, &
+                                  z_coordinates_au, &
+                                  proton_charges,   &
+                                  grid_x_au,        &
+                                  grid_y_au,        &
+                                  grid_z_au,        &
+                                  grid_w) bind (c)
          import :: c_ptr, c_double, c_int
          type(c_ptr), value                :: context
          integer(c_int), intent(in), value :: num_centers
@@ -70,6 +81,32 @@ module numgrid
          real(c_double), intent(inout)     :: grid_y_au(*)
          real(c_double), intent(inout)     :: grid_z_au(*)
          real(c_double), intent(inout)     :: grid_w(*)
+      end subroutine
+   end interface
+
+   interface numgrid_get_radial_grid
+      subroutine numgrid_get_radial_grid(context,  &
+                                         radial_grid_r_au,&
+                                         radial_grid_w) bind (c)
+         import :: c_ptr, c_double, c_int
+         type(c_ptr), value            :: context
+         real(c_double), intent(inout) :: radial_grid_r_au(*)
+         real(c_double), intent(inout) :: radial_grid_w(*)
+      end subroutine
+   end interface
+
+   interface numgrid_get_angular_grid
+      subroutine numgrid_get_angular_grid(num_angular_grid_points, &
+                                          angular_grid_x_au,       &
+                                          angular_grid_y_au,       &
+                                          angular_grid_z_au,       &
+                                          angular_grid_w) bind (c)
+         import :: c_double, c_int
+         integer(c_int), intent(in), value :: num_angular_grid_points
+         real(c_double), intent(inout)     :: angular_grid_x_au(*)
+         real(c_double), intent(inout)     :: angular_grid_y_au(*)
+         real(c_double), intent(inout)     :: angular_grid_z_au(*)
+         real(c_double), intent(inout)     :: angular_grid_w(*)
       end subroutine
    end interface
 

@@ -31,19 +31,37 @@ context_t *numgrid_new_atom_grid(const double radial_precision,
 NUMGRID_API
 int numgrid_get_num_grid_points(const context_t *context);
 
+/* get number of radial grid points on current atom */
+NUMGRID_API
+int numgrid_get_num_radial_grid_points(const context_t *context);
+
 /* get grid on current atom, scaled by becke partitioning */
 NUMGRID_API
-void numgrid_get_grid_points(const context_t *context,
-                             const int num_centers,
-                             const int center_index,
-                             const double x_coordinates_au[],
-                             const double y_coordinates_au[],
-                             const double z_coordinates_au[],
-                             const int proton_charges[],
-                             double grid_x_au[],
-                             double grid_y_au[],
-                             double grid_z_au[],
-                             double grid_w[]);
+void numgrid_get_grid(const context_t *context,
+                      const int num_centers,
+                      const int center_index,
+                      const double x_coordinates_au[],
+                      const double y_coordinates_au[],
+                      const double z_coordinates_au[],
+                      const int proton_charges[],
+                      double grid_x_au[],
+                      double grid_y_au[],
+                      double grid_z_au[],
+                      double grid_w[]);
+
+/* get radial grid on current atom */
+NUMGRID_API
+void numgrid_get_radial_grid(const context_t *context,
+                             double radial_grid_r_au[],
+                             double radial_grid_w[]);
+
+/* get angular grid */
+NUMGRID_API
+void numgrid_get_angular_grid(const int num_angular_grid_points,
+                              double angular_grid_x_au[],
+                              double angular_grid_y_au[],
+                              double angular_grid_z_au[],
+                              double angular_grid_w[]);
 
 /* destroy the atom and deallocate all data */
 NUMGRID_API
