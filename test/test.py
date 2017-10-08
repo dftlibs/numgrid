@@ -67,10 +67,11 @@ def test_h2o_grid():
                                       z_coordinates_au,
                                       proton_charges)
 
-        assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=1e-9)
-        assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=1e-9)
-        assert z == approx(reference_grid_z_au[offset:offset + num_points], rel=1e-9)
-        assert w == approx(reference_grid_w[offset:offset + num_points], rel=1e-9)
+        rel_error = 1.0e-9
+        assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=rel_error)
+        assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=rel_error)
+        assert z == approx(reference_grid_z_au[offset:offset + num_points], rel=rel_error)
+        assert w == approx(reference_grid_w[offset:offset + num_points], rel=rel_error)
 
         # we only check that call works but for the moment do not verify results
         r, w = numgrid.get_radial_grid(context)
