@@ -271,3 +271,24 @@ void AtomGrid::get_radial_grid_points(double grid_r_au[], double grid_w[]) const
         grid_w[ipoint] = radial_atom_grid_w[ipoint];
     }
 }
+
+void numgrid_get_angular_grid_points(const context_t *context,
+                                     const int num_angular_grid_points,
+                                     double grid_x_au[],
+                                     double grid_y_au[],
+                                     double grid_z_au[],
+                                     double grid_w[])
+{
+    return AS_CTYPE(AtomGrid, context)
+        ->get_angular_grid_points(
+            num_angular_grid_points, grid_x_au, grid_y_au, grid_z_au, grid_w);
+}
+void AtomGrid::get_angular_grid_points(const int num_angular_grid_points,
+                                       double grid_x_au[],
+                                       double grid_y_au[],
+                                       double grid_z_au[],
+                                       double grid_w[]) const
+{
+    int i = get_angular_order(num_angular_grid_points);
+    ld_by_order(lebedev_table[i], grid_x_au, grid_y_au, grid_z_au, grid_w);
+}

@@ -33,6 +33,12 @@ class AtomGrid
 
     void get_radial_grid_points(double grid_r_au[], double grid_w[]) const;
 
+    void get_angular_grid_points(const int num_angular_grid_points,
+                                 double grid_x_au[],
+                                 double grid_y_au[],
+                                 double grid_z_au[],
+                                 double grid_w[]) const;
+
   private:
     AtomGrid(const AtomGrid &rhs);            // not implemented
     AtomGrid &operator=(const AtomGrid &rhs); // not implemented
