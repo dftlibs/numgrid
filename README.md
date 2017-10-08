@@ -26,7 +26,7 @@ Numgrid can be built with C, Fortran, and Python bindings.
 
 ## Contributors
 
-- Roberto Di Remigio (OS X testing, streamlined Travis testing, better C++)
+- Roberto Di Remigio (OS X testing, streamlined Travis testing, better C++, error handling)
 
 For a list of all the contributions see https://github.com/dftlibs/numgrid/contributors.
 
