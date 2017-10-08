@@ -1,7 +1,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../api/numgrid.h"
+#include "numgrid.h"
 #include "AtomGrid.h"
 #include "becke_partitioning.h"
 #include "bragg.h"

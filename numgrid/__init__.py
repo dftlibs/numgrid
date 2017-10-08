@@ -1,59 +1,37 @@
-import sys
 import os
-from subprocess import Popen, PIPE
 from cffi import FFI
+from .cffi_helpers import get_lib_handle
 import numpy as np
 
 
-def _get_env(v):
-    _v = os.getenv(v)
-    if _v is None:
-        sys.stderr.write('Error: Environment variable {0} is undefined\n'.format(v))
-        sys.exit(1)
-    return _v
+_this_path = os.path.dirname(os.path.realpath(__file__))
 
+_build_dir = os.getenv('NUMGRID_BUILD_DIR')
+if _build_dir is None:
+    _build_dir = _this_path
+else:
+    _build_dir = os.path.join(_build_dir, 'lib')
 
-def _get_library_suffix():
-    if sys.platform == "darwin":
-        return 'dylib'
-    else:
-        return 'so'
+_include_dir = _this_path
 
-
-def _get_lib_handle(definitions, header, library, build_dir, include_dir):
-    ffi = FFI()
-
-    interface = Popen(['cc', '-E'] + definitions + [os.path.join(include_dir, header)],
-                      stdout=PIPE).communicate()[0].decode("utf-8")
-    ffi.cdef(interface)
-
-    suffix = _get_library_suffix()
-    lib = ffi.dlopen(os.path.join(build_dir, 'lib', 'lib{0}.{1}'.format(library, suffix)))
-    return lib
-
-
-_build_dir = _get_env('NUMGRID_BUILD_DIR')
-_include_dir = os.path.dirname(os.path.realpath(__file__))
-
-_lib = _get_lib_handle(
-    ['-DNUMGRID_API=', '-DNUMGRID_NOINCLUDE'],
+_lib = get_lib_handle(
+    ['-DNUMGRID_API=', '-DCPP_INTERFACE_NOINCLUDE'],
     'numgrid.h',
     'numgrid',
     _build_dir,
     _include_dir
 )
 
-
 _ffi = FFI()
-
-def get_version():
-    return _ffi.string(_lib.numgrid_get_version()).decode('utf-8')
-
 
 new_atom_grid = _lib.numgrid_new_atom_grid
 get_num_grid_points = _lib.numgrid_get_num_grid_points
 get_num_radial_grid_points = _lib.numgrid_get_num_radial_grid_points
 free_atom_grid = _lib.numgrid_free_atom_grid
+
+
+def get_version():
+    return _ffi.string(_lib.numgrid_get_version()).decode('utf-8')
 
 
 def get_grid(context,
