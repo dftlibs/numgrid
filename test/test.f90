@@ -87,6 +87,8 @@ program test
    allocate(grid_z_au(num_points))
    allocate(grid_w(num_points))
 
+   center_index = 0
+
    call numgrid_get_grid(context,          &
                          num_centers,      &
                          center_index,     &
