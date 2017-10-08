@@ -13,11 +13,11 @@ program test
    integer              :: max_num_angular_points
    integer              :: num_centers
    integer              :: proton_charges(3)
-   real(8)              :: x_coordinates_au(3);
-   real(8)              :: y_coordinates_au(3);
-   real(8)              :: z_coordinates_au(3);
-   real(8)              :: alpha_max;
-   integer              :: max_l_quantum_number;
+   real(8)              :: x_coordinates_au(3)
+   real(8)              :: y_coordinates_au(3)
+   real(8)              :: z_coordinates_au(3)
+   real(8)              :: alpha_max
+   integer              :: max_l_quantum_number
    real(8)              :: alpha_min(3)
    integer              :: num_points
    integer              :: num_radial_points
