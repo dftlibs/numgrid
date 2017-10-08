@@ -18,6 +18,8 @@ class AtomGrid
 
     int get_num_grid_points() const;
 
+    int get_num_radial_grid_points() const;
+
     void get_grid_points(const int num_centers,
                          const int center_index,
                          const double x_coordinates_au[],
@@ -29,16 +31,23 @@ class AtomGrid
                          double grid_z_au[],
                          double grid_w[]) const;
 
+    void get_radial_grid_points(double grid_r_au[], double grid_w[]) const;
+
   private:
     AtomGrid(const AtomGrid &rhs);            // not implemented
     AtomGrid &operator=(const AtomGrid &rhs); // not implemented
 
-    int num_atom_grid_points;
+    int num_grid_points;
 
     std::vector<double> atom_grid_x_au;
     std::vector<double> atom_grid_y_au;
     std::vector<double> atom_grid_z_au;
     std::vector<double> atom_grid_w;
+
+    int num_radial_grid_points;
+
+    std::vector<double> radial_atom_grid_r_au;
+    std::vector<double> radial_atom_grid_w;
 };
 
 #endif /* ATOMGRID_H_INCLUDED */
