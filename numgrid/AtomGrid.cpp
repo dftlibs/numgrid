@@ -165,16 +165,7 @@ void numgrid_free_atom_grid(context_t *context)
         return;
     delete AS_TYPE(AtomGrid, context);
 }
-AtomGrid::~AtomGrid()
-{
-    atom_grid_x_au.clear();
-    atom_grid_y_au.clear();
-    atom_grid_z_au.clear();
-    atom_grid_w.clear();
-
-    radial_atom_grid_r_au.clear();
-    radial_atom_grid_w.clear();
-}
+AtomGrid::~AtomGrid() {}
 
 int numgrid_get_num_grid_points(const context_t *context)
 {
