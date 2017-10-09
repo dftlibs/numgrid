@@ -55,7 +55,16 @@ Mozilla Public License Version 2.0.
 - [pytest](http://pytest.org) (to test the optional Python interface)
 
 
-# Building and testing
+# Installation
+
+## Installing via pip
+
+```
+pip install git+https://github.com/dftlibs/numgrid@master
+```
+
+
+## Building and testing from sources
 
 Fetch the code:
 
