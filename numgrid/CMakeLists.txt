@@ -6,6 +6,7 @@ add_library(_numgrid OBJECT
   bragg.cpp
   )
 target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
+target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_BINARY_DIR}/include)
 add_dependencies(_numgrid version)
 set_target_properties(_numgrid PROPERTIES POSITION_INDEPENDENT_CODE 1)
 list(APPEND _objects
@@ -88,4 +89,14 @@ if(NOT SHARED_LIBRARY_ONLY)
   install (EXPORT "${PROJECT_NAME}Targets-static"
     NAMESPACE "${PROJECT_NAME}::"
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+endif()
+
+install(FILES ${PROJECT_SOURCE_DIR}/numgrid/numgrid.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+
+message(STATUS "numgrid Fortran bindings ${BoldBlue}${ENABLE_FC_SUPPORT}${ColourReset}")
+if(ENABLE_FC_SUPPORT)
+  add_library(numgrid_fortran OBJECT ${PROJECT_SOURCE_DIR}/numgrid/numgrid.f90)
+  set_target_properties(numgrid_fortran PROPERTIES INCLUDE_DIRECTORIES ""
+    POSITION_INDEPENDENT_CODE 1
+    )
 endif()
