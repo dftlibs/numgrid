@@ -79,8 +79,8 @@ AtomGrid::AtomGrid(const double radial_precision,
     double *angular_w = new double[MAX_ANGULAR_ORDER * MAX_ANGULAR_GRID];
 
     for (int i = get_angular_order(min_num_angular_points_closest);
-         i <= get_angular_order(max_num_angular_points_closest);
-         i++)
+         i < get_angular_order(max_num_angular_points_closest) + 1;
+         ++i)
     {
         int angular_off = i * MAX_ANGULAR_GRID;
         ld_by_order(lebedev_table[i],
