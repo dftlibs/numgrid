@@ -217,6 +217,11 @@ void AtomGrid::get_grid(const int num_centers,
                         double grid_z_au[],
                         double grid_w[]) const
 {
+    std::fill_n(&grid_x_au[0], num_grid_points, 0.0);
+    std::fill_n(&grid_y_au[0], num_grid_points, 0.0);
+    std::fill_n(&grid_z_au[0], num_grid_points, 0.0);
+    std::fill_n(&grid_w[0], num_grid_points, 0.0);
+
     for (int ipoint = 0; ipoint < num_grid_points; ipoint++)
     {
         grid_x_au[ipoint] =
