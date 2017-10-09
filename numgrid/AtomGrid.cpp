@@ -1,13 +1,13 @@
 #include <cmath>
 #include <limits>
 
-#include "numgrid.h"
 #include "AtomGrid.h"
 #include "becke_partitioning.h"
 #include "bragg.h"
 #include "error_handling.h"
 #include "grid_radial.h"
 #include "lebedev/sphere_lebedev_rule.h"
+#include "numgrid.h"
 #include "parameters.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
@@ -147,7 +147,7 @@ AtomGrid::AtomGrid(const double radial_precision,
             atom_grid_z_au_.push_back(angular_z[angular_off + iang] * radial_r);
 
             atom_grid_w_.push_back(4.0 * M_PI * angular_w[angular_off + iang] *
-                                  radial_w);
+                                   radial_w);
 
             num_grid_points_++;
         }
@@ -256,8 +256,7 @@ void numgrid_get_radial_grid(const context_t *context,
                              double grid_r_au[],
                              double grid_w[])
 {
-    return AS_CTYPE(AtomGrid, context)
-        ->get_radial_grid(grid_r_au, grid_w);
+    return AS_CTYPE(AtomGrid, context)->get_radial_grid(grid_r_au, grid_w);
 }
 void AtomGrid::get_radial_grid(double grid_r_au[], double grid_w[]) const
 {

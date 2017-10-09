@@ -3,3 +3,4 @@ AlignAfterOpenBracket: true
 BreakBeforeBraces: Allman
 BinPackParameters: false
 BinPackArguments: false
+SortIncludes: true
