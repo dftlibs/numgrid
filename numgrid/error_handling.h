@@ -39,35 +39,34 @@
  */
 
 /// Macro and helper functions to be used to signal error conditions
-#define NUMGRID_ERROR(msg)                          \
-  {                                                 \
-    std::ostringstream errmsg;                      \
-    errmsg << std::string("Numgrid fatal error.\n") \
-            << std::string(" In function ")         \
-            << std::string(__func__)                \
-            << std::string(" at line ") << __LINE__ \
-            << std::string(" of file ")             \
-            << std::string(__FILE__)                \
-            << std::endl;                           \
-    message_and_die(errmsg.str(), msg);             \
-  }
+#define NUMGRID_ERROR(msg)                                                     \
+    {                                                                          \
+        std::ostringstream errmsg;                                             \
+        errmsg << std::string("Numgrid fatal error.\n")                        \
+               << std::string(" In function ") << std::string(__func__)        \
+               << std::string(" at line ") << __LINE__                         \
+               << std::string(" of file ") << std::string(__FILE__)            \
+               << std::endl;                                                   \
+        message_and_die(errmsg.str(), msg);                                    \
+    }
 
-inline void message_and_die(const std::string & err,
-    const std::ostringstream & msg) {
-  std::fprintf(stderr, "%s\n", (err + msg.str()).c_str());
-  std::exit(EXIT_FAILURE);
+inline void message_and_die(const std::string &err,
+                            const std::ostringstream &msg)
+{
+    std::fprintf(stderr, "%s\n", (err + msg.str()).c_str());
+    std::exit(EXIT_FAILURE);
 }
 
-inline void message_and_die(const std::string & err,
-    const std::string & msg) {
-  std::fprintf(stderr, "%s\n", (err + msg).c_str());
-  std::exit(EXIT_FAILURE);
+inline void message_and_die(const std::string &err, const std::string &msg)
+{
+    std::fprintf(stderr, "%s\n", (err + msg).c_str());
+    std::exit(EXIT_FAILURE);
 }
 
-inline void message_and_die(const std::string & err,
-    const char * c_msg) {
-  std::fprintf(stderr, "%s\n", (err + std::string(c_msg)).c_str());
-  std::exit(EXIT_FAILURE);
+inline void message_and_die(const std::string &err, const char *c_msg)
+{
+    std::fprintf(stderr, "%s\n", (err + std::string(c_msg)).c_str());
+    std::exit(EXIT_FAILURE);
 }
 
 /// Macro to be used for assertions
