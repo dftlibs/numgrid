@@ -120,6 +120,7 @@ implementation
 This was done to simplify memory management and avoid memory leaks and strange
 effects.  The client can now query the number of grid points before computing
 the grid for a certain atom type. Sounds cumbersome but is not a problem in practice.
+For the Python interface this is not a problem at all since it takes care of that.
 
 
 ### Compute one center at a time
@@ -235,59 +236,49 @@ min_num_angular_points = 86
 max_num_angular_points = 302
 
 num_centers = 3
-center_coordinates = [
-    0.00,
-    0.00,
-    0.00,
-    1.43,
-    0.00,
-    1.10,
-    -1.43,
-    0.00,
-    1.10,
-]
-center_elements = [8, 1, 1]
+proton_charges = [8, 1, 1]
 
-num_outer_centers = 0
-outer_center_coordinates = []
-outer_center_elements = []
+x_coordinates_au = [0.0, 1.43, -1.43]
+y_coordinates_au = [0.0, 0.0, 0.0]
+z_coordinates_au = [0.0, 1.1, 1.1]
 
-num_shells = 12
-shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
-shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
+# cc-pVDZ basis
+alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
+max_l_quantum_numbers = [2, 1, 1]  # O, H, H
+alpha_min = [[0.3023, 0.2753, 1.185],  # O
+             [0.122, 0.727],  # H
+             [0.122, 0.727]]  # H
 
-primitive_exponents = [
-    1.172e+04,
-    1.759e+03,
-    4.008e+02,
-    ...  # we skip many numbers here for brevity
-    7.270e-01,
-]
+for center_index in range(num_centers):
+    context = numgrid.new_atom_grid(radial_precision,
+                                    min_num_angular_points,
+                                    max_num_angular_points,
+                                    proton_charges[center_index],
+                                    alpha_max[center_index],
+                                    max_l_quantum_numbers[center_index],
+                                    alpha_min[center_index])
 
-context = numgrid.new_context()
+    num_points = numgrid.get_num_grid_points(context)
 
-ierr = numgrid.generate_grid(context,
-                             radial_precision,
-                             min_num_angular_points,
-                             max_num_angular_points,
-                             num_centers,
-                             center_coordinates,
-                             center_elements,
-                             num_outer_centers,
-                             outer_center_coordinates,
-                             outer_center_elements,
-                             num_shells,
-                             shell_centers,
-                             shell_l_quantum_numbers,
-                             shell_num_primitives,
-                             primitive_exponents)
+    # generate an atomic grid in the molecular environment
+    x, y, z, w = numgrid.get_grid(context,
+                                  num_centers,
+                                  center_index,
+                                  x_coordinates_au,
+                                  y_coordinates_au,
+                                  z_coordinates_au,
+                                  proton_charges)
 
-num_points = numgrid.get_num_points(context)
+    num_radial_points = numgrid.get_num_radial_grid_points(context)
 
-grid = numgrid.get_grid(context)
+    # generate an isolated radial grid
+    r, w = numgrid.get_radial_grid(context)
 
-numgrid.free_context(context)
+    numgrid.free_atom_grid(context)
+
+
+# generate an isolated angular grid
+x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
 ```
 
 
