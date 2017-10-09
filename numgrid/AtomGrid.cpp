@@ -112,8 +112,8 @@ AtomGrid::AtomGrid(const double radial_precision,
     }
     NUMGRID_ASSERT(r_outer > h);
 
-    num_grid_points = 0;
-    num_radial_grid_points = 0;
+    num_grid_points_ = 0;
+    num_radial_grid_points_ = 0;
 
     double rb = get_bragg_angstrom(proton_charge) /
                 (5.0 * 0.529177249); // factors match DIRAC code
@@ -124,9 +124,9 @@ AtomGrid::AtomGrid(const double radial_precision,
         double radial_r = c * (exp((irad + 1) * h) - 1.0);
         double radial_w = (radial_r + c) * radial_r * radial_r * h;
 
-        radial_atom_grid_r_au.push_back(radial_r);
-        radial_atom_grid_w.push_back(radial_w);
-        num_radial_grid_points++;
+        radial_atom_grid_r_au_.push_back(radial_r);
+        radial_atom_grid_w_.push_back(radial_w);
+        num_radial_grid_points_++;
 
         int num_angular = max_num_angular_points_closest;
         if (radial_r < rb)
@@ -142,14 +142,14 @@ AtomGrid::AtomGrid(const double radial_precision,
 
         for (int iang = 0; iang < num_angular; iang++)
         {
-            atom_grid_x_au.push_back(angular_x[angular_off + iang] * radial_r);
-            atom_grid_y_au.push_back(angular_y[angular_off + iang] * radial_r);
-            atom_grid_z_au.push_back(angular_z[angular_off + iang] * radial_r);
+            atom_grid_x_au_.push_back(angular_x[angular_off + iang] * radial_r);
+            atom_grid_y_au_.push_back(angular_y[angular_off + iang] * radial_r);
+            atom_grid_z_au_.push_back(angular_z[angular_off + iang] * radial_r);
 
-            atom_grid_w.push_back(4.0 * M_PI * angular_w[angular_off + iang] *
+            atom_grid_w_.push_back(4.0 * M_PI * angular_w[angular_off + iang] *
                                   radial_w);
 
-            num_grid_points++;
+            num_grid_points_++;
         }
     }
 
@@ -171,7 +171,7 @@ int numgrid_get_num_grid_points(const context_t *context)
 {
     return AS_CTYPE(AtomGrid, context)->get_num_grid_points();
 }
-int AtomGrid::get_num_grid_points() const { return num_grid_points; }
+int AtomGrid::get_num_grid_points() const { return num_grid_points_; }
 
 int numgrid_get_num_radial_grid_points(const context_t *context)
 {
@@ -179,7 +179,7 @@ int numgrid_get_num_radial_grid_points(const context_t *context)
 }
 int AtomGrid::get_num_radial_grid_points() const
 {
-    return num_radial_grid_points;
+    return num_radial_grid_points_;
 }
 
 void numgrid_get_grid(const context_t *context,
@@ -217,19 +217,19 @@ void AtomGrid::get_grid(const int num_centers,
                         double grid_z_au[],
                         double grid_w[]) const
 {
-    std::fill_n(&grid_x_au[0], num_grid_points, 0.0);
-    std::fill_n(&grid_y_au[0], num_grid_points, 0.0);
-    std::fill_n(&grid_z_au[0], num_grid_points, 0.0);
-    std::fill_n(&grid_w[0], num_grid_points, 0.0);
+    std::fill_n(&grid_x_au[0], num_grid_points_, 0.0);
+    std::fill_n(&grid_y_au[0], num_grid_points_, 0.0);
+    std::fill_n(&grid_z_au[0], num_grid_points_, 0.0);
+    std::fill_n(&grid_w[0], num_grid_points_, 0.0);
 
-    for (int ipoint = 0; ipoint < num_grid_points; ipoint++)
+    for (size_t ipoint = 0; ipoint < num_grid_points_; ipoint++)
     {
         grid_x_au[ipoint] =
-            atom_grid_x_au[ipoint] + x_coordinates_au[center_index];
+            atom_grid_x_au_[ipoint] + x_coordinates_au[center_index];
         grid_y_au[ipoint] =
-            atom_grid_y_au[ipoint] + y_coordinates_au[center_index];
+            atom_grid_y_au_[ipoint] + y_coordinates_au[center_index];
         grid_z_au[ipoint] =
-            atom_grid_z_au[ipoint] + z_coordinates_au[center_index];
+            atom_grid_z_au_[ipoint] + z_coordinates_au[center_index];
 
         double becke_w = 1.0;
 
@@ -248,7 +248,7 @@ void AtomGrid::get_grid(const int num_centers,
                                   grid_z_au[ipoint]);
         }
 
-        grid_w[ipoint] = atom_grid_w[ipoint] * becke_w;
+        grid_w[ipoint] = atom_grid_w_[ipoint] * becke_w;
     }
 }
 
@@ -261,10 +261,10 @@ void numgrid_get_radial_grid(const context_t *context,
 }
 void AtomGrid::get_radial_grid(double grid_r_au[], double grid_w[]) const
 {
-    for (int ipoint = 0; ipoint < num_radial_grid_points; ipoint++)
+    for (size_t ipoint = 0; ipoint < num_radial_grid_points_; ipoint++)
     {
-        grid_r_au[ipoint] = radial_atom_grid_r_au[ipoint];
-        grid_w[ipoint] = radial_atom_grid_w[ipoint];
+        grid_r_au[ipoint] = radial_atom_grid_r_au_[ipoint];
+        grid_w[ipoint] = radial_atom_grid_w_[ipoint];
     }
 }
 
