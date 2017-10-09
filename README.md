@@ -136,93 +136,38 @@ Great simplification. All that is needed now is the steepest exponent and a set
 of smallest exponents for each angular momentum.
 
 
-## Obtain the API version
+### Separate arrays for x, y, z, and weights
 
-```c
-char *numgrid_get_version();
-```
-
-
-## Creating and destroying contexts
-
-Create a new context:
-
-```c
-context_t *numgrid_new_context();
-```
-
-Destroy the context and deallocates all data:
-
-```c
-void numgrid_free_context(context_t *context);
-```
-
-You can keep several contexts alive at the same time.
-
-
-## Generating the grid
-
-Generate grid and hold it in memory for the lifetime of the context (returns 0 if the call
-completed without errors):
-
-```c
-int numgrid_generate_grid(context_t *context,
-                          const double radial_precision,
-                          const int    min_num_angular_points,
-                          const int    max_num_angular_points,
-                          const int    num_centers,
-                          const double center_coordinates[],
-                          const int    center_elements[],
-                          const int    num_outer_centers,
-                          const double outer_center_coordinates[],
-                          const int    outer_center_elements[],
-                          const int    num_shells,
-                          const int    shell_centers[],
-                          const int    shell_l_quantum_numbers[],
-                          const int    shell_num_primitives[],
-                          const double primitive_exponents[]);
-```
-
-
-## How to query the grid
-
-Get number of grid points:
-
-```c
-int numgrid_get_num_points(const context_t *context);
-```
-
-Get the pointer to the memory which holds the grid:
-
-```c
-double *numgrid_get_grid(const context_t *context);
-```
-
-The grid is saved in a one-dimensional array with the following ordering:
-
-```
-point 1, x coordinate
-point 1, y coordinate
-point 1, z coordinate
-point 1, weight
-point 2, x coordinate
-point 2, y coordinate
-point 2, z coordinate
-point 2, weight
-...
-point N, x coordinate
-point N, y coordinate
-point N, z coordinate
-point N, weight
-```
+They can be recombined on the client side but it makes it easier to understand
+how the grid information is stored in memory.
 
 
 ## Units
 
-`center_coordinates` are understood to be in bohr.
+Coordinates are in bohr.
 
 
-## Python interface
+## Overview
+
+Grid computation is done per atom/basis type and proceeds in five steps:
+
+- Create atom
+- Get number of points (depends on basis set range)
+- Allocate memory to hold the grid
+- Compute grid on this atom in a molecular environment
+- Free atom and its memory
+
+The Python interface takes care of the allocation and deallocation part but the
+essential point is that memory management is happening on the client side.
+
+If you have many atom centers that have the same atom type and same basis set,
+it will make sense to create only one atom object and then reuse this object to
+compute the grid on all atoms with the same basis type.
+
+It is no problem to create several atom objects at the same time.
+
+
+## Python example
 
 The Python interface is generated using [CFFI](https://cffi.readthedocs.org).
 
@@ -280,6 +225,118 @@ for center_index in range(num_centers):
 # generate an isolated angular grid
 x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
 ```
+
+
+## C API
+
+To see a real example, have a look at the [C++ test case](test/test.cpp).
+
+
+### Creating a new atom grid
+
+```c
+context_t *numgrid_new_atom_grid(const double radial_precision,
+                                 const int min_num_angular_points,
+                                 const int max_num_angular_points,
+                                 const int proton_charge,
+                                 const double alpha_max,
+                                 const int max_l_quantum_number,
+                                 const double alpha_min[]);
+```
+
+The smaller the `radial_precision`, the better grid.
+
+For `min_num_angular_points` and `max_num_angular_points`,
+see "Angular grid" below.
+
+`alpha_max` is the steepest basis set exponent.
+
+`alpha_min` is an array of the size `max_l_quantum_number` + 1 and holds the smallest
+exponents for each angular momentum. If an angular momentum set is missing "in the middle", provide 0.0.
+In other words, imagine that you have a basis set which only contains *s* and *d* functions and no *p* functions
+and let us assume that the most diffuse *s* function has the exponent 0.1 and the most diffuse *d* function has
+the exponent 0.2, then `alpha_min` would be an array of three numbers holding {0.1, 0.0, 0.2}.
+
+
+### Get number of grid points on current atom
+
+The following two functions are probably self-explaining. We need to provide the context
+which refers to a specific atom object.
+
+```c
+int numgrid_get_num_grid_points(const context_t *context);
+
+int numgrid_get_num_radial_grid_points(const context_t *context);
+```
+
+
+### Get grid on current atom, scaled by Becke partitioning
+
+We assume that `grid_x_au`, `grid_y_au`, `grid_z_au`, and `grid_w` are
+allocated by the caller and have the length that equals the number of grid
+points.
+
+`x_coordinates_au`, `y_coordinates_au`, `z_coordinates_au`, and
+`proton_charges` refer to the molecular environment and have the size
+`num_centers`.
+
+Using `center_index` we tell the code which of the atom centers is the one we
+have computed the grid for.
+
+```c
+void numgrid_get_grid(const context_t *context,
+                      const int num_centers,
+                      const int center_index,
+                      const double x_coordinates_au[],
+                      const double y_coordinates_au[],
+                      const double z_coordinates_au[],
+                      const int proton_charges[],
+                      double grid_x_au[],
+                      double grid_y_au[],
+                      double grid_z_au[],
+                      double grid_w[]);
+```
+
+
+### Get radial grid on current atom
+
+We assume that `radial_grid_r_au` and `radial_grid_w` are allocated by the caller
+and have both the length that equals the number of radial grid points.
+
+```c
+void numgrid_get_radial_grid(const context_t *context,
+                             double radial_grid_r_au[],
+                             double radial_grid_w[]);
+```
+
+
+### Get angular grid
+
+This does not refer to any specific atom and does not require any context.
+
+`num_angular_grid_points` has to be one of the many supported Lebedev grids (see table on the bottom of this page)
+and the code will assume that the grid arrays are allocated by the caller and have at least the size `num_angular_grid_points`.
+
+```c
+void numgrid_get_angular_grid(const int num_angular_grid_points,
+                              double angular_grid_x_au[],
+                              double angular_grid_y_au[],
+                              double angular_grid_z_au[],
+                              double angular_grid_w[]);
+```
+
+
+### Destroy the atom and deallocate all data
+
+```c
+void numgrid_free_atom_grid(context_t *context);
+```
+
+
+## Fortran API
+
+Closely follows the C API.
+To see a real example, have a look at the [Fortran test case](test/test.f90).
 
 
 # Parallelization
