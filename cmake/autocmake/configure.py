@@ -98,8 +98,10 @@ def run_cmake(command, build_path, default_build_path):
     print(stdout)
 
     if stderr:
+        # we write out stderr but we do not stop yet
+        # this is because CMake warnings are sent to stderr
+        # and they might be benign
         sys.stderr.write(stderr)
-        sys.exit(1)
 
     # write cmake output to file
     with open('cmake_output', 'w') as f:
@@ -108,16 +110,21 @@ def run_cmake(command, build_path, default_build_path):
     # change directory and return
     os.chdir(topdir)
 
-    if 'Configuring incomplete' in stdout:
-        # configuration was not successful
+    # to figure out whether configuration was a success
+    # we check for 3 sentences that should be part of stdout
+    configuring_done = '-- Configuring done' in stdout
+    generating_done = '-- Generating done' in stdout
+    build_files_written = '-- Build files have been written to' in stdout
+    configuration_successful = configuring_done and generating_done and build_files_written
+
+    if configuration_successful:
+        save_setup_command(sys.argv, build_path)
+        print_build_help(build_path, default_build_path)
+    else:
         if (build_path == default_build_path):
             # remove build_path iff not set by the user
             # otherwise removal can be dangerous
             rmtree(default_build_path)
-    else:
-        # configuration was successful
-        save_setup_command(sys.argv, build_path)
-        print_build_help(build_path, default_build_path)
 
 
 def print_build_help(build_path, default_build_path):

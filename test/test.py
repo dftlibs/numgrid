@@ -1,139 +1,88 @@
-import pytest
+from pytest import approx
+import os
+import numgrid
 
 
-@pytest.fixture(scope='function')
-def context(request):
-    """
-    Add context to test functions.
-    """
-    import numgrid
-    ctx = numgrid.new_context()
-
-    def cleanup():
-        """
-        Clean up the context.
-        """
-        numgrid.free_context(ctx)
-
-    request.addfinalizer(cleanup)
-    return ctx
-
-
-def test_h2o_grid(context):
+def test_h2o_grid():
     """
     Test H2O grid generation.
     """
-    import os
-    import numgrid
+
+    # read reference grid from file
+    # we will compare results against this file
+    reference_grid_x_au = []
+    reference_grid_y_au = []
+    reference_grid_z_au = []
+    reference_grid_w = []
+    _here = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(_here, 'reference_grid.txt'), 'r') as f:
+        for line in f.read().splitlines():
+            (x, y, z, w) = line.split()
+            reference_grid_x_au.append(float(x))
+            reference_grid_y_au.append(float(y))
+            reference_grid_z_au.append(float(z))
+            reference_grid_w.append(float(w))
+    reference_num_points = [16364, 14928, 14928]
+    reference_num_radial_points = [106, 78, 78]
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
     max_num_angular_points = 302
 
     num_centers = 3
-    center_coordinates = [
-        0.00,
-        0.00,
-        0.00,
-        1.43,
-        0.00,
-        1.10,
-        -1.43,
-        0.00,
-        1.10,
-    ]
+    proton_charges = [8, 1, 1]
 
-    center_elements = [8, 1, 1]
+    x_coordinates_au = [0.0, 1.43, -1.43]
+    y_coordinates_au = [0.0, 0.0, 0.0]
+    z_coordinates_au = [0.0, 1.1, 1.1]
 
-    num_outer_centers = 0
-    outer_center_coordinates = []
-    outer_center_elements = []
+    # cc-pVDZ basis
+    alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
+    max_l_quantum_numbers = [2, 1, 1]  # O, H, H
+    alpha_min = [[0.3023, 0.2753, 1.185],  # O
+                 [0.122, 0.727],  # H
+                 [0.122, 0.727]]  # H
 
-    num_shells = 12
-    shell_centers = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-    shell_l_quantum_numbers = [0, 0, 0, 1, 1, 2, 0, 0, 1, 0, 0, 1]
-    shell_num_primitives = [9, 9, 1, 4, 1, 1, 4, 1, 1, 4, 1, 1]
+    offset = 0
+    for center_index in range(num_centers):
+        context = numgrid.new_atom_grid(radial_precision,
+                                        min_num_angular_points,
+                                        max_num_angular_points,
+                                        proton_charges[center_index],
+                                        alpha_max[center_index],
+                                        max_l_quantum_numbers[center_index],
+                                        alpha_min[center_index])
 
-    primitive_exponents = [
-        1.172e+04,
-        1.759e+03,
-        4.008e+02,
-        1.137e+02,
-        3.703e+01,
-        1.327e+01,
-        5.025e+00,
-        1.013e+00,
-        3.023e-01,
-        1.172e+04,
-        1.759e+03,
-        4.008e+02,
-        1.137e+02,
-        3.703e+01,
-        1.327e+01,
-        5.025e+00,
-        1.013e+00,
-        3.023e-01,
-        3.023e-01,
-        1.770e+01,
-        3.854e+00,
-        1.046e+00,
-        2.753e-01,
-        2.753e-01,
-        1.185e+00,
-        1.301e+01,
-        1.962e+00,
-        4.446e-01,
-        1.220e-01,
-        1.220e-01,
-        7.270e-01,
-        1.301e+01,
-        1.962e+00,
-        4.446e-01,
-        1.220e-01,
-        1.220e-01,
-        7.270e-01,
-    ]
+        num_points = numgrid.get_num_grid_points(context)
+        assert num_points == reference_num_points[center_index]
 
-    ierr = numgrid.generate_grid(context,
-                                 radial_precision,
-                                 min_num_angular_points,
-                                 max_num_angular_points,
-                                 num_centers,
-                                 center_coordinates,
-                                 center_elements,
-                                 num_outer_centers,
-                                 outer_center_coordinates,
-                                 outer_center_elements,
-                                 num_shells,
-                                 shell_centers,
-                                 shell_l_quantum_numbers,
-                                 shell_num_primitives,
-                                 primitive_exponents)
+        num_radial_points = numgrid.get_num_radial_grid_points(context)
+        assert num_radial_points == reference_num_radial_points[center_index]
 
-    num_points = numgrid.get_num_points(context)
-    assert num_points == 46220
+        x, y, z, w = numgrid.get_grid(context,
+                                      num_centers,
+                                      center_index,
+                                      x_coordinates_au,
+                                      y_coordinates_au,
+                                      z_coordinates_au,
+                                      proton_charges)
 
-    here = os.path.abspath(os.path.dirname(__file__))
-    reference_grid = []
-    with open(os.path.join(here, 'reference_grid.txt'), 'r') as f:
-        for line in f.readlines():
-            for x in line.split():
-                reference_grid.append(float(x))
-    grid = numgrid.get_grid(context)
-#   with open(os.path.join(here, 'reference_grid.txt'), 'w') as f:
-#       for i in range(num_points):
-#           f.write('{0} {1} {2} {3}\n'.format(grid[4*i + 0],
-#                                              grid[4*i + 1],
-#                                              grid[4*i + 2],
-#                                              grid[4*i + 3]))
-    for i in range(num_points):
-        error = grid[i] - reference_grid[i]
-        if abs(reference_grid[i]) > 1.0e-20:
-            error /= reference_grid[i]
-        assert abs(error) < 1.0e-6
+        rel_error = 1.0e-9
+        assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=rel_error)
+        assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=rel_error)
+        assert z == approx(reference_grid_z_au[offset:offset + num_points], rel=rel_error)
+        assert w == approx(reference_grid_w[offset:offset + num_points], rel=rel_error)
+
+        # we only check that call works but for the moment do not verify results
+        r, w = numgrid.get_radial_grid(context)
+
+        # we only check that call works but for the moment do not verify results
+        x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
+
+        offset += num_points
+
+        numgrid.free_atom_grid(context)
 
 
 def test_version():
-    import numgrid
-
-    assert numgrid.get_version() == '0.5.1'
+    assert numgrid.get_version() == '1.0.0-alpha'

@@ -43,7 +43,7 @@ matrix:
     - os: linux
       compiler: gcc
       addons: *gcc49
-      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug'
+      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug' COVERAGE='true'
 
     - os: linux
       compiler: gcc
@@ -113,7 +113,7 @@ script:
   - cd ..
   - pep8 --ignore=E501 test/test.py
   - pep8 --ignore=E501 test/valgrind.py
-  - NUMGRID_BUILD_DIR=$PWD/build PYTHONPATH=$PWD/api py.test -s -vv test/test.py
+  - NUMGRID_BUILD_DIR=$PWD/build PYTHONPATH=$PWD py.test -s -vv test/test.py
   - |
     if [[ "${VALGRIND}" = true ]]; then
       PYTHONPATH=build pytest -vv test/valgrind.py
