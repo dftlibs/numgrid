@@ -34,6 +34,7 @@ class AtomGrid
     void get_radial_grid(double grid_r_au[], double grid_w[]) const;
 
   private:
+    // TODO move to public section, use C++11, use delete
     AtomGrid(const AtomGrid &rhs);            // not implemented
     AtomGrid &operator=(const AtomGrid &rhs); // not implemented
 
