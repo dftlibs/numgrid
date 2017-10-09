@@ -1,5 +1,4 @@
-#ifndef NUMGRID_H_INCLUDED
-#define NUMGRID_H_INCLUDED
+#pragma once
 
 #ifndef NUMGRID_API
 #include "numgrid_export.h"
@@ -70,5 +69,3 @@ void numgrid_free_atom_grid(context_t *context);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* NUMGRID_H_INCLUDED */

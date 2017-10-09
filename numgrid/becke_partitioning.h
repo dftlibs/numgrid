@@ -1,5 +1,4 @@
-#ifndef BECKE_PARTITIONING_H_INCLUDED
-#define BECKE_PARTITIONING_H_INCLUDED
+#pragma once
 
 double get_becke_w(const int num_centers,
                    const int proton_charges[],
@@ -10,5 +9,3 @@ double get_becke_w(const int num_centers,
                    const double x,
                    const double y,
                    const double z);
-
-#endif /* BECKE_PARTITIONING_H_INCLUDED */

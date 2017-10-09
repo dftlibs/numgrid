@@ -1,5 +1,4 @@
-#ifndef ATOMGRID_H_INCLUDED
-#define ATOMGRID_H_INCLUDED
+#pragma once
 
 #include <vector>
 
@@ -50,5 +49,3 @@ class AtomGrid
     std::vector<double> radial_atom_grid_r_au_;
     std::vector<double> radial_atom_grid_w_;
 };
-
-#endif /* ATOMGRID_H_INCLUDED */

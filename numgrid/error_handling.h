@@ -2,8 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef ERRORHANDLING_H
-#define ERRORHANDLING_H
+#pragma once
 
 #include <cassert>
 #include <cstdio>
@@ -73,5 +72,3 @@ inline void message_and_die(const std::string & err,
 
 /// Macro to be used for assertions
 #define NUMGRID_ASSERT(arg) assert(arg)
-
-#endif /* ERRORHANDLING_H */
