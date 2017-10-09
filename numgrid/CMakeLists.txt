@@ -6,7 +6,7 @@ add_library(_numgrid OBJECT
   bragg.cpp
   )
 target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
-target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_BINARY_DIR}/include)
+target_include_directories(_numgrid PRIVATE ${PROJECT_BINARY_DIR}/include)
 add_dependencies(_numgrid version)
 set_target_properties(_numgrid PROPERTIES POSITION_INDEPENDENT_CODE 1)
 list(APPEND _objects

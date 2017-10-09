@@ -14,7 +14,7 @@ add_executable(
   test.cpp
   )
 
-target_include_directories(cpp_test SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/numgrid ${PROJECT_BINARY_DIR}/include)
+target_include_directories(cpp_test PRIVATE ${PROJECT_SOURCE_DIR}/numgrid ${PROJECT_BINARY_DIR}/include)
 
 add_dependencies(cpp_test gtest)
 
