@@ -38,14 +38,14 @@ class AtomGrid
     AtomGrid(const AtomGrid &rhs);            // not implemented
     AtomGrid &operator=(const AtomGrid &rhs); // not implemented
 
-    int num_grid_points;
+    std::size_t num_grid_points;
 
     std::vector<double> atom_grid_x_au;
     std::vector<double> atom_grid_y_au;
     std::vector<double> atom_grid_z_au;
     std::vector<double> atom_grid_w;
 
-    int num_radial_grid_points;
+    std::size_t num_radial_grid_points;
 
     std::vector<double> radial_atom_grid_r_au;
     std::vector<double> radial_atom_grid_w;
