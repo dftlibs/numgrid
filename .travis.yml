@@ -92,12 +92,20 @@ install:
       export PATH=$PWD/cmake-3.8.0-Linux-x86_64/bin:$PATH
       export LD_LIBARY_PATH=$PWD/cmake-3.8.0-Linux-x86_64/lib:$LD_LIBRARY_PATH
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install gcc
+      brew update &> /dev/null
+      brew cask uninstall --force oclint
+      brew install gcc python pyenv-virtualenv
+      brew upgrade cmake
     fi
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - pip install -r requirements.txt
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      pip install -r requirements.txt
+    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      pip2 install -r requirements.txt
+    fi
   - export PATH=$HOME/.local/bin:$PATH
   - |
     if [[ "${COVERAGE}" = true ]]; then
