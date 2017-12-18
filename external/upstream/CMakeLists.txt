@@ -1,5 +1,1 @@
-foreach(dir lebedev
-            gtest
-)
-   add_subdirectory(${dir})
-endforeach()
+add_subdirectory(lebedev)
