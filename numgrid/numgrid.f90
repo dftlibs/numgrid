@@ -61,51 +61,51 @@ module numgrid
       subroutine numgrid_get_grid(context,          &
                                   num_centers,      &
                                   center_index,     &
-                                  x_coordinates_au, &
-                                  y_coordinates_au, &
-                                  z_coordinates_au, &
+                                  x_coordinates_bohr, &
+                                  y_coordinates_bohr, &
+                                  z_coordinates_bohr, &
                                   proton_charges,   &
-                                  grid_x_au,        &
-                                  grid_y_au,        &
-                                  grid_z_au,        &
+                                  grid_x_bohr,        &
+                                  grid_y_bohr,        &
+                                  grid_z_bohr,        &
                                   grid_w) bind (c)
          import :: c_ptr, c_double, c_int
          type(c_ptr), value                :: context
          integer(c_int), intent(in), value :: num_centers
          integer(c_int), intent(in), value :: center_index
-         real(c_double), intent(in)        :: x_coordinates_au(*)
-         real(c_double), intent(in)        :: y_coordinates_au(*)
-         real(c_double), intent(in)        :: z_coordinates_au(*)
+         real(c_double), intent(in)        :: x_coordinates_bohr(*)
+         real(c_double), intent(in)        :: y_coordinates_bohr(*)
+         real(c_double), intent(in)        :: z_coordinates_bohr(*)
          integer(c_int), intent(in)        :: proton_charges(*)
-         real(c_double), intent(inout)     :: grid_x_au(*)
-         real(c_double), intent(inout)     :: grid_y_au(*)
-         real(c_double), intent(inout)     :: grid_z_au(*)
+         real(c_double), intent(inout)     :: grid_x_bohr(*)
+         real(c_double), intent(inout)     :: grid_y_bohr(*)
+         real(c_double), intent(inout)     :: grid_z_bohr(*)
          real(c_double), intent(inout)     :: grid_w(*)
       end subroutine
    end interface
 
    interface numgrid_get_radial_grid
       subroutine numgrid_get_radial_grid(context,  &
-                                         radial_grid_r_au,&
+                                         radial_grid_r_bohr,&
                                          radial_grid_w) bind (c)
          import :: c_ptr, c_double, c_int
          type(c_ptr), value            :: context
-         real(c_double), intent(inout) :: radial_grid_r_au(*)
+         real(c_double), intent(inout) :: radial_grid_r_bohr(*)
          real(c_double), intent(inout) :: radial_grid_w(*)
       end subroutine
    end interface
 
    interface numgrid_get_angular_grid
       subroutine numgrid_get_angular_grid(num_angular_grid_points, &
-                                          angular_grid_x_au,       &
-                                          angular_grid_y_au,       &
-                                          angular_grid_z_au,       &
+                                          angular_grid_x_bohr,       &
+                                          angular_grid_y_bohr,       &
+                                          angular_grid_z_bohr,       &
                                           angular_grid_w) bind (c)
          import :: c_double, c_int
          integer(c_int), intent(in), value :: num_angular_grid_points
-         real(c_double), intent(inout)     :: angular_grid_x_au(*)
-         real(c_double), intent(inout)     :: angular_grid_y_au(*)
-         real(c_double), intent(inout)     :: angular_grid_z_au(*)
+         real(c_double), intent(inout)     :: angular_grid_x_bohr(*)
+         real(c_double), intent(inout)     :: angular_grid_y_bohr(*)
+         real(c_double), intent(inout)     :: angular_grid_z_bohr(*)
          real(c_double), intent(inout)     :: angular_grid_w(*)
       end subroutine
    end interface

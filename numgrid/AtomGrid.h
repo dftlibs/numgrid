@@ -21,16 +21,16 @@ class AtomGrid
 
     void get_grid(const int num_centers,
                   const int center_index,
-                  const double x_coordinates_au[],
-                  const double y_coordinates_au[],
-                  const double z_coordinates_au[],
+                  const double x_coordinates_bohr[],
+                  const double y_coordinates_bohr[],
+                  const double z_coordinates_bohr[],
                   const int proton_charges[],
-                  double grid_x_au[],
-                  double grid_y_au[],
-                  double grid_z_au[],
+                  double grid_x_bohr[],
+                  double grid_y_bohr[],
+                  double grid_z_bohr[],
                   double grid_w[]) const;
 
-    void get_radial_grid(double grid_r_au[], double grid_w[]) const;
+    void get_radial_grid(double grid_r_bohr[], double grid_w[]) const;
 
   private:
     // TODO move to public section, use C++11, use delete
@@ -39,13 +39,13 @@ class AtomGrid
 
     std::size_t num_grid_points_;
 
-    std::vector<double> atom_grid_x_au_;
-    std::vector<double> atom_grid_y_au_;
-    std::vector<double> atom_grid_z_au_;
+    std::vector<double> atom_grid_x_bohr_;
+    std::vector<double> atom_grid_y_bohr_;
+    std::vector<double> atom_grid_z_bohr_;
     std::vector<double> atom_grid_w_;
 
     std::size_t num_radial_grid_points_;
 
-    std::vector<double> radial_atom_grid_r_au_;
+    std::vector<double> radial_atom_grid_r_bohr_;
     std::vector<double> radial_atom_grid_w_;
 };

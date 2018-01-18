@@ -10,17 +10,17 @@ def test_h2o_grid():
 
     # read reference grid from file
     # we will compare results against this file
-    reference_grid_x_au = []
-    reference_grid_y_au = []
-    reference_grid_z_au = []
+    reference_grid_x_bohr = []
+    reference_grid_y_bohr = []
+    reference_grid_z_bohr = []
     reference_grid_w = []
     _here = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(_here, 'reference_grid.txt'), 'r') as f:
         for line in f.read().splitlines():
             (x, y, z, w) = line.split()
-            reference_grid_x_au.append(float(x))
-            reference_grid_y_au.append(float(y))
-            reference_grid_z_au.append(float(z))
+            reference_grid_x_bohr.append(float(x))
+            reference_grid_y_bohr.append(float(y))
+            reference_grid_z_bohr.append(float(z))
             reference_grid_w.append(float(w))
     reference_num_points = [16364, 14928, 14928]
     reference_num_radial_points = [106, 78, 78]
@@ -32,9 +32,9 @@ def test_h2o_grid():
     num_centers = 3
     proton_charges = [8, 1, 1]
 
-    x_coordinates_au = [0.0, 1.43, -1.43]
-    y_coordinates_au = [0.0, 0.0, 0.0]
-    z_coordinates_au = [0.0, 1.1, 1.1]
+    x_coordinates_bohr = [0.0, 1.43, -1.43]
+    y_coordinates_bohr = [0.0, 0.0, 0.0]
+    z_coordinates_bohr = [0.0, 1.1, 1.1]
 
     # cc-pVDZ basis
     alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
@@ -62,15 +62,15 @@ def test_h2o_grid():
         x, y, z, w = numgrid.get_grid(context,
                                       num_centers,
                                       center_index,
-                                      x_coordinates_au,
-                                      y_coordinates_au,
-                                      z_coordinates_au,
+                                      x_coordinates_bohr,
+                                      y_coordinates_bohr,
+                                      z_coordinates_bohr,
                                       proton_charges)
 
         rel_error = 1.0e-9
-        assert x == approx(reference_grid_x_au[offset:offset + num_points], rel=rel_error)
-        assert y == approx(reference_grid_y_au[offset:offset + num_points], rel=rel_error)
-        assert z == approx(reference_grid_z_au[offset:offset + num_points], rel=rel_error)
+        assert x == approx(reference_grid_x_bohr[offset:offset + num_points], rel=rel_error)
+        assert y == approx(reference_grid_y_bohr[offset:offset + num_points], rel=rel_error)
+        assert z == approx(reference_grid_z_bohr[offset:offset + num_points], rel=rel_error)
         assert w == approx(reference_grid_w[offset:offset + num_points], rel=rel_error)
 
         # we only check that call works but for the moment do not verify results
@@ -85,4 +85,4 @@ def test_h2o_grid():
 
 
 def test_version():
-    assert numgrid.get_version() == '1.0.0-alpha'
+    assert numgrid.get_version() == '1.0.0-beta-1'

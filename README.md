@@ -183,9 +183,9 @@ max_num_angular_points = 302
 num_centers = 3
 proton_charges = [8, 1, 1]
 
-x_coordinates_au = [0.0, 1.43, -1.43]
-y_coordinates_au = [0.0, 0.0, 0.0]
-z_coordinates_au = [0.0, 1.1, 1.1]
+x_coordinates_bohr = [0.0, 1.43, -1.43]
+y_coordinates_bohr = [0.0, 0.0, 0.0]
+z_coordinates_bohr = [0.0, 1.1, 1.1]
 
 # cc-pVDZ basis
 alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
@@ -209,9 +209,9 @@ for center_index in range(num_centers):
     x, y, z, w = numgrid.get_grid(context,
                                   num_centers,
                                   center_index,
-                                  x_coordinates_au,
-                                  y_coordinates_au,
-                                  z_coordinates_au,
+                                  x_coordinates_bohr,
+                                  y_coordinates_bohr,
+                                  z_coordinates_bohr,
                                   proton_charges)
 
     num_radial_points = numgrid.get_num_radial_grid_points(context)
@@ -272,11 +272,11 @@ int numgrid_get_num_radial_grid_points(const context_t *context);
 
 ### Get grid on current atom, scaled by Becke partitioning
 
-We assume that `grid_x_au`, `grid_y_au`, `grid_z_au`, and `grid_w` are
+We assume that `grid_x_bohr`, `grid_y_bohr`, `grid_z_bohr`, and `grid_w` are
 allocated by the caller and have the length that equals the number of grid
 points.
 
-`x_coordinates_au`, `y_coordinates_au`, `z_coordinates_au`, and
+`x_coordinates_bohr`, `y_coordinates_bohr`, `z_coordinates_bohr`, and
 `proton_charges` refer to the molecular environment and have the size
 `num_centers`.
 
@@ -287,25 +287,25 @@ have computed the grid for.
 void numgrid_get_grid(const context_t *context,
                       const int num_centers,
                       const int center_index,
-                      const double x_coordinates_au[],
-                      const double y_coordinates_au[],
-                      const double z_coordinates_au[],
+                      const double x_coordinates_bohr[],
+                      const double y_coordinates_bohr[],
+                      const double z_coordinates_bohr[],
                       const int proton_charges[],
-                      double grid_x_au[],
-                      double grid_y_au[],
-                      double grid_z_au[],
+                      double grid_x_bohr[],
+                      double grid_y_bohr[],
+                      double grid_z_bohr[],
                       double grid_w[]);
 ```
 
 
 ### Get radial grid on current atom
 
-We assume that `radial_grid_r_au` and `radial_grid_w` are allocated by the caller
+We assume that `radial_grid_r_bohr` and `radial_grid_w` are allocated by the caller
 and have both the length that equals the number of radial grid points.
 
 ```c
 void numgrid_get_radial_grid(const context_t *context,
-                             double radial_grid_r_au[],
+                             double radial_grid_r_bohr[],
                              double radial_grid_w[]);
 ```
 
@@ -319,9 +319,9 @@ and the code will assume that the grid arrays are allocated by the caller and ha
 
 ```c
 void numgrid_get_angular_grid(const int num_angular_grid_points,
-                              double angular_grid_x_au[],
-                              double angular_grid_y_au[],
-                              double angular_grid_z_au[],
+                              double angular_grid_x_bohr[],
+                              double angular_grid_y_bohr[],
+                              double angular_grid_z_bohr[],
                               double angular_grid_w[]);
 ```
 

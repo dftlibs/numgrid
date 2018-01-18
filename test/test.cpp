@@ -17,20 +17,20 @@ TEST(numgrid, h2o)
     proton_charges[1] = 1;
     proton_charges[2] = 1;
 
-    double x_coordinates_au[3];
-    x_coordinates_au[0] = 0.0;
-    x_coordinates_au[1] = 1.43;
-    x_coordinates_au[2] = -1.43;
+    double x_coordinates_bohr[3];
+    x_coordinates_bohr[0] = 0.0;
+    x_coordinates_bohr[1] = 1.43;
+    x_coordinates_bohr[2] = -1.43;
 
-    double y_coordinates_au[3];
-    y_coordinates_au[0] = 0.0;
-    y_coordinates_au[1] = 0.0;
-    y_coordinates_au[2] = 0.0;
+    double y_coordinates_bohr[3];
+    y_coordinates_bohr[0] = 0.0;
+    y_coordinates_bohr[1] = 0.0;
+    y_coordinates_bohr[2] = 0.0;
 
-    double z_coordinates_au[3];
-    z_coordinates_au[0] = 0.0;
-    z_coordinates_au[1] = 1.1;
-    z_coordinates_au[2] = 1.1;
+    double z_coordinates_bohr[3];
+    z_coordinates_bohr[0] = 0.0;
+    z_coordinates_bohr[1] = 1.1;
+    z_coordinates_bohr[2] = 1.1;
 
     double alpha_max[3];
     alpha_max[0] = 11720.0;
@@ -74,21 +74,21 @@ TEST(numgrid, h2o)
         int num_points = numgrid_get_num_grid_points(context);
         ASSERT_EQ(num_points, reference_num_points[center_index]);
 
-        double *grid_x_au = new double[num_points];
-        double *grid_y_au = new double[num_points];
-        double *grid_z_au = new double[num_points];
+        double *grid_x_bohr = new double[num_points];
+        double *grid_y_bohr = new double[num_points];
+        double *grid_z_bohr = new double[num_points];
         double *grid_w = new double[num_points];
 
         numgrid_get_grid(context,
                          num_centers,
                          center_index,
-                         x_coordinates_au,
-                         y_coordinates_au,
-                         z_coordinates_au,
+                         x_coordinates_bohr,
+                         y_coordinates_bohr,
+                         z_coordinates_bohr,
                          proton_charges,
-                         grid_x_au,
-                         grid_y_au,
-                         grid_z_au,
+                         grid_x_bohr,
+                         grid_y_bohr,
+                         grid_z_bohr,
                          grid_w);
 
         double x_ref, y_ref, z_ref, w_ref;
@@ -96,15 +96,15 @@ TEST(numgrid, h2o)
         {
             infile >> x_ref >> y_ref >> z_ref >> w_ref;
 
-            ASSERT_NEAR(x_ref, grid_x_au[ipoint], 1.0e-10);
-            ASSERT_NEAR(y_ref, grid_y_au[ipoint], 1.0e-10);
-            ASSERT_NEAR(z_ref, grid_z_au[ipoint], 1.0e-10);
+            ASSERT_NEAR(x_ref, grid_x_bohr[ipoint], 1.0e-10);
+            ASSERT_NEAR(y_ref, grid_y_bohr[ipoint], 1.0e-10);
+            ASSERT_NEAR(z_ref, grid_z_bohr[ipoint], 1.0e-10);
             ASSERT_NEAR(w_ref, grid_w[ipoint], 1.0e-10);
         }
 
-        delete[] grid_x_au;
-        delete[] grid_y_au;
-        delete[] grid_z_au;
+        delete[] grid_x_bohr;
+        delete[] grid_y_bohr;
+        delete[] grid_z_bohr;
         delete[] grid_w;
 
         numgrid_free_atom_grid(context);

@@ -39,27 +39,27 @@ NUMGRID_API
 void numgrid_get_grid(const context_t *context,
                       const int num_centers,
                       const int center_index,
-                      const double x_coordinates_au[],
-                      const double y_coordinates_au[],
-                      const double z_coordinates_au[],
+                      const double x_coordinates_bohr[],
+                      const double y_coordinates_bohr[],
+                      const double z_coordinates_bohr[],
                       const int proton_charges[],
-                      double grid_x_au[],
-                      double grid_y_au[],
-                      double grid_z_au[],
+                      double grid_x_bohr[],
+                      double grid_y_bohr[],
+                      double grid_z_bohr[],
                       double grid_w[]);
 
 /* get radial grid on current atom */
 NUMGRID_API
 void numgrid_get_radial_grid(const context_t *context,
-                             double radial_grid_r_au[],
+                             double radial_grid_r_bohr[],
                              double radial_grid_w[]);
 
 /* get angular grid */
 NUMGRID_API
 void numgrid_get_angular_grid(const int num_angular_grid_points,
-                              double angular_grid_x_au[],
-                              double angular_grid_y_au[],
-                              double angular_grid_z_au[],
+                              double angular_grid_x_bohr[],
+                              double angular_grid_y_bohr[],
+                              double angular_grid_z_bohr[],
                               double angular_grid_w[]);
 
 /* destroy the atom and deallocate all data */

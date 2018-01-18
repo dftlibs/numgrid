@@ -23,9 +23,9 @@ inline double f3(const double x)
 // JCP 88, 2547 (1988)
 double get_becke_w(const int num_centers,
                    const int proton_charges[],
-                   const double x_coordinates_au[],
-                   const double y_coordinates_au[],
-                   const double z_coordinates_au[],
+                   const double x_coordinates_bohr[],
+                   const double y_coordinates_bohr[],
+                   const double z_coordinates_bohr[],
                    const int center_index,
                    const double x,
                    const double y,
@@ -46,9 +46,9 @@ double get_becke_w(const int num_centers,
 
     for (int a = 0; a < num_centers; a++)
     {
-        vx = x_coordinates_au[a] - x;
-        vy = y_coordinates_au[a] - y;
-        vz = z_coordinates_au[a] - z;
+        vx = x_coordinates_bohr[a] - x;
+        vy = y_coordinates_bohr[a] - y;
+        vz = z_coordinates_bohr[a] - z;
         dist_a = vx * vx + vy * vy + vz * vz;
         dist_a = std::sqrt(dist_a);
 
@@ -66,17 +66,17 @@ double get_becke_w(const int num_centers,
             if (a != b)
             {
 
-                vx = x_coordinates_au[b] - x;
-                vy = y_coordinates_au[b] - y;
-                vz = z_coordinates_au[b] - z;
+                vx = x_coordinates_bohr[b] - x;
+                vy = y_coordinates_bohr[b] - y;
+                vz = z_coordinates_bohr[b] - z;
                 dist_b = vx * vx + vy * vy + vz * vz;
                 dist_b = std::sqrt(dist_b);
 
                 R_b = get_bragg_angstrom(proton_charges[b]);
 
-                vx = x_coordinates_au[b] - x_coordinates_au[a];
-                vy = y_coordinates_au[b] - y_coordinates_au[a];
-                vz = z_coordinates_au[b] - z_coordinates_au[a];
+                vx = x_coordinates_bohr[b] - x_coordinates_bohr[a];
+                vy = y_coordinates_bohr[b] - y_coordinates_bohr[a];
+                vz = z_coordinates_bohr[b] - z_coordinates_bohr[a];
                 dist_ab = vx * vx + vy * vy + vz * vz;
                 dist_ab = std::sqrt(dist_ab);
 
