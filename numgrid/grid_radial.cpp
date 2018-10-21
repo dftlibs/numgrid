@@ -68,7 +68,7 @@ double get_h(const double max_error, const int l, const double guess)
     double step = 0.1 * guess;
     double sign, sign_old;
     double f = 1.0e50;
-    double c0, cm, p0, e0, pm, rd0, rdm;
+    double c0, cm, p0, e0, pm, rd0;
 
     (f > max_error) ? (sign = -1.0) : (sign = 1.0);
 

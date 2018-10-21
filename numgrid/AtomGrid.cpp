@@ -30,6 +30,9 @@ int get_closest_num_angular(int n)
     }
 
     NUMGRID_ERROR("Input n too high in get_closest_num_angular");
+
+    // this statement is unreachable and only here to not see a compiler warning
+    return -1;
 }
 
 int get_angular_order(int n)
@@ -41,6 +44,9 @@ int get_angular_order(int n)
     }
 
     NUMGRID_ERROR("No match found in get_angular_offset");
+
+    // this statement is unreachable and only here to not see a compiler warning
+    return -1;
 }
 
 context_t *numgrid_new_atom_grid(const double radial_precision,
