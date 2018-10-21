@@ -1,79 +1,78 @@
-#!/usr/bin/env python
-
-from distutils.core import setup
-import distutils.spawn as _spawn
 import distutils.command.build as _build
-import distutils.dir_util as _dir_util
-import setuptools.command.install as _install
 import os
 import sys
+from distutils import spawn
 from distutils.sysconfig import get_python_lib
-from shutil import copy2
+
+from setuptools import setup
 
 
-def run_cmake():
-    """
-    Runs CMake to determine configuration for this build.
-    """
-    if _spawn.find_executable('cmake') is None:
-        print("CMake is required to build this package.")
-        print("Please install/load CMake and re-run setup.")
-        sys.exit(-1)
+def extend_build():
+    class build(_build.build):
+        def run(self):
+            cwd = os.getcwd()
+            if spawn.find_executable('cmake') is None:
+                sys.stderr.write("CMake is required to build this package.\n")
+                sys.exit(-1)
+            _source_dir = os.path.split(__file__)[0]
+            _build_dir = os.path.join(_source_dir, 'build_setup_py')
+            _prefix = get_python_lib()
+            try:
+                cmake_configure_command = [
+                    'cmake',
+                    '-H{0}'.format(_source_dir),
+                    '-B{0}'.format(_build_dir),
+                    '-DCMAKE_INSTALL_PREFIX={0}'.format(_prefix),
+                ]
+                _generator = os.getenv('CMAKE_GENERATOR')
+                if _generator is not None:
+                    cmake_configure_command.append('-G{0}'.format(_generator))
+                spawn.spawn(cmake_configure_command)
+                spawn.spawn(
+                    ['cmake', '--build', _build_dir, '--target', 'install'])
+                os.chdir(cwd)
+            except spawn.DistutilsExecError:
+                sys.stderr.write("Error while building with CMake\n")
+                sys.exit(-1)
+            _build.build.run(self)
 
-    _build_dir = os.path.join(os.path.split(__file__)[0], 'build_setup_py')
-    _dir_util.mkpath(_build_dir)
-    os.chdir(_build_dir)
-
-    try:
-        _spawn.spawn(['cmake', '..'])
-    except _spawn.DistutilsExecError:
-        print("Error while running CMake")
-        sys.exit(-1)
-
-
-class build(_build.build):
-
-    def run(self):
-        cwd = os.getcwd()
-        run_cmake()
-
-        try:
-            _spawn.spawn(['make'])
-            os.chdir(cwd)
-        except _spawn.DistutilsExecError:
-            print("Error while running Make")
-            sys.exit(-1)
-
-        _build.build.run(self)
+    return build
 
 
-class install(_install.install):
-    def run(self):
-        cwd = os.getcwd()
-        _install.install.run(self)
-        _target_path = os.path.join(get_python_lib(), 'numgrid')
+_here = os.path.abspath(os.path.dirname(__file__))
 
-        if not os.path.exists(_target_path):
-             os.makedirs(_target_path)
+if sys.version_info[0] < 3:
+    with open(os.path.join(_here, 'README.rst')) as f:
+        long_description = f.read()
+else:
+    with open(os.path.join(_here, 'README.rst'), encoding='utf-8') as f:
+        long_description = f.read()
 
-        if sys.platform == "darwin":
-            suffix = 'dylib'
-        else:
-            suffix = 'so'
+_this_package = 'numgrid'
 
-        for f in [os.path.join('build_setup_py', 'lib', 'libnumgrid.{0}'.format(suffix)),
-                  os.path.join('build_setup_py', 'include', 'numgrid_export.h'),
-                  os.path.join('numgrid', 'numgrid.h')]:
-            copy2(os.path.join(cwd, f), _target_path)
+with open(os.path.join(_here, 'VERSION')) as f:
+     version = f.read()
 
+print(f'raboof{version}raboof')
 
-setup(name='numgrid',
-      version='1.0.0-alpha',
-      description='Numerical integration grid for molecules.',
-      author='Radovan Bast',
-      author_email='radovan.bast@uit.no',
-      url='https://github.com/dftlibs/numgrid',
-      packages=['numgrid'],
-      license='MPL-v2.0',
-      install_requires=['cffi', 'numpy'],
-      cmdclass={'install': install, 'build': build})
+setup(
+    name=_this_package,
+    version=version,
+    description='Numerical integration grid for molecules.',
+    long_description=long_description,
+    author='Radovan Bast',
+    author_email='radovan.bast@uit.no',
+    url='https://github.com/dftlibs/numgrid',
+    license='MPL-v2.0',
+    packages=[_this_package],
+    install_requires=[
+        'cffi==1.11.5',
+        'numpy==1.15.2',
+        ],
+    include_package_data=True,
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python :: 3.6'
+    ],
+    cmdclass={'build': extend_build()})

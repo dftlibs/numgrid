@@ -1,133 +1,66 @@
 add_library(
-  _numgrid
-  OBJECT
-  AtomGrid.cpp
-  becke_partitioning.cpp
-  grid_radial.cpp
-  version.cpp
-  bragg.cpp
+  numgrid
+  SHARED
+    AtomGrid.cpp
+    becke_partitioning.cpp
+    grid_radial.cpp
+    version.cpp
+    bragg.cpp
+    lebedev/sphere_lebedev_rule.cpp
   )
 
-target_include_directories(
-  _numgrid
-  SYSTEM PRIVATE
-  ${PROJECT_SOURCE_DIR}/external/upstream
-  )
+add_dependencies(numgrid version)
 
 target_include_directories(
-  _numgrid
+  numgrid
   PRIVATE
-  ${PROJECT_BINARY_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/lebedev
+    ${PROJECT_BINARY_DIR}/include
+  PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-add_dependencies(_numgrid version)
+add_library(
+  numgrid_fortran_bindings
+  SHARED
+    numgrid.f90
+  )
+
+target_link_libraries(
+  numgrid_fortran_bindings
+  PRIVATE
+    numgrid
+  )
+
+# generate numgrid_export.h
+include(GenerateExportHeader)
+generate_export_header(
+  numgrid
+  BASE_NAME numgrid
+  )
+
+file(
+  GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/interface_file_names.cfg
+  INPUT ${CMAKE_CURRENT_SOURCE_DIR}/interface_file_names.cfg.in
+  )
 
 set_target_properties(
-  _numgrid
+  numgrid
   PROPERTIES
-    POSITION_INDEPENDENT_CODE 1
+    PUBLIC_HEADER "numgrid.h;${CMAKE_CURRENT_BINARY_DIR}/numgrid_export.h"
+    RESOURCE "${CMAKE_CURRENT_BINARY_DIR}/interface_file_names.cfg"
   )
 
-list(APPEND _objects
-  $<TARGET_OBJECTS:_numgrid>
-  $<TARGET_OBJECTS:_lebedev>
+install(
+  TARGETS
+    numgrid
+  LIBRARY
+    DESTINATION numgrid/lib
+  RUNTIME
+    DESTINATION numgrid/lib
+  PUBLIC_HEADER
+    DESTINATION numgrid/include
+  RESOURCE
+    DESTINATION numgrid
   )
-
-if(ENABLE_FC_SUPPORT)
-  list(APPEND _objects
-    $<TARGET_OBJECTS:numgrid_fortran>
-    )
-endif()
-
-if(NOT STATIC_LIBRARY_ONLY)
-  add_library(
-    ${PROJECT_NAME}-shared
-    SHARED
-    ${_objects}
-    )
-  set_target_properties(${PROJECT_NAME}-shared PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR}
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN 1
-    OUTPUT_NAME "numgrid"
-    EXPORT_NAME "numgrid"
-    )
-  install(TARGETS ${PROJECT_NAME}-shared
-    EXPORT "${PROJECT_NAME}Targets-shared"
-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-endif()
-
-if(NOT SHARED_LIBRARY_ONLY)
-  add_library(${PROJECT_NAME}-static
-    STATIC
-    ${_objects}
-    )
-  set_target_properties(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS -D${PROJECT_NAME}_STATIC_DEFINE
-    OUTPUT_NAME "numgrid"
-    EXPORT_NAME "numgrid"
-    )
-  install(TARGETS ${PROJECT_NAME}-static
-    EXPORT "${PROJECT_NAME}Targets-static"
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-endif()
-
-if(STATIC_LIBRARY_ONLY)
-  add_library(${PROJECT_NAME} ALIAS ${PROJECT_NAME}-static)
-else()
-  add_library(${PROJECT_NAME} ALIAS ${PROJECT_NAME}-shared)
-endif()
-
-install(FILES ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-
-# <<<  Export interface  >>>
-
-if(NOT STATIC_LIBRARY_ONLY)
-  if (APPLE)
-    set_target_properties(${PROJECT_NAME}-shared PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-  endif()
-  target_compile_definitions(${PROJECT_NAME}-shared INTERFACE USING_${PROJECT_NAME})
-  target_include_directories(${PROJECT_NAME}-shared INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-endif()
-
-if(NOT SHARED_LIBRARY_ONLY)
-  target_compile_definitions(${PROJECT_NAME}-static INTERFACE USING_${PROJECT_NAME})
-  target_include_directories(${PROJECT_NAME}-static INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-endif()
-
-# <<<  Export Config  >>>
-
-# explicit "share" not "DATADIR" for CMake search path
-set (CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}")
-if(NOT STATIC_LIBRARY_ONLY)
-  install (EXPORT "${PROJECT_NAME}Targets-shared"
-    NAMESPACE "${PROJECT_NAME}::"
-    DESTINATION ${CMAKECONFIG_INSTALL_DIR})
-endif()
-
-if(NOT SHARED_LIBRARY_ONLY)
-  install (EXPORT "${PROJECT_NAME}Targets-static"
-    NAMESPACE "${PROJECT_NAME}::"
-    DESTINATION ${CMAKECONFIG_INSTALL_DIR})
-endif()
-
-install(FILES ${PROJECT_SOURCE_DIR}/numgrid/numgrid.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-
-message(STATUS "numgrid Fortran bindings ${BoldBlue}${ENABLE_FC_SUPPORT}${ColourReset}")
-if(ENABLE_FC_SUPPORT)
-  add_library(numgrid_fortran OBJECT ${PROJECT_SOURCE_DIR}/numgrid/numgrid.f90)
-  set_target_properties(numgrid_fortran PROPERTIES INCLUDE_DIRECTORIES ""
-    POSITION_INDEPENDENT_CODE 1
-    )
-endif()
-
-
-list(APPEND headers_list parameters.h
-                         error_handling.h
-                         )
-
-# Sets install directory for all the headers in the list
-foreach(_header ${headers_list})
-   install(FILES ${_header} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-endforeach()

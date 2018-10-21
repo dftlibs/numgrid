@@ -4,7 +4,7 @@
 
 #ifndef NUMGRID_API
 #include "numgrid_export.h"
-#define NUMGRID_API numgrid_EXPORT
+#define NUMGRID_API NUMGRID_EXPORT
 #endif
 
 #ifdef __cplusplus

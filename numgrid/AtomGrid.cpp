@@ -6,7 +6,7 @@
 #include "bragg.h"
 #include "error_handling.h"
 #include "grid_radial.h"
-#include "lebedev/sphere_lebedev_rule.h"
+#include "sphere_lebedev_rule.h"
 #include "numgrid.h"
 #include "parameters.h"
 

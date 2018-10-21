@@ -18,29 +18,23 @@ Usage:
   ./setup (-h | --help)
 
 Options:
-  --fc=<FC>                                Fortran compiler [default: gfortran].
-  --extra-fc-flags=<EXTRA_FCFLAGS>         Extra Fortran compiler flags [default: ''].
-  --fc-support=<FC_SUPPORT>                Toggle Fortran language support (ON/OFF) [default: ON].
-  --cxx=<CXX>                              C++ compiler [default: g++].
-  --extra-cxx-flags=<EXTRA_CXXFLAGS>       Extra C++ compiler flags [default: ''].
-  --python=<PYTHON_INTERPRETER>            The Python interpreter (development version) to use. [default: ''].
-  --ccache=<USE_CCACHE>                    Toggle use of ccache <ON/OFF> [default: ON].
-  --bindir=<CMAKE_INSTALL_BINDIR>          User executables [default: bin].
-  --libdir=<CMAKE_INSTALL_LIBDIR>          Object code libraries [default: lib].
-  --includedir=<CMAKE_INSTALL_INCLUDEDIR>  C header files [default: include].
-  --datadir=<CMAKE_INSTALL_DATADIR>        Read-only architecture-independent data root [default: share].
-  --pydir=<PYMOD_INSTALL_LIBDIR>           Python modules [default: bin]
-  --static                                 Create only the static library [default: False].
-  --add-definitions=<STRING>               Add preprocesor definitions [default: ''].
-  --coverage                               Enable code coverage [default: OFF].
-  --type=<TYPE>                            Set the CMake build type (debug, release, relwithdebinfo, minsizerel) [default: release].
-  --generator=<STRING>                     Set the CMake build system generator [default: Unix Makefiles].
-  --show                                   Show CMake command and exit.
-  --cmake-executable=<CMAKE_EXECUTABLE>    Set the CMake executable [default: cmake].
-  --cmake-options=<STRING>                 Define options to CMake [default: ''].
-  --prefix=<PATH>                          Set the install path for make install.
-  <builddir>                               Build directory.
-  -h --help                                Show this screen.
+  --fc=<FC>                              Fortran compiler [default: gfortran].
+  --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
+  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: ON].
+  --cxx=<CXX>                            C++ compiler [default: g++].
+  --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
+  --python=<PYTHON_INTERPRETER>          The Python interpreter (development version) to use. [default: ''].
+  --ccache=<USE_CCACHE>                  Toggle use of ccache <ON/OFF> [default: ON].
+  --add-definitions=<STRING>             Add preprocesor definitions [default: ''].
+  --coverage                             Enable code coverage [default: OFF].
+  --type=<TYPE>                          Set the CMake build type (debug, release, relwithdebinfo, minsizerel) [default: release].
+  --generator=<STRING>                   Set the CMake build system generator [default: Unix Makefiles].
+  --show                                 Show CMake command and exit.
+  --cmake-executable=<CMAKE_EXECUTABLE>  Set the CMake executable [default: cmake].
+  --cmake-options=<STRING>               Define options to CMake [default: ''].
+  --prefix=<PATH>                        Set the install path for make install.
+  <builddir>                             Build directory.
+  -h --help                              Show this screen.
 """
 
 
@@ -55,12 +49,6 @@ def gen_cmake_command(options, arguments):
     command.append('-DCMAKE_CXX_COMPILER={0} -DEXTRA_CXXFLAGS="{1}"'.format(arguments['--cxx'], arguments['--extra-cxx-flags']))
     command.append('-DPYTHON_INTERPRETER="{0}"'.format(arguments['--python']))
     command.append('-DUSE_CCACHE={0}'.format(arguments['--ccache']))
-    command.append('-DCMAKE_INSTALL_BINDIR={0}'.format(arguments['--bindir']))
-    command.append('-DCMAKE_INSTALL_LIBDIR={0}'.format(arguments['--libdir']))
-    command.append('-DCMAKE_INSTALL_INCLUDEDIR={0}'.format(arguments['--includedir']))
-    command.append('-DCMAKE_INSTALL_DATADIR={0}'.format(arguments['--datadir']))
-    command.append('-DPYMOD_INSTALL_LIBDIR={0}'.format(arguments['--pydir']))
-    command.append('-DSTATIC_LIBRARY_ONLY={0}'.format(arguments['--static']))
     command.append('-DPREPROCESSOR_DEFINITIONS="{0}"'.format(arguments['--add-definitions']))
     command.append('-DENABLE_CODE_COVERAGE={0}'.format(arguments['--coverage']))
     command.append('-DCMAKE_BUILD_TYPE={0}'.format(arguments['--type']))

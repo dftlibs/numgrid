@@ -8,6 +8,8 @@ list(GET _version_list 2 PROJECT_VERSION_PATCH)
 set(${PROJECT_NAME}_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 message(STATUS "${BoldGreen}numgrid v${${PROJECT_NAME}_VERSION}${ColourReset}")
 
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include)
+
 add_custom_target(
     version
     ALL
