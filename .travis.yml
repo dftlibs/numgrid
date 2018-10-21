@@ -120,17 +120,12 @@ script:
   - ctest -V -j 2
   - cd ..
   - pycodestyle --ignore=E501 test/test.py
-  - pycodestyle --ignore=E501 test/valgrind.py
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir test_python_interface
   - cp ${TRAVIS_BUILD_DIR}/test/test.py ${TRAVIS_BUILD_DIR}/test/reference_grid.txt test_python_interface
   - cd test_python_interface
   - pip install ${TRAVIS_BUILD_DIR}
   - pytest test.py
-  - |
-    if [[ "${VALGRIND}" = true ]]; then
-      PYTHONPATH=build pytest -vv test/valgrind.py
-    fi
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build
