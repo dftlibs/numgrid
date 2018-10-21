@@ -45,7 +45,10 @@ target_link_libraries(
 # make sure that gtest is built before we build cpp_test
 add_dependencies(cpp_test gtest)
 
-add_test(cpp_test ${PROJECT_BINARY_DIR}/bin/cpp_test)
+add_test(
+  NAME cpp_test
+  COMMAND $<TARGET_FILE:cpp_test>
+  )
 
 if(ENABLE_FC_SUPPORT)
     add_executable(
@@ -60,5 +63,8 @@ if(ENABLE_FC_SUPPORT)
         numgrid
         )
 
-    add_test(fortran_test ${PROJECT_BINARY_DIR}/bin/fortran_test)
+    add_test(
+      NAME fortran_test
+      COMMAND $<TARGET_FILE:fortran_test>
+      )
 endif()
