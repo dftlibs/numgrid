@@ -1,18 +1,38 @@
-add_library(_numgrid OBJECT
+add_library(
+  _numgrid
+  OBJECT
   AtomGrid.cpp
   becke_partitioning.cpp
   grid_radial.cpp
   version.cpp
   bragg.cpp
   )
-target_include_directories(_numgrid SYSTEM PRIVATE ${PROJECT_SOURCE_DIR}/external/upstream)
-target_include_directories(_numgrid PRIVATE ${PROJECT_BINARY_DIR}/include)
-add_dependencies(_numgrid version)
-set_target_properties(_numgrid PROPERTIES POSITION_INDEPENDENT_CODE 1)
-list(APPEND _objects
-    $<TARGET_OBJECTS:_numgrid>
-    $<TARGET_OBJECTS:_lebedev>
+
+target_include_directories(
+  _numgrid
+  SYSTEM PRIVATE
+  ${PROJECT_SOURCE_DIR}/external/upstream
   )
+
+target_include_directories(
+  _numgrid
+  PRIVATE
+  ${PROJECT_BINARY_DIR}/include
+  )
+
+add_dependencies(_numgrid version)
+
+set_target_properties(
+  _numgrid
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE 1
+  )
+
+list(APPEND _objects
+  $<TARGET_OBJECTS:_numgrid>
+  $<TARGET_OBJECTS:_lebedev>
+  )
+
 if(ENABLE_FC_SUPPORT)
   list(APPEND _objects
     $<TARGET_OBJECTS:numgrid_fortran>
@@ -20,7 +40,8 @@ if(ENABLE_FC_SUPPORT)
 endif()
 
 if(NOT STATIC_LIBRARY_ONLY)
-  add_library(${PROJECT_NAME}-shared
+  add_library(
+    ${PROJECT_NAME}-shared
     SHARED
     ${_objects}
     )
