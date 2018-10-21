@@ -106,7 +106,8 @@ Build the code::
 
 Test the Python interface (optional)::
 
-   env NUMGRID_BUILD_DIR=. PYTHONPATH=.. pytest -s -vv ../test/test.py
+   cd ..
+   env NUMGRID_HEADER_FILE=numgrid/numgrid.h NUMGRID_LIBRARY_FILE=build/lib/libnumgrid.so PYTHONPATH=. pytest -s -vv test/test.py
 
 
 API

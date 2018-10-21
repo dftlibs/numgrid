@@ -1,26 +1,50 @@
-import os
+from subprocess import check_output
 from cffi import FFI
-from .cffi_helpers import get_lib_handle
+import os
+import sys
+from configparser import ConfigParser
+from pathlib import Path
 import numpy as np
 
 
-_this_path = os.path.dirname(os.path.realpath(__file__))
+def get_lib_handle(definitions, header_file, library_file):
+    ffi = FFI()
+    command = ['cc', '-E'] + definitions + [header_file]
+    interface = check_output(command).decode('utf-8')
 
-_build_dir = os.getenv('NUMGRID_BUILD_DIR')
-if _build_dir is None:
-    _build_dir = _this_path
+    # remove possible \r characters on windows which
+    # would confuse cdef
+    _interface = [l.strip('\r') for l in interface.split('\n')]
+
+    ffi.cdef('\n'.join(_interface))
+    lib = ffi.dlopen(library_file)
+    return lib
+
+
+# this interface requires the header file and library file
+# and these can be either provided by interface_file_names.cfg
+# in the same path as this file
+# or if this is not found then using environment variables
+_this_path = Path(os.path.dirname(os.path.realpath(__file__)))
+_cfg_file = _this_path / 'interface_file_names.cfg'
+if _cfg_file.exists():
+    config = ConfigParser()
+    config.read(_cfg_file)
+    header_file_name = config.get('configuration', 'header_file_name')
+    _header_file = _this_path / 'include' /  header_file_name
+    _header_file = str(_header_file)
+    library_file_name = config.get('configuration', 'library_file_name')
+    _library_file = _this_path / 'lib' / library_file_name
+    _library_file = str(_library_file)
 else:
-    _build_dir = os.path.join(_build_dir, 'lib')
+    _header_file = os.getenv('NUMGRID_HEADER_FILE')
+    assert _header_file is not None
+    _library_file = os.getenv('NUMGRID_LIBRARY_FILE')
+    assert _library_file is not None
 
-_include_dir = _this_path
-
-_lib = get_lib_handle(
-    ['-DNUMGRID_API=', '-DCPP_INTERFACE_NOINCLUDE'],
-    'numgrid.h',
-    'numgrid',
-    _build_dir,
-    _include_dir
-)
+_lib = get_lib_handle(definitions=['-DNUMGRID_API=', '-DNUMGRID_NOINCLUDE'],
+                      header_file=_header_file,
+                      library_file=_library_file)
 
 _ffi = FFI()
 
