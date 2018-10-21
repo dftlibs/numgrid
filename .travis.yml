@@ -119,8 +119,8 @@ script:
   - make -j 2
   - ctest -V -j 2
   - cd ..
-  - pep8 --ignore=E501 test/test.py
-  - pep8 --ignore=E501 test/valgrind.py
+  - pycodestyle --ignore=E501 test/test.py
+  - pycodestyle --ignore=E501 test/valgrind.py
   - NUMGRID_BUILD_DIR=$PWD/build PYTHONPATH=$PWD py.test -s -vv test/test.py
   - |
     if [[ "${VALGRIND}" = true ]]; then
