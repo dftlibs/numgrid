@@ -1,4 +1,4 @@
-option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
+option(ENABLE_UNIT_TESTS "Enable unit tests" OFF)
 message(STATUS "Unit tests ${BoldBlue}${ENABLE_UNIT_TESTS}${ColourReset}")
 
 if(ENABLE_UNIT_TESTS)
