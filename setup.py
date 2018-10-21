@@ -52,9 +52,7 @@ else:
 _this_package = 'numgrid'
 
 with open(os.path.join(_here, 'VERSION')) as f:
-     version = f.read()
-
-print(f'raboof{version}raboof')
+     version = f.read().strip()
 
 setup(
     name=_this_package,
