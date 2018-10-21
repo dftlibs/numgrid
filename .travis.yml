@@ -109,9 +109,9 @@ before_script:
   - export PATH=$HOME/.local/bin:$PATH
   - |
     if [[ "${COVERAGE}" = true ]]; then
-      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-D ENABLE_UNIT_TESTS=ON' --coverage
+      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --coverage
     else
-      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --cmake-options='-D ENABLE_UNIT_TESTS=ON'
+      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} 
     fi
   - cd build
 

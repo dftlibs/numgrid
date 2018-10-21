@@ -23,6 +23,7 @@ def extend_build():
                     '-H{0}'.format(_source_dir),
                     '-B{0}'.format(_build_dir),
                     '-DCMAKE_INSTALL_PREFIX={0}'.format(_prefix),
+                    '-DENABLE_UNIT_TESTS=OFF',
                 ]
                 _generator = os.getenv('CMAKE_GENERATOR')
                 if _generator is not None:
