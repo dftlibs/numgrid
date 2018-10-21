@@ -106,7 +106,7 @@ Build the code::
 
 Test the Python interface (optional)::
 
-   env NUMGRID_BUILD_DIR=. PYTHONPATH=../api py.test -s -vv ../test/test.py
+   env NUMGRID_BUILD_DIR=. PYTHONPATH=.. pytest -s -vv ../test/test.py
 
 
 API
