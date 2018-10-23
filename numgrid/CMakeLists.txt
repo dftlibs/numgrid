@@ -21,17 +21,19 @@ target_include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-add_library(
-  numgrid_fortran_bindings
-  SHARED
-    numgrid.f90
-  )
+if(ENABLE_FC_SUPPORT)
+  add_library(
+    numgrid_fortran_bindings
+    SHARED
+      numgrid.f90
+    )
 
-target_link_libraries(
-  numgrid_fortran_bindings
-  PRIVATE
-    numgrid
-  )
+  target_link_libraries(
+    numgrid_fortran_bindings
+    PRIVATE
+      numgrid
+    )
+endif()
 
 # generate numgrid_export.h
 include(GenerateExportHeader)
