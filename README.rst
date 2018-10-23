@@ -117,11 +117,11 @@ The library provides a context-aware C interface. In addition it also
 provides a Fortran and Python interfaces as thin layers on top of the C
 interface::
 
-   Python: api/numgrid.py
+   Python: numgrid/__init__.py
      \
-      \     Fortran: api/numgrid.f90
+      \     Fortran: numgrid/numgrid.f90
        \   /
-     C interface: api/numgrid.h
+     C interface: numgrid/numgrid.h
          |
    implementation
 
@@ -138,6 +138,7 @@ before computing the grid for a certain atom type. Sounds cumbersome but
 is not a problem in practice. For the Python interface this is not a
 problem at all since it takes care of that.
 
+
 Compute one center at a time
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -145,11 +146,13 @@ Motivation was to simplify code and to make it possible to pre-compute a
 grid for a certain atom/basis type. This also means that the code can be
 optimized and parallelized on the client side.
 
+
 Full basis set does not need to be provided
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Great simplification. All that is needed now is the steepest exponent
 and a set of smallest exponents for each angular momentum.
+
 
 Separate arrays for x, y, z, and weights
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
