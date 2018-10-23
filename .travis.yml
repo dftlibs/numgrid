@@ -24,77 +24,74 @@ matrix:
         apt:
           sources: ['llvm-toolchain-precise-3.7', 'ubuntu-toolchain-r-test']
           packages: ['clang-3.7', 'gfortran', 'python-virtualenv']
-      env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+      env: CXX='clang++-3.7' CC='clang-3.7' FC='gfortran' BUILD_TYPE='release'
 
     - os: linux
       compiler: clang
       addons: *clang37
-      env: CXX_COMPILER='clang++-3.7' C_COMPILER='clang-3.7' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+      env: CXX='clang++-3.7' CC='clang-3.7' FC='gfortran' BUILD_TYPE='debug'
 
     # 2/ Linux GCC Builds
-    - os: linux
-      compiler: gcc
-      addons: &gcc49
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'gcc-4.9', 'gfortran-4.9', 'python-virtualenv']
-      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='release'
-
-    - os: linux
-      compiler: gcc
-      addons: *gcc49
-      env: CXX_COMPILER='g++-4.9' C_COMPILER='gcc-4.9' Fortran_COMPILER='gfortran-4.9' BUILD_TYPE='debug' COVERAGE='true'
-
     - os: linux
       compiler: gcc
       addons: &gcc5
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5', 'gcc-5', 'gfortran-5', 'python-virtualenv']
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='release'
+      env: CXX='g++-5' CC='gcc-5' FC='gfortran-5' BUILD_TYPE='release'
 
     - os: linux
       compiler: gcc
       addons: *gcc5
-      env: CXX_COMPILER='g++-5' C_COMPILER='gcc-5' Fortran_COMPILER='gfortran-5' BUILD_TYPE='debug'
+      env: CXX='g++-5' CC='gcc-5' FC='gfortran-5' BUILD_TYPE='debug'
 
     # 3/ OSX Clang Builds
     - os: osx
-      osx_image: xcode7
+      osx_image: xcode9.2
       compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+      env: CXX='clang++' CC='clang' FC='gfortran' BUILD_TYPE='debug'
 
     - os: osx
-      osx_image: xcode7
+      osx_image: xcode9.2
       compiler: clang
-      env: CXX_COMPILER='clang++' C_COMPILER='clang' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+      env: CXX='clang++' CC='clang' FC='gfortran' BUILD_TYPE='release'
 
     # 4/ OSX GCC5 Builds
     - os: osx
-      osx_image: xcode7
+      osx_image: xcode9.2
       compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='debug'
+      env: CXX='g++' CC='gcc' FC='gfortran' BUILD_TYPE='debug'
 
     - os: osx
-      osx_image: xcode7
+      osx_image: xcode9.2
       compiler: gcc
-      env: CXX_COMPILER='g++' C_COMPILER='gcc' Fortran_COMPILER='gfortran' BUILD_TYPE='release'
+      env: CXX='g++' CC='gcc' FC='gfortran' BUILD_TYPE='release'
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+  - mkdir -p ${DEPS_DIR}
+  - cd ${DEPS_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       cd ${TRAVIS_BUILD_DIR}
-      virtualenv --python=python3 venv
-      source venv/bin/activate
       curl https://cmake.org/files/v3.12/cmake-3.12.3-Linux-x86_64.tar.gz | tar xz
       export PATH=$PWD/cmake-3.12.3-Linux-x86_64/bin:$PATH
       export LD_LIBARY_PATH=$PWD/cmake-3.12.3-Linux-x86_64/lib:$LD_LIBRARY_PATH
+      cd ${DEPS_DIR}
+      curl -O https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz
+      tar xf Python-3.6.6.tgz
+      cd Python-3.6.6
+      ./configure --prefix=${DEPS_DIR}/python/
+      make > /dev/null
+      make install > /dev/null
+      export PATH=${DEPS_DIR}/python/bin:$PATH
+      export LD_LIBARY_PATH=${DEPS_DIR}/python/lib:$LD_LIBRARY_PATH
+      pip install --user pipenv --upgrade
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew update &> /dev/null
       brew cask uninstall --force oclint
-      brew install gcc python pyenv-virtualenv
+      brew upgrade python
+      brew install gcc pipenv
       brew upgrade cmake
     fi
 
@@ -102,16 +99,16 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      pip install -r requirements.txt
+      pipenv install --python=python3
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      pip2 install -r requirements.txt
+      pipenv install --python=/usr/local/bin/python3
     fi
   - export PATH=$HOME/.local/bin:$PATH
   - |
     if [[ "${COVERAGE}" = true ]]; then
-      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} --coverage
+      ./setup --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE} --coverage
     else
-      ./setup --cxx=${CXX_COMPILER} --cc=${C_COMPILER} --fc=${Fortran_COMPILER} --type=${BUILD_TYPE} 
+      ./setup --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE}
     fi
   - cd build
 
@@ -119,13 +116,20 @@ script:
   - make -j 2
   - ctest -V -j 2
   - cd ..
-  - pycodestyle --ignore=E501 test/test.py
+  - pipenv run pycodestyle --ignore=E501 test/test.py
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir test_python_interface
   - cp ${TRAVIS_BUILD_DIR}/test/test.py ${TRAVIS_BUILD_DIR}/test/reference_grid.txt test_python_interface
   - cd test_python_interface
-  - pip install ${TRAVIS_BUILD_DIR}
-  - pytest test.py
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      pipenv install ${TRAVIS_BUILD_DIR}
+      pipenv run pytest test.py
+    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      pipenv install --python=/usr/local/bin/python3 ${TRAVIS_BUILD_DIR}
+      pipenv install --python=/usr/local/bin/python3 pytest
+      pipenv run pytest test.py
+    fi
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build

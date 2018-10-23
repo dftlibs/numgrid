@@ -92,9 +92,7 @@ Fetch the code::
 
 Install Python dependencies (optional)::
 
-   virtualenv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
+   pipenv install
 
 Build the code::
 
@@ -104,10 +102,8 @@ Build the code::
    make
    make test
 
-Test the Python interface (optional)::
-
-   cd ..
-   env NUMGRID_HEADER_FILE=numgrid/numgrid.h NUMGRID_LIBRARY_FILE=build/lib/libnumgrid.so PYTHONPATH=. pytest -s -vv test/test.py
+The Python interface is automatically tested by Travis CI:
+https://github.com/dftlibs/numgrid/blob/master/.travis.yml
 
 
 API

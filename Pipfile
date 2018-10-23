@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cffi = "*"
+pytest = "*"
+pycodestyle = "*"
+cpp-coveralls = "*"
+numpy = "*"
+PyYAML = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
