@@ -1,6 +1,6 @@
 add_library(
-  numgrid
-  SHARED
+  numgrid-objects
+  OBJECT
     AtomGrid.cpp
     becke_partitioning.cpp
     grid_radial.cpp
@@ -9,16 +9,46 @@ add_library(
     lebedev/sphere_lebedev_rule.cpp
   )
 
-add_dependencies(numgrid version)
+target_compile_options(
+  numgrid-objects
+  PRIVATE
+    "-fPIC"
+  )
 
 target_include_directories(
-  numgrid
+  numgrid-objects
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/lebedev
     ${PROJECT_BINARY_DIR}/include
   PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+add_dependencies(numgrid-objects version)
+
+add_library(
+  numgrid-shared
+  SHARED
+    $<TARGET_OBJECTS:numgrid-objects>
+  )
+
+set_target_properties(
+  numgrid-shared
+  PROPERTIES
+    OUTPUT_NAME "numgrid"
+  )
+
+add_library(
+  numgrid-static
+  STATIC
+    $<TARGET_OBJECTS:numgrid-objects>
+  )
+
+set_target_properties(
+  numgrid-static
+  PROPERTIES
+    OUTPUT_NAME "numgrid"
   )
 
 if(ENABLE_FC_SUPPORT)
@@ -31,14 +61,14 @@ if(ENABLE_FC_SUPPORT)
   target_link_libraries(
     numgrid_fortran_bindings
     PRIVATE
-      numgrid
+      numgrid-objects
     )
 endif()
 
 # generate numgrid_export.h
 include(GenerateExportHeader)
 generate_export_header(
-  numgrid
+  numgrid-shared
   BASE_NAME numgrid
   )
 
@@ -48,7 +78,7 @@ file(
   )
 
 set_target_properties(
-  numgrid
+  numgrid-shared
   PROPERTIES
     PUBLIC_HEADER "numgrid.h;${CMAKE_CURRENT_BINARY_DIR}/numgrid_export.h"
     RESOURCE "${CMAKE_CURRENT_BINARY_DIR}/interface_file_names.cfg"
@@ -56,7 +86,7 @@ set_target_properties(
 
 install(
   TARGETS
-    numgrid
+    numgrid-shared
   LIBRARY
     DESTINATION numgrid/lib
   RUNTIME

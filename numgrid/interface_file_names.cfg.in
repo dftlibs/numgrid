@@ -1,3 +1,3 @@
 [configuration]
 header_file_name = numgrid.h
-library_file_name = $<TARGET_FILE_NAME:numgrid>
+library_file_name = $<TARGET_FILE_NAME:numgrid-shared>
