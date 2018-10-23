@@ -55,6 +55,7 @@ if(ENABLE_FC_SUPPORT)
 
   target_link_libraries(
     fortran_test
+    numgrid_fortran_bindings
     numgrid
     )
 
