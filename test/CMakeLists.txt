@@ -7,7 +7,7 @@ fetch_git_repo(
   googletest
   ${CMAKE_BINARY_DIR}/_deps
   https://github.com/google/googletest.git
-  release-1.8.0
+  release-1.8.1
 )
 
 # adds the targers: gtest, gtest_main, gmock, gmock_main
