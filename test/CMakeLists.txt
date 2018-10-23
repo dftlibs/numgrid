@@ -1,25 +1,20 @@
 # copy reference file to ${PROJECT_BINARY_DIR}/test (aka ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY reference_grid.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-include(FetchContent)
+include(fetch_git_repo.cmake)
 
-FetchContent_Declare(
+fetch_git_repo(
   googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        release-1.8.0
+  ${CMAKE_BINARY_DIR}/_deps
+  https://github.com/google/googletest.git
+  release-1.8.0
 )
 
-FetchContent_GetProperties(googletest)
-
-if(NOT googletest_POPULATED)
-  FetchContent_Populate(googletest)
-
-  # adds the targers: gtest, gtest_main, gmock, gmock_main
-  add_subdirectory(
-    ${googletest_SOURCE_DIR}
-    ${googletest_BINARY_DIR}
-    )
-endif()
+# adds the targers: gtest, gtest_main, gmock, gmock_main
+add_subdirectory(
+  ${googletest_SOURCE_DIR}
+  ${googletest_BINARY_DIR}
+  )
 
 add_executable(
   cpp_test
