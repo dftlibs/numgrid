@@ -4,6 +4,8 @@
    :target: https://coveralls.io/r/dftlibs/numgrid?branch=master
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: ../master/LICENSE
+.. image:: https://badge.fury.io/py/numgrid.svg
+   :target: https://badge.fury.io/py/numgrid
 
 -  `Build and test
    history <https://travis-ci.org/dftlibs/numgrid/builds>`__
