@@ -1,0 +1,3 @@
+include README.rst CMakeLists.txt VERSION LICENSE numgrid/interface_file_names.cfg.in
+recursive-include cmake *
+recursive-include numgrid *.cpp *.h *.f90 CMakeLists.txt
