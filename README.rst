@@ -6,6 +6,8 @@
    :target: ../master/LICENSE
 .. image:: https://badge.fury.io/py/numgrid.svg
    :target: https://badge.fury.io/py/numgrid
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470277.svg
+   :target: https://doi.org/10.5281/zenodo.1470277
 
 -  `Build and test
    history <https://travis-ci.org/dftlibs/numgrid/builds>`__
@@ -47,6 +49,15 @@ Acknowledgements
 
 -  Simon Neville (reporting issues)
 -  Jaime Axel Rosal Sandberg (reporting issues)
+
+
+Citation
+--------
+
+If you use this tool in a program or publication, please acknowledge its
+author(s) by adding the following reference:
+
+- Numgrid 1.0.2, October 2018, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1470277.
 
 
 Would you like to contribute?
