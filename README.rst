@@ -77,7 +77,7 @@ Installing via pip
 
 ::
 
-   pip install git+https://github.com/dftlibs/numgrid@master
+   pip install numgrid
 
 
 Building and testing from sources
