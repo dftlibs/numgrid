@@ -5,9 +5,6 @@
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: ../master/LICENSE
 
-.. figure:: https://github.com/dftlibs/numgrid/raw/master/img/truegrid.jpg
-   :alt: numgrid
-
 -  `Build and test
    history <https://travis-ci.org/dftlibs/numgrid/builds>`__
 -  `Code coverage <https://coveralls.io/r/dftlibs/numgrid>`__
