@@ -258,6 +258,27 @@ As an example let us generate a grid for the water molecule:
    x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
 
 
+Saving grid in Numpy format
+---------------------------
+
+The current API makes is relatively easy to export the computed grid in Numpy format.
+
+In this example we save the radial grid positions and weights to two separate files
+in Numpy format:
+
+.. code:: python
+
+   import numgrid
+   import numpy as np
+
+   # we assume the context is created
+   # ...
+   r, w = numgrid.get_radial_grid(context)
+
+   np.save('radial_grid_r.npy', r)
+   np.save('radial_grid_w.npy', w)
+
+
 C API
 -----
 
