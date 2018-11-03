@@ -124,12 +124,11 @@ script:
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       pipenv install ${TRAVIS_BUILD_DIR}
-      pipenv run pytest test.py
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       pipenv install --python=/usr/local/bin/python3 ${TRAVIS_BUILD_DIR}
       pipenv install --python=/usr/local/bin/python3 pytest
-      pipenv run pytest test.py
     fi
+  - pipenv run pytest test.py
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build
