@@ -58,7 +58,7 @@ TEST(numgrid, h2o)
     reference_num_points[1] = 14928;
     reference_num_points[2] = 14928;
 
-    std::ifstream infile("../test/reference_grid.txt");
+    std::ifstream infile("../test/reference_grid/cc-pVDZ.txt");
 
     for (int center_index = 0; center_index < num_centers; center_index++)
     {

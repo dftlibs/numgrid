@@ -69,7 +69,7 @@ program test
    alpha_min(2) = 0.2753d0
    alpha_min(3) = 1.185d0
 
-   open(unit=io_unit, file='../test/reference_grid.txt', access='sequential', action='read')
+   open(unit=io_unit, file='../test/reference_grid/cc-pVDZ.txt', access='sequential', action='read')
 
    context = numgrid_new_atom_grid(radial_precision,       &
                                    min_num_angular_points, &

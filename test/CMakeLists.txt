@@ -1,5 +1,5 @@
-# copy reference file to ${PROJECT_BINARY_DIR}/test (aka ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY reference_grid.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# copy reference grid data to ${PROJECT_BINARY_DIR}/test (aka ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY reference_grid DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 include(fetch_git_repo.cmake)
 

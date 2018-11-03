@@ -119,7 +119,7 @@ script:
   - pipenv run pycodestyle --ignore=E501 test/test.py
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir test_python_interface
-  - cp ${TRAVIS_BUILD_DIR}/test/test.py ${TRAVIS_BUILD_DIR}/test/reference_grid.txt test_python_interface
+  - cp ${TRAVIS_BUILD_DIR}/test/test.py ${TRAVIS_BUILD_DIR}/test/reference_grid/cc-pVDZ.txt test_python_interface
   - cd test_python_interface
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
