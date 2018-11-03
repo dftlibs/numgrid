@@ -18,8 +18,8 @@ add_subdirectory(
 
 add_executable(
   cpp_test
-  main.cpp
-  test.cpp
+    main.cpp
+    test_explicit.cpp
   )
 
 target_include_directories(

@@ -4,7 +4,7 @@
 
 #include "numgrid.h"
 
-TEST(numgrid, h2o)
+TEST(numgrid, h2o_explicit)
 {
     double radial_precision = 1.0e-12;
     int min_num_angular_points = 86;

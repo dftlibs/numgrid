@@ -249,7 +249,7 @@ C API
 -----
 
 To see a real example, have a look at the `C++ test
-case <test/test.cpp>`__.
+case <test/test_explicit.cpp>`__.
 
 
 Creating a new atom grid
