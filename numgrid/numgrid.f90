@@ -4,6 +4,7 @@ module numgrid
 
    implicit none
 
+   public numgrid_new_atom_grid_tabulated
    public numgrid_new_atom_grid
    public numgrid_free_atom_grid
    public numgrid_get_num_grid_points
@@ -13,6 +14,20 @@ module numgrid
    public numgrid_get_angular_grid
 
    private
+
+   interface numgrid_new_atom_grid_tabulated
+      function numgrid_new_atom_grid_tabulated(radial_precision,       &
+                                               min_num_angular_points, &
+                                               max_num_angular_points, &
+                                               proton_charge) result(context) bind (c)
+         import :: c_ptr, c_double, c_int
+         type(c_ptr) :: context
+         real(c_double), intent(in), value :: radial_precision
+         integer(c_int), intent(in), value :: min_num_angular_points
+         integer(c_int), intent(in), value :: max_num_angular_points
+         integer(c_int), intent(in), value :: proton_charge
+      end function
+   end interface
 
    interface numgrid_new_atom_grid
       function numgrid_new_atom_grid(radial_precision,       &

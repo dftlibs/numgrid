@@ -44,7 +44,7 @@ add_test(
   )
 
 if(ENABLE_FC_SUPPORT)
-  foreach(_test IN ITEMS test_explicit)
+  foreach(_test IN ITEMS test_explicit test_tabulated)
     add_executable(
       fortran_${_test}
         ${_test}.f90
