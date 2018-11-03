@@ -370,7 +370,7 @@ Fortran API
 -----------
 
 Closely follows the C API. To see a real example, have a look at the
-`Fortran test case <test/test.f90>`__.
+`Fortran test case <test/test_explicit.f90>`__.
 
 
 Parallelization

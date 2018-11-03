@@ -44,19 +44,21 @@ add_test(
   )
 
 if(ENABLE_FC_SUPPORT)
-  add_executable(
-    fortran_test
-    test.f90
-    )
+  foreach(_test IN ITEMS test_explicit)
+    add_executable(
+      fortran_${_test}
+        ${_test}.f90
+      )
 
-  target_link_libraries(
-    fortran_test
-    numgrid_fortran_bindings
-    numgrid-objects
-    )
+    target_link_libraries(
+      fortran_${_test}
+        numgrid_fortran_bindings
+        numgrid-objects
+      )
 
-  add_test(
-    NAME fortran_test
-    COMMAND $<TARGET_FILE:fortran_test>
-    )
+    add_test(
+      NAME fortran_${_test}
+      COMMAND $<TARGET_FILE:fortran_${_test}>
+      )
+  endforeach()
 endif()
