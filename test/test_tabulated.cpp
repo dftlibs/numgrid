@@ -33,11 +33,11 @@ TEST(numgrid, h2o_tabulated)
     z_coordinates_bohr[2] = 1.1;
 
     int reference_num_points[3];
-    reference_num_points[0] = 16364;
-    reference_num_points[1] = 14928;
-    reference_num_points[2] = 14928;
+    reference_num_points[0] = 19310;
+    reference_num_points[1] = 18132;
+    reference_num_points[2] = 18132;
 
-    std::ifstream infile("../test/reference_grid/cc-pVDZ.txt");
+    std::ifstream infile("../test/reference_grid/dyall.v3z.txt");
 
     for (int center_index = 0; center_index < num_centers; center_index++)
     {
