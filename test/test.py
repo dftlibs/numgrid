@@ -15,7 +15,7 @@ def test_h2o_grid():
     reference_grid_z_bohr = []
     reference_grid_w = []
     _here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(_here, 'reference_grid/cc-pVDZ.txt'), 'r') as f:
+    with open(os.path.join(_here, 'cc-pVDZ.txt'), 'r') as f:
         for line in f.read().splitlines():
             (x, y, z, w) = line.split()
             reference_grid_x_bohr.append(float(x))
