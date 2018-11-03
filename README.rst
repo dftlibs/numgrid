@@ -3,7 +3,7 @@
 .. image:: https://coveralls.io/repos/dftlibs/numgrid/badge.png?branch=master
    :target: https://coveralls.io/r/dftlibs/numgrid?branch=master
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
-   :target: ../master/LICENSE
+   :target: LICENSE
 .. image:: https://badge.fury.io/py/numgrid.svg
    :target: https://badge.fury.io/py/numgrid
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470277.svg
@@ -12,7 +12,7 @@
 -  `Build and test
    history <https://travis-ci.org/dftlibs/numgrid/builds>`__
 -  `Code coverage <https://coveralls.io/r/dftlibs/numgrid>`__
--  Licensed under `MPL v2.0 <../master/LICENSE>`__ (except John
+-  Licensed under `MPL v2.0 <LICENSE>`__ (except John
    Burkardt’s Lebedev code which is redistributed under LGPL v3.0)
 -  Built with `Autocmake <https://github.com/coderefinery/autocmake>`__
 
@@ -20,9 +20,9 @@
 About
 =====
 
-Numgrid is a library that produces numerical integration grid for
+numgrid is a library that produces numerical integration grid for
 molecules based on atom coordinates, atom types, and basis set
-information. Numgrid can be built with C, Fortran, and Python bindings.
+information. This library can be built with C, Fortran, and Python bindings.
 
 
 Who are the people behind this code?
@@ -55,9 +55,9 @@ Citation
 --------
 
 If you use this tool in a program or publication, please acknowledge its
-author(s) by adding the following reference:
-
-- Numgrid 1.0.2, October 2018, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1470277.
+author(s). The metadata necessary for citing this tool can be found in the
+`CITATION.cff <CITATION.cff>`__ file. For more information CITATION.cff files, see
+https://citation-file-format.github.io.
 
 
 Would you like to contribute?

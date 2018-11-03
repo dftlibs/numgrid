@@ -1,0 +1,9 @@
+cff-version: 1.0.3
+message: If you use numgrid, please cite it as below.
+authors:
+  - family-names: Bast
+    given-names: Radovan
+title: numgrid
+version: 1.0.2
+doi: 10.5281/zenodo.1470277
+date-released: 2018-10-24
