@@ -18,7 +18,7 @@ typedef struct context_s context_t;
 NUMGRID_API
 char *numgrid_get_version();
 
-/* create a new atom grid */
+/* create a new atom grid by providing explicit exponents*/
 NUMGRID_API
 context_t *numgrid_new_atom_grid(const double radial_precision,
                                  const int min_num_angular_points,
@@ -27,6 +27,13 @@ context_t *numgrid_new_atom_grid(const double radial_precision,
                                  const double alpha_max,
                                  const int max_l_quantum_number,
                                  const double alpha_min[]);
+
+/* create a new atom grid using tabulated exponents */
+NUMGRID_API
+context_t *numgrid_new_atom_grid_tabulated(const double radial_precision,
+                                           const int min_num_angular_points,
+                                           const int max_num_angular_points,
+                                           const int proton_charge);
 
 /* get number of grid points on current atom */
 NUMGRID_API

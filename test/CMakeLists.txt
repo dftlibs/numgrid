@@ -20,6 +20,7 @@ add_executable(
   cpp_test
     main.cpp
     test_explicit.cpp
+    test_tabulated.cpp
   )
 
 target_include_directories(

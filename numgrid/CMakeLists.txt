@@ -7,6 +7,7 @@ add_library(
     version.cpp
     bragg.cpp
     lebedev/sphere_lebedev_rule.cpp
+    tabulated_exponents.cpp
   )
 
 target_compile_options(
