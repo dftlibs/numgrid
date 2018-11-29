@@ -18,10 +18,10 @@ target_compile_options(
 target_include_directories(
   numgrid-objects
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/lebedev
     ${PROJECT_BINARY_DIR}/include
   PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
   )
 
