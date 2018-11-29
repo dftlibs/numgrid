@@ -439,3 +439,48 @@ desired precision::
 
 Taking the same number for the minimum and maximum number of angular
 points switches off pruning.
+
+
+How to include numgrid in a CMake project
+=========================================
+
+There are multiple ways to achieve this. Here is how to include
+the library using ``FetchContent``:
+
+.. code:: cmake
+
+  cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+
+  project(example LANGUAGES CXX)
+
+  include(FetchContent)
+
+  FetchContent_Declare(
+    numgrid
+    GIT_REPOSITORY https://github.com/dftlibs/numgrid.git
+    GIT_TAG        e14bf969d68e7847f5e40f36816f61f245211a9b
+  )
+
+  FetchContent_GetProperties(numgrid)
+
+  if(NOT numgrid_POPULATED)
+    FetchContent_Populate(numgrid)
+    add_subdirectory(
+      ${numgrid_SOURCE_DIR}
+      ${numgrid_BINARY_DIR}
+      )
+  endif()
+
+  add_executable(example "")
+
+  target_sources(
+    example
+    PRIVATE
+      main.cpp
+    )
+
+  target_link_libraries(
+    example
+    PRIVATE
+      numgrid-objects
+    )
