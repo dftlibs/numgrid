@@ -9,6 +9,7 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470277.svg
    :target: https://doi.org/10.5281/zenodo.1470277
 
+- `Changelog <CHANGES.rst>`__
 -  `Build and test
    history <https://travis-ci.org/dftlibs/numgrid/builds>`__
 -  `Code coverage <https://coveralls.io/r/dftlibs/numgrid>`__
@@ -130,41 +131,6 @@ interface::
      C interface: numgrid/numgrid.h
          |
    implementation
-
-
-What changed since v0.5?
-------------------------
-
-Grid memory management is now client-side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This was done to simplify memory management and avoid memory leaks and
-strange effects. The client can now query the number of grid points
-before computing the grid for a certain atom type. Sounds cumbersome but
-is not a problem in practice. For the Python interface this is not a
-problem at all since it takes care of that.
-
-
-Compute one center at a time
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Motivation was to simplify code and to make it possible to pre-compute a
-grid for a certain atom/basis type. This also means that the code can be
-optimized and parallelized on the client side.
-
-
-Full basis set does not need to be provided
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Great simplification. All that is needed now is the steepest exponent
-and a set of smallest exponents for each angular momentum.
-
-
-Separate arrays for x, y, z, and weights
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-They can be recombined on the client side but it makes it easier to
-understand how the grid information is stored in memory.
 
 
 Units
