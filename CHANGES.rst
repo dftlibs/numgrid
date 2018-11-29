@@ -11,6 +11,7 @@ Unreleased.
 
 - Do not append "numgrid" to install prefix within CMake.
 - Install both shared and static libraries.
+- Fortran support by default OFF.
 
 
 Version 1.0.2

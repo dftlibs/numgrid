@@ -106,9 +106,9 @@ before_script:
   - export PATH=$HOME/.local/bin:$PATH
   - |
     if [[ "${COVERAGE}" = true ]]; then
-      ./setup --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE} --coverage
+      ./setup --fc-support=ON --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE} --coverage
     else
-      ./setup --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE}
+      ./setup --fc-support=ON --fc=$FC --cc=$CC --cxx=$CXX --type=${BUILD_TYPE}
     fi
   - cd build
 

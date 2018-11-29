@@ -20,7 +20,7 @@ Usage:
 Options:
   --fc=<FC>                              Fortran compiler [default: gfortran].
   --extra-fc-flags=<EXTRA_FCFLAGS>       Extra Fortran compiler flags [default: ''].
-  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: ON].
+  --fc-support=<FC_SUPPORT>              Toggle Fortran language support (ON/OFF) [default: OFF].
   --cxx=<CXX>                            C++ compiler [default: g++].
   --extra-cxx-flags=<EXTRA_CXXFLAGS>     Extra C++ compiler flags [default: ''].
   --python=<PYTHON_INTERPRETER>          The Python interpreter (development version) to use. [default: ''].
