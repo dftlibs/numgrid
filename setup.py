@@ -7,7 +7,7 @@ from distutils.sysconfig import get_python_lib
 from setuptools import setup
 
 
-def extend_build():
+def extend_build(package_name):
     class build(_build.build):
         def run(self):
             cwd = os.getcwd()
@@ -16,7 +16,7 @@ def extend_build():
                 sys.exit(-1)
             _source_dir = os.path.split(__file__)[0]
             _build_dir = os.path.join(_source_dir, 'build_setup_py')
-            _prefix = get_python_lib()
+            _prefix = os.path.join(get_python_lib(), package_name)
             try:
                 cmake_configure_command = [
                     'cmake',
@@ -74,4 +74,4 @@ setup(
         'Intended Audience :: Science/Research',
         'Programming Language :: Python :: 3.6'
     ],
-    cmdclass={'build': extend_build()})
+    cmdclass={'build': extend_build(_this_package)})

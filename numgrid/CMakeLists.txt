@@ -89,13 +89,13 @@ install(
     numgrid-shared
     numgrid-static
   LIBRARY
-    DESTINATION numgrid/lib
+    DESTINATION lib
   RUNTIME
-    DESTINATION numgrid/lib
+    DESTINATION lib
   ARCHIVE
-    DESTINATION numgrid/lib
+    DESTINATION lib
   PUBLIC_HEADER
-    DESTINATION numgrid/include
+    DESTINATION include
   RESOURCE
-    DESTINATION numgrid
+    DESTINATION .
   )
