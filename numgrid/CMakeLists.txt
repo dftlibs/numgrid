@@ -87,9 +87,12 @@ set_target_properties(
 install(
   TARGETS
     numgrid-shared
+    numgrid-static
   LIBRARY
     DESTINATION numgrid/lib
   RUNTIME
+    DESTINATION numgrid/lib
+  ARCHIVE
     DESTINATION numgrid/lib
   PUBLIC_HEADER
     DESTINATION numgrid/include
