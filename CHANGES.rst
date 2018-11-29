@@ -9,6 +9,9 @@ Version 1.y.z
 
 Unreleased.
 
+- Do not append "numgrid" to install prefix within CMake.
+- Install both shared and static libraries.
+
 
 Version 1.0.2
 -------------
