@@ -224,6 +224,25 @@ As an example let us generate a grid for the water molecule:
    x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
 
 
+Avoiding explicit exponent ranges
+---------------------------------
+
+Using the Python interface you can choose to not provide
+explicit exponent ranges and instead specify the basis
+set which is then fetched directly from
+https://github.com/MolSSI-BSE/basis_set_exchange
+using the wonderful
+`MolSSI BSE <https://molssi-bse.github.io/basis_set_exchange/>`__:
+
+.. code:: python
+
+   context = numgrid.new_atom_grid_bse(radial_precision=1.0e-12,
+                                       min_num_angular_points=86,
+                                       max_num_angular_points=302,
+                                       proton_charge=8,
+                                       basis_set='cc-pVDZ')
+
+
 Saving grid in Numpy format
 ---------------------------
 
