@@ -9,7 +9,7 @@ pytest = "*"
 pycodestyle = "*"
 cpp-coveralls = "*"
 numpy = "*"
-PyYAML = "*"
+PyYAML = "==4.2b4"
 
 [dev-packages]
 
