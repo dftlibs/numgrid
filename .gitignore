@@ -35,6 +35,7 @@
 __pycache__/
 venv/
 .cache/
+*.egg-info/
 
 # Autocmake stuff
 cmake/lib/*.pyc
