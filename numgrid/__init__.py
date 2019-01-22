@@ -52,7 +52,6 @@ _lib = get_lib_handle(definitions=['-DNUMGRID_API=', '-DNUMGRID_NOINCLUDE'],
 _ffi = FFI()
 
 new_atom_grid = _lib.numgrid_new_atom_grid
-new_atom_grid_tabulated = _lib.numgrid_new_atom_grid_tabulated
 get_num_grid_points = _lib.numgrid_get_num_grid_points
 get_num_radial_grid_points = _lib.numgrid_get_num_radial_grid_points
 free_atom_grid = _lib.numgrid_free_atom_grid

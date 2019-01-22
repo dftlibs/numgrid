@@ -9,7 +9,6 @@
 #include "numgrid.h"
 #include "parameters.h"
 #include "sphere_lebedev_rule.h"
-#include "tabulated_exponents.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
@@ -48,21 +47,6 @@ int get_angular_order(int n)
 
     // this statement is unreachable and only here to not see a compiler warning
     return -1;
-}
-
-context_t *numgrid_new_atom_grid_tabulated(const double radial_precision,
-                                           const int min_num_angular_points,
-                                           const int max_num_angular_points,
-                                           const int proton_charge)
-{
-    return AS_TYPE(context_t,
-                   new AtomGrid(radial_precision,
-                                min_num_angular_points,
-                                max_num_angular_points,
-                                proton_charge,
-                                alpha_max_tabulated(proton_charge),
-                                max_l_quantum_number_tabulated(proton_charge),
-                                &alpha_min_tabulated(proton_charge)[0]));
 }
 
 context_t *numgrid_new_atom_grid(const double radial_precision,

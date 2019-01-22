@@ -20,7 +20,6 @@ add_executable(
   cpp_test
     main.cpp
     test_explicit.cpp
-    test_tabulated.cpp
   )
 
 target_include_directories(
@@ -44,7 +43,7 @@ add_test(
   )
 
 if(ENABLE_FC_SUPPORT)
-  foreach(_test IN ITEMS test_explicit test_tabulated)
+  foreach(_test IN ITEMS test_explicit)
     add_executable(
       fortran_${_test}
         ${_test}.f90

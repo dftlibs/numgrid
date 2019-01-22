@@ -7,7 +7,6 @@ add_library(
     version.cpp
     bragg.cpp
     lebedev/sphere_lebedev_rule.cpp
-    tabulated/tabulated_exponents.cpp
   )
 
 target_compile_options(
@@ -20,7 +19,6 @@ target_include_directories(
   numgrid-objects
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/lebedev
-    ${CMAKE_CURRENT_LIST_DIR}/tabulated
     ${PROJECT_BINARY_DIR}/include
   PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
