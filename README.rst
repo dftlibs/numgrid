@@ -51,6 +51,18 @@ Acknowledgements
 -  Simon Neville (reporting issues)
 -  Jaime Axel Rosal Sandberg (reporting issues)
 
+This tool uses SPHERE_LEBEDEV_RULE, a C library written by John Burkardt which
+computes a Lebedev quadrature rule over the surface of the unit sphere in 3D,
+see also:
+http://people.sc.fsu.edu/~jburkardt/c_src/sphere_lebedev_rule/sphere_lebedev_rule.html
+
+This library uses and acknowledges the
+MolSSI BSE (https://molssi-bse.github.io/basis_set_exchange/),
+which is a rewrite of the Basis Set Exchange
+(https://bse.pnl.gov/bse/portal) and is a collaboration between the Molecular
+Sciences Software Institute (http://www.molssi.org) and the Environmental
+Molecular Sciences Laboratory (https://www.emsl.pnl.gov).
+
 
 Citation
 --------
