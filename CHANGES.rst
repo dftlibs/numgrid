@@ -12,6 +12,8 @@ Unreleased.
 - Do not append "numgrid" to install prefix within CMake.
 - Install both shared and static libraries.
 - Fortran support by default OFF.
+- Python interface allows to specify the basis set instead of explicit exponent ranges
+  (this uses https://github.com/MolSSI-BSE/basis_set_exchange).
 
 
 Version 1.0.2
