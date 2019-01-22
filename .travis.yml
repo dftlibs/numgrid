@@ -121,7 +121,6 @@ script:
   - mkdir test_python_interface
   - cp ${TRAVIS_BUILD_DIR}/test/test.py test_python_interface
   - cp ${TRAVIS_BUILD_DIR}/test/reference_grid/cc-pVDZ.txt test_python_interface
-  - cp ${TRAVIS_BUILD_DIR}/test/reference_grid/dyall.v3z.txt test_python_interface
   - cd test_python_interface
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
