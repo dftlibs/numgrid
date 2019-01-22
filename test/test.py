@@ -84,9 +84,9 @@ def test_h2o_grid_explicit():
         numgrid.free_atom_grid(context)
 
 
-def test_h2o_grid_tabulated():
+def test_h2o_grid_bse():
     """
-    Test H2O grid generation using tabulated exponents.
+    Test H2O grid generation using a basis set fetched via BSE web API.
     """
 
     # read reference grid from file
@@ -96,15 +96,15 @@ def test_h2o_grid_tabulated():
     reference_grid_z_bohr = []
     reference_grid_w = []
     _here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(_here, 'dyall.v3z.txt'), 'r') as f:
+    with open(os.path.join(_here, 'cc-pVDZ.txt'), 'r') as f:
         for line in f.read().splitlines():
             (x, y, z, w) = line.split()
             reference_grid_x_bohr.append(float(x))
             reference_grid_y_bohr.append(float(y))
             reference_grid_z_bohr.append(float(z))
             reference_grid_w.append(float(w))
-    reference_num_points = [19310, 18132, 18132]
-    reference_num_radial_points = [127, 102, 102]
+    reference_num_points = [16364, 14928, 14928]
+    reference_num_radial_points = [106, 78, 78]
 
     radial_precision = 1.0e-12
     min_num_angular_points = 86
@@ -119,10 +119,11 @@ def test_h2o_grid_tabulated():
 
     offset = 0
     for center_index in range(num_centers):
-        context = numgrid.new_atom_grid_tabulated(radial_precision,
-                                                  min_num_angular_points,
-                                                  max_num_angular_points,
-                                                  proton_charges[center_index])
+        context = numgrid.new_atom_grid_bse(radial_precision,
+                                            min_num_angular_points,
+                                            max_num_angular_points,
+                                            proton_charges[center_index],
+                                            'cc-pVDZ')
 
         num_points = numgrid.get_num_grid_points(context)
         assert num_points == reference_num_points[center_index]

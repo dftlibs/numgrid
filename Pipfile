@@ -10,6 +10,7 @@ pycodestyle = "*"
 cpp-coveralls = "*"
 numpy = "*"
 PyYAML = "==4.2b4"
+basis_set_exchange = "*"
 
 [dev-packages]
 

@@ -3,8 +3,11 @@ from cffi import FFI
 import os
 import sys
 from configparser import ConfigParser
+from collections import defaultdict
 from pathlib import Path
 import numpy as np
+import basis_set_exchange
+import json
 
 
 def get_lib_handle(definitions, header_file, library_file):
@@ -140,3 +143,35 @@ def get_angular_grid(num_angular_grid_points):
     w = angular_grid_w_np.tolist()
 
     return x, y, z, w
+
+
+def new_atom_grid_bse(radial_precision,
+                      min_num_angular_points,
+                      max_num_angular_points,
+                      proton_charge,
+                      basis_set):
+
+    bse_json = basis_set_exchange.get_basis(basis_set,
+                                            elements=[proton_charge],
+                                            fmt='json',
+                                            header=False)
+    data = json.loads(bse_json)
+
+    max_l_quantum_number = 0
+    alpha_max = -sys.float_info.max
+    alpha_min_dict = defaultdict(lambda: sys.float_info.max)
+    for shell in data['basis_set_elements'][str(proton_charge)]['element_electron_shells']:
+        l = shell['shell_angular_momentum'][0]
+        max_l_quantum_number = max(max_l_quantum_number, l)
+        for exponent in shell['shell_exponents']:
+            alpha_max = max(alpha_max, float(exponent))
+            alpha_min_dict[l] = min(alpha_min_dict[l], float(exponent))
+    alpha_min = [alpha_min_dict[l] for l in range(0, max_l_quantum_number + 1)]
+
+    return new_atom_grid(radial_precision,
+                         min_num_angular_points,
+                         max_num_angular_points,
+                         proton_charge,
+                         alpha_max,
+                         max_l_quantum_number,
+                         alpha_min)
