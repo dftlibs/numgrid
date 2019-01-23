@@ -67,6 +67,7 @@ setup(
     install_requires=[
         'cffi==1.11.5',
         'numpy==1.15.2',
+        'basis_set_exchange==0.5.4',
         ],
     include_package_data=True,
     classifiers=[
