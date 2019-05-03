@@ -4,10 +4,10 @@ Changelog
 =========
 
 
-Version 1.y.z
+Version 1.1.0
 -------------
 
-Unreleased.
+Released on 2019-05-03.
 
 - Do not append "numgrid" to install prefix within CMake.
 - Install both shared and static libraries.
