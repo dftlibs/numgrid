@@ -33,6 +33,16 @@ add_library(
     $<TARGET_OBJECTS:numgrid-objects>
   )
 
+# this is an ugly hack to make the unit tests link
+# a nicer solution would be not to duplicate this info
+# since the target dependencies are already expressed
+# in numgrid-objects
+target_include_directories(
+  numgrid-shared
+  PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
 set_target_properties(
   numgrid-shared
   PROPERTIES
@@ -61,7 +71,7 @@ if(ENABLE_FC_SUPPORT)
   target_link_libraries(
     numgrid_fortran_bindings
     PRIVATE
-      numgrid-objects
+      numgrid-shared
     )
 endif()
 

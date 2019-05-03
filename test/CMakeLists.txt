@@ -33,7 +33,7 @@ target_include_directories(
 target_link_libraries(
   cpp_test
   PRIVATE
-    numgrid-objects
+    numgrid-shared
     gtest_main
   )
 
@@ -52,7 +52,7 @@ if(ENABLE_FC_SUPPORT)
     target_link_libraries(
       fortran_${_test}
         numgrid_fortran_bindings
-        numgrid-objects
+        numgrid-shared
       )
 
     add_test(
