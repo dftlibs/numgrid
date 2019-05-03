@@ -19,6 +19,7 @@ matrix:
 
     # 1/ Linux Clang Builds
     - os: linux
+      dist: xenial
       compiler: clang
       addons: &clang37
         apt:
@@ -27,12 +28,14 @@ matrix:
       env: CXX='clang++-3.7' CC='clang-3.7' FC='gfortran' BUILD_TYPE='release'
 
     - os: linux
+      dist: xenial
       compiler: clang
       addons: *clang37
       env: CXX='clang++-3.7' CC='clang-3.7' FC='gfortran' BUILD_TYPE='debug'
 
     # 2/ Linux GCC Builds
     - os: linux
+      dist: xenial
       compiler: gcc
       addons: &gcc5
         apt:
@@ -41,6 +44,7 @@ matrix:
       env: CXX='g++-5' CC='gcc-5' FC='gfortran-5' BUILD_TYPE='release'
 
     - os: linux
+      dist: xenial
       compiler: gcc
       addons: *gcc5
       env: CXX='g++-5' CC='gcc-5' FC='gfortran-5' BUILD_TYPE='debug'
@@ -68,24 +72,12 @@ matrix:
       env: CXX='g++' CC='gcc' FC='gfortran' BUILD_TYPE='release'
 
 install:
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR}
-  - cd ${DEPS_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       cd ${TRAVIS_BUILD_DIR}
       curl https://cmake.org/files/v3.12/cmake-3.12.3-Linux-x86_64.tar.gz | tar xz
       export PATH=$PWD/cmake-3.12.3-Linux-x86_64/bin:$PATH
       export LD_LIBARY_PATH=$PWD/cmake-3.12.3-Linux-x86_64/lib:$LD_LIBRARY_PATH
-      cd ${DEPS_DIR}
-      curl -O https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz
-      tar xf Python-3.6.6.tgz
-      cd Python-3.6.6
-      ./configure --prefix=${DEPS_DIR}/python/
-      make > /dev/null
-      make install > /dev/null
-      export PATH=${DEPS_DIR}/python/bin:$PATH
-      export LD_LIBARY_PATH=${DEPS_DIR}/python/lib:$LD_LIBRARY_PATH
       pip install --user pipenv --upgrade
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew update &> /dev/null
@@ -99,8 +91,10 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      curl https://bootstrap.pypa.io/get-pip.py | python3
       pipenv install --python=python3
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      curl https://bootstrap.pypa.io/get-pip.py | /usr/local/bin/python3
       pipenv install --python=/usr/local/bin/python3
     fi
   - export PATH=$HOME/.local/bin:$PATH
@@ -124,7 +118,7 @@ script:
   - cd test_python_interface
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      pipenv install ${TRAVIS_BUILD_DIR}
+      pipenv install --python=python3 ${TRAVIS_BUILD_DIR}
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       pipenv install --python=/usr/local/bin/python3 ${TRAVIS_BUILD_DIR}
       pipenv install --python=/usr/local/bin/python3 pytest
