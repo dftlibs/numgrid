@@ -32,7 +32,7 @@ _this_path = Path(os.path.dirname(os.path.realpath(__file__)))
 _cfg_file = _this_path / 'interface_file_names.cfg'
 if _cfg_file.exists():
     config = ConfigParser()
-    config.read(_cfg_file)
+    config.read(str(_cfg_file))
     header_file_name = config.get('configuration', 'header_file_name')
     _header_file = _this_path / 'include' /  header_file_name
     _header_file = str(_header_file)
@@ -159,10 +159,10 @@ def new_atom_grid_bse(radial_precision,
     max_l_quantum_number = 0
     alpha_max = -sys.float_info.max
     alpha_min_dict = defaultdict(lambda: sys.float_info.max)
-    for shell in data['basis_set_elements'][str(proton_charge)]['element_electron_shells']:
-        l = shell['shell_angular_momentum'][0]
+    for shell in data['elements'][str(proton_charge)]['electron_shells']:
+        l = shell['angular_momentum'][0]
         max_l_quantum_number = max(max_l_quantum_number, l)
-        for exponent in shell['shell_exponents']:
+        for exponent in shell['exponents']:
             alpha_max = max(alpha_max, float(exponent))
             alpha_min_dict[l] = min(alpha_min_dict[l], float(exponent))
     alpha_min = [alpha_min_dict[l] for l in range(0, max_l_quantum_number + 1)]

@@ -13,6 +13,3 @@ PyYAML = "==4.2b4"
 basis_set_exchange = "*"
 
 [dev-packages]
-
-[requires]
-python_version = "3.6"
