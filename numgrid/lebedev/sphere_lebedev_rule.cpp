@@ -6487,6 +6487,14 @@ void timestamp ( void )
   tm = localtime ( &now );
 
   len = strftime ( time_buffer, TIME_SIZE, "%d %B %Y %I:%M:%S %p", tm );
+  if (len == 0)
+  {
+    fprintf ( stderr, "\n" );
+    fprintf ( stderr, "TIMESTAMP - Fatal error!\n" );
+    fprintf ( stderr, "  TIME_SIZE constant too small.\n" );
+    exit ( 1 );
+  }
+ 
 
   fprintf ( stdout, "%s\n", time_buffer );
 
