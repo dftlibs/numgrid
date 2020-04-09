@@ -6,8 +6,8 @@
    :target: LICENSE
 .. image:: https://badge.fury.io/py/numgrid.svg
    :target: https://badge.fury.io/py/numgrid
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470277.svg
-   :target: https://doi.org/10.5281/zenodo.1470277
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3746461.svg
+   :target: https://doi.org/10.5281/zenodo.3746461
 
 - `Changelog <CHANGES.rst>`__
 -  `Build and test
