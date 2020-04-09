@@ -4,6 +4,15 @@ Changelog
 =========
 
 
+Version 1.1.1
+-------------
+
+Released on 2020-04-09.
+
+- Build warning removed.
+- Add .zenodo.json.
+
+
 Version 1.1.0
 -------------
 
