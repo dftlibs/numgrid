@@ -18,12 +18,15 @@
 -  Built with `Autocmake <https://github.com/coderefinery/autocmake>`__
 
 
-About
-=====
+Numgrid
+=======
 
-numgrid is a library that produces numerical integration grid for
+Numgrid is a library that produces numerical integration grid for
 molecules based on atom coordinates, atom types, and basis set
 information. This library can be built with C, Fortran, and Python bindings.
+
+
+.. contents:: Table of Contents
 
 
 Who are the people behind this code?
@@ -472,7 +475,7 @@ Taking the same number for the minimum and maximum number of angular
 points switches off pruning.
 
 
-How to include numgrid in a CMake project
+How to include Numgrid in a CMake project
 =========================================
 
 There are multiple ways to achieve this. Here is how to include
