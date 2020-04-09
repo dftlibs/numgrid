@@ -71,9 +71,29 @@ Citation
 --------
 
 If you use this tool in a program or publication, please acknowledge its
-author(s). The metadata necessary for citing this tool can be found in the
-`CITATION.cff <CITATION.cff>`__ file. For more information CITATION.cff files, see
-https://citation-file-format.github.io.
+author(s)::
+
+  @misc{numgrid,
+    author    = {Bast, Radovan},
+    title     = {Numgrid: Numerical integration grid for molecules},
+    month     = {4},
+    year      = {2020},
+    publisher = {Zenodo},
+    version   = {v1.1.1},
+    doi       = {10.5281/zenodo.3746461},
+    url       = {https://doi.org/10.5281/zenodo.3746461}
+  }
+
+  @misc{sphere_lebedev_rule,,
+    author = {Burkardt, John},
+    title  = {SPHERE_LEBEDEV_RULE: Quadrature Rules for the Unit Sphere},
+    year   = {2010},
+    url    = {https://people.sc.fsu.edu/~jburkardt/c_src/sphere_lebedev_rule/sphere_lebedev_rule.html}
+  }
+
+I kindly ask you to also cite the latter since Numgrid is basically a "shell"
+around SPHERE_LEBEDEV_RULE, with added radial integration and molecular
+partitioning.
 
 
 Would you like to contribute?

@@ -3,7 +3,7 @@ message: If you use Numgrid, please cite it as below.
 authors:
   - family-names: Bast
     given-names: Radovan
-title: "Numgrid: Numerical integration grid for molecules."
+title: "Numgrid: Numerical integration grid for molecules"
 version: 1.1.0
 license: MPL-2.0
 doi: 10.5281/zenodo.3746461
