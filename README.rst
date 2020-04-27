@@ -84,7 +84,7 @@ author(s)::
     url       = {https://doi.org/10.5281/zenodo.3746461}
   }
 
-  @misc{sphere_lebedev_rule,,
+  @misc{sphere_lebedev_rule,
     author = {Burkardt, John},
     title  = {SPHERE_LEBEDEV_RULE: Quadrature Rules for the Unit Sphere},
     year   = {2010},
