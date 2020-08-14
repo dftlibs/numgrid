@@ -4,6 +4,14 @@ Changelog
 =========
 
 
+Version 1.1.2
+-------------
+
+Released on 2020-08-14.
+
+- Unpin version dependencies for Numpy and CFFI.
+
+
 Version 1.1.1
 -------------
 

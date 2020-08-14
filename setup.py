@@ -65,8 +65,8 @@ setup(
     license='MPL-v2.0',
     packages=[_this_package],
     install_requires=[
-        'cffi==1.12.3',
-        'numpy==1.16.3',
+        'cffi',
+        'numpy',
         'basis_set_exchange==0.6.9',
         ],
     include_package_data=True,

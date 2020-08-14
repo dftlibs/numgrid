@@ -79,9 +79,9 @@ author(s)::
     month     = {4},
     year      = {2020},
     publisher = {Zenodo},
-    version   = {v1.1.1},
-    doi       = {10.5281/zenodo.3746461},
-    url       = {https://doi.org/10.5281/zenodo.3746461}
+    version   = {v1.1.2},
+    doi       = {10.5281/zenodo.1470276},
+    url       = {https://doi.org/10.5281/zenodo.1470276}
   }
 
   @misc{sphere_lebedev_rule,
