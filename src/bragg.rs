@@ -87,7 +87,7 @@ pub fn get_bragg_angstrom(charge: i32) -> f64 {
         84 => 1.90,
         85 => 1.50,
         86 => 1.50,
-        _ => panic!("Bragg radius not found for element"),
+        _ => panic!("Bragg radius not found for input charge"),
     };
 
     return radius;
