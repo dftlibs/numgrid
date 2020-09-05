@@ -1,5 +1,6 @@
 //! Describe me ...
 
+mod becke_partitioning;
 mod bragg;
 mod lebedev;
 mod tables;
