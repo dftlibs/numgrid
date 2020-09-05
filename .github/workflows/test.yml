@@ -1,0 +1,23 @@
+name: Test
+
+on:
+  push:
+    branches: [ radovan/rust ]
+  pull_request:
+    branches: [ radovan/rust ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build crate
+      run: cargo build --verbose
+    - name: Test crate
+      run: cargo test --verbose
