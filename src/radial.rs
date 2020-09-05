@@ -1,3 +1,5 @@
+#![allow(clippy::many_single_char_names)]
+
 use crate::comparison;
 use crate::parameters;
 use statrs::function::gamma;
@@ -12,7 +14,7 @@ fn get_r_inner(max_error: f64, alpha_inner: f64) -> f64 {
     r = r.exp() / alpha_inner;
     r = r.sqrt();
 
-    return r;
+    r
 }
 
 #[test]
@@ -46,7 +48,7 @@ fn get_r_outer(max_error: f64, alpha_outer: f64, l: usize, guess: f64) -> f64 {
         if r < 0.0 {
             sign = 1.0
         }
-        if sign != sign_old {
+        if sign * sign_old < 0.0 {
             step *= 0.1;
         }
 
@@ -54,7 +56,7 @@ fn get_r_outer(max_error: f64, alpha_outer: f64, l: usize, guess: f64) -> f64 {
         r += sign * step;
     }
 
-    return r;
+    r
 }
 
 #[test]
@@ -113,7 +115,7 @@ fn get_h(max_error: f64, l: usize, guess: f64) -> f64 {
         if h < 0.0 {
             sign = 1.0
         }
-        if sign != sign_old {
+        if sign * sign_old < 0.0 {
             step *= 0.1;
         }
 
@@ -121,7 +123,7 @@ fn get_h(max_error: f64, l: usize, guess: f64) -> f64 {
         h += sign * step;
     }
 
-    return h;
+    h
 }
 
 #[test]

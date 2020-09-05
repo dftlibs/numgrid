@@ -34,5 +34,5 @@ pub fn offsets() -> HashMap<usize, usize> {
     mapping.insert(4802, 31070);
     mapping.insert(5294, 35872);
     mapping.insert(5810, 41166);
-    return mapping;
+    mapping
 }

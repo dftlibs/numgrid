@@ -4,10 +4,12 @@ use crate::comparison;
 #[inline]
 fn f3(x: f64, becke_hardness: usize) -> f64 {
     let mut f = x;
+
     for _ in 0..becke_hardness {
         f *= 1.5 - 0.5 * f * f;
     }
-    return f;
+
+    f
 }
 
 #[test]

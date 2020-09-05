@@ -29,13 +29,18 @@ def write_table_offsets(offsets):
         f.write("    let mut mapping = HashMap::new();\n")
         for (num_points, offset) in offsets:
             f.write(f"    mapping.insert({num_points}, {offset});\n")
-        f.write("    return mapping;\n")
+        f.write("    mapping\n")
         f.write("}\n")
 
 
-def cap(x):
+def fix(x):
     if abs(x) < 1.0e-15:
         return 0.0
+    elif abs(abs(x) - 0.707106781186547) < 1.0e-15:
+        if x > 0:
+            return "F"
+        else:
+            return "-F"
     else:
         return x
 
@@ -51,21 +56,24 @@ def spherical_to_cartesian(coordinate):
     phi_sin = math.sin(phi_rad)
     phi_cos = math.cos(phi_rad)
 
-    x = cap(theta_sin * phi_cos)
-    y = cap(theta_sin * phi_sin)
-    z = cap(theta_cos)
+    x = fix(theta_sin * phi_cos)
+    y = fix(theta_sin * phi_sin)
+    z = fix(theta_cos)
 
     return x, y, z
 
 
 def write_tables(coordinates, ws):
     with open("coordinates.rs", "w") as f:
+        f.write("#![allow(clippy::unreadable_literal)]\n\n")
+        f.write("const F: f64 = std::f64::consts::FRAC_1_SQRT_2;\n\n")
         f.write(f"pub const COORDINATES: [(f64, f64, f64); {len(coordinates)}] = [\n")
         for (x, y, z) in coordinates:
             f.write(f"    ({x}, {y}, {z}),\n")
         f.write(f"];\n")
 
     with open("weights.rs", "w") as f:
+        f.write("#![allow(clippy::unreadable_literal)]\n\n")
         f.write(f"pub const WEIGHTS: [f64; {len(ws)}] = [\n")
         for w in ws:
             f.write(f"    {w},\n")

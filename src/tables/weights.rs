@@ -1,3 +1,5 @@
+#![allow(clippy::unreadable_literal)]
+
 pub const WEIGHTS: [f64; 46976] = [
     0.166666666666667,
     0.166666666666667,
