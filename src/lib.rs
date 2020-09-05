@@ -1,5 +1,6 @@
 //! Describe me ...
 
+mod bragg;
 mod lebedev;
 mod tables;
 
