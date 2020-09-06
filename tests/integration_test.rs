@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 fn floats_are_same(f1: f64, f2: f64) -> bool {
     let d = f1 - f2;
     return d.abs() < 1.0e-15;
@@ -371,3 +373,11 @@ fn radial_grid() {
         assert!(floats_are_same(x, x_reference));
     }
 }
+
+// #[test]
+// fn atom_grid() {
+//     let alpha_min = vec![0.3023, 0.2753, 1.185];
+//     let start = Instant::now();
+//     let (_rs, _ws) = numgrid::get_atom_grid(1.0e-18, alpha_min, 11720.0, 2, 8, 5810);
+//     println!("time elapsed in atom_grid: {:?}", start.elapsed());
+// }
