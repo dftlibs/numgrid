@@ -1,3 +1,4 @@
+#[cfg(test)]
 use crate::comparison;
 
 // JCP 88, 2547 (1988), eq. 20

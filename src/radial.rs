@@ -1,8 +1,53 @@
 #![allow(clippy::many_single_char_names)]
 
-use crate::comparison;
+use crate::bragg;
 use crate::parameters;
 use statrs::function::gamma;
+
+#[cfg(test)]
+use crate::comparison;
+
+pub fn get_radial_grid(
+    radial_precision: f64,
+    alpha_min: Vec<f64>,
+    alpha_max: f64,
+    max_l_quantum_number: usize,
+    proton_charge: i32,
+) -> (Vec<f64>, Vec<f64>) {
+    // factor 2.0 to match DIRAC code
+    let r_inner = get_r_inner(radial_precision, alpha_max * 2.0);
+
+    let mut h = std::f64::MAX;
+    let mut r_outer: f64 = 0.0;
+
+    for l in 0..=max_l_quantum_number {
+        if alpha_min[l] > 0.0 {
+            r_outer = r_outer.max(get_r_outer(
+                radial_precision,
+                alpha_min[l],
+                l,
+                4.0 * bragg::get_bragg_angstrom(proton_charge),
+            ));
+            assert!(r_outer > r_inner);
+            h = h.min(get_h(radial_precision, l, 0.1 * (r_outer - r_inner)));
+        }
+    }
+    assert!(r_outer > h);
+
+    let c = r_inner / (h.exp() - 1.0);
+    let num_points = ((1.0 + (r_outer / c)).ln() / h) as usize;
+
+    let mut rs = Vec::new();
+    let mut ws = Vec::new();
+
+    for i in 1..=num_points {
+        let r = c * (((i as f64) * h).exp() - 1.0);
+        rs.push(r);
+        ws.push((r + c) * r * r * h);
+    }
+
+    (rs, ws)
+}
 
 // TCA 106, 178 (2001), eq. 25
 // we evaluate r_inner for s functions
