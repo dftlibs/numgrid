@@ -1,11 +1,11 @@
 use crate::tables;
 
-pub fn get_angular_grid(num_points: usize) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
+pub fn angular_grid(num_points: usize) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let offsets = tables::offsets::offsets();
 
     let offset: usize = match offsets.get(&num_points) {
         Some(v) => *v,
-        None => panic!("get_angular_grid called with unsupported num_points"),
+        None => panic!("angular_grid called with unsupported num_points"),
     };
 
     (

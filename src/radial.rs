@@ -7,7 +7,7 @@ use statrs::function::gamma;
 #[cfg(test)]
 use crate::comparison;
 
-pub fn get_radial_grid(
+pub fn radial_grid(
     radial_precision: f64,
     alpha_min: Vec<f64>,
     alpha_max: f64,

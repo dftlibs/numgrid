@@ -7,7 +7,7 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
 
 #[test]
 fn angular_grid() {
-    let (coordinates, weights) = numgrid::get_angular_grid(50);
+    let (coordinates, weights) = numgrid::angular_grid(50);
 
     let coordinates_reference: [(f64, f64, f64); 50] = [
         (1.0, 0.0, 0.0),
@@ -145,7 +145,7 @@ fn angular_grid() {
 #[test]
 fn radial_grid() {
     let alpha_min = vec![0.3023, 0.2753, 1.185];
-    let (rs, ws) = numgrid::get_radial_grid(1.0e-12, alpha_min, 11720.0, 2, 8);
+    let (rs, ws) = numgrid::radial_grid(1.0e-12, alpha_min, 11720.0, 2, 8);
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,
@@ -378,6 +378,6 @@ fn radial_grid() {
 // fn atom_grid() {
 //     let alpha_min = vec![0.3023, 0.2753, 1.185];
 //     let start = Instant::now();
-//     let (_rs, _ws) = numgrid::get_atom_grid(1.0e-18, alpha_min, 11720.0, 2, 8, 5810);
+//     let (_rs, _ws) = numgrid::atom_grid(1.0e-18, alpha_min, 11720.0, 2, 8, 5810);
 //     println!("time elapsed in atom_grid: {:?}", start.elapsed());
 // }

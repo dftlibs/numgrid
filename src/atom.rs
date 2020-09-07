@@ -1,7 +1,7 @@
 use crate::lebedev;
 use crate::radial;
 
-pub fn get_atom_grid(
+pub fn atom_grid(
     radial_precision: f64,
     alpha_min: Vec<f64>,
     alpha_max: f64,
@@ -9,14 +9,14 @@ pub fn get_atom_grid(
     proton_charge: i32,
     num_angular_points: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
-    let (rs, weights_radial) = radial::get_radial_grid(
+    let (rs, weights_radial) = radial::radial_grid(
         radial_precision,
         alpha_min,
         alpha_max,
         max_l_quantum_number,
         proton_charge,
     );
-    let (coordinates_angular, weights_angular) = lebedev::get_angular_grid(num_angular_points);
+    let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular_points);
 
     let mut coordinates = Vec::new();
     let mut weights = Vec::new();

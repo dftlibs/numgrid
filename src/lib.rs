@@ -9,6 +9,6 @@ mod parameters;
 mod radial;
 mod tables;
 
-pub use crate::atom::get_atom_grid;
-pub use crate::lebedev::get_angular_grid;
-pub use crate::radial::get_radial_grid;
+pub use crate::atom::atom_grid;
+pub use crate::lebedev::angular_grid;
+pub use crate::radial::radial_grid;
