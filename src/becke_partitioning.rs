@@ -6,10 +6,10 @@ use crate::comparison;
 
 // JCP 88, 2547 (1988), eq. 20
 #[inline]
-fn f3(x: f64, becke_hardness: usize) -> f64 {
+fn f3(x: f64, hardness: usize) -> f64 {
     let mut f = x;
 
-    for _ in 0..becke_hardness {
+    for _ in 0..hardness {
         f *= 1.5 - 0.5 * f * f;
     }
 
@@ -48,73 +48,84 @@ pub fn partitioning_weight(
     y_coordinates_bohr: &Vec<f64>,
     z_coordinates_bohr: &Vec<f64>,
     center_index: usize,
-    x: f64,
-    y: f64,
-    z: f64,
-    becke_hardness: usize,
-) -> f64 {
-    let mut pa = vec![1.0; num_centers];
+    coordinates: &Vec<(f64, f64, f64)>,
+    hardness: usize,
+) -> Vec<f64> {
+    let mut becke_weights = Vec::new();
 
-    for ia in 0..num_centers {
-        let vx = x_coordinates_bohr[ia] - x;
-        let vy = y_coordinates_bohr[ia] - y;
-        let vz = z_coordinates_bohr[ia] - z;
-        let dist_a = (vx * vx + vy * vy + vz * vz).sqrt();
+    for coordinate in coordinates {
+        let mut pa = vec![1.0; num_centers];
 
-        // in principle good idea but fails for larger molecules containing
-        // diffuse sets
-        // if (ia != center_index) && (dist_a > BECKE_CUTOFF) {
-        //     pa[ia] = 0.0;
-        //     continue;
-        // }
+        let x = coordinate.0;
+        let y = coordinate.1;
+        let z = coordinate.2;
 
-        let r_a = bragg::get_bragg_angstrom(proton_charges[ia]);
+        for ia in 0..num_centers {
+            let vx = x_coordinates_bohr[ia] - x;
+            let vy = y_coordinates_bohr[ia] - y;
+            let vz = z_coordinates_bohr[ia] - z;
+            let dist_a = (vx * vx + vy * vy + vz * vz).sqrt();
 
-        for ib in 0..ia {
-            let vx = x_coordinates_bohr[ib] - x;
-            let vy = y_coordinates_bohr[ib] - y;
-            let vz = z_coordinates_bohr[ib] - z;
-            let dist_b = (vx * vx + vy * vy + vz * vz).sqrt();
+            // in principle good idea but fails for larger molecules containing
+            // diffuse sets
+            // if (ia != center_index) && (dist_a > 5.0) {
+            //     pa[ia] = 0.0;
+            //     continue;
+            // }
 
-            let r_b = bragg::get_bragg_angstrom(proton_charges[ib]);
+            let r_a = bragg::get_bragg_angstrom(proton_charges[ia]);
 
-            let vx = x_coordinates_bohr[ib] - x_coordinates_bohr[ia];
-            let vy = y_coordinates_bohr[ib] - y_coordinates_bohr[ia];
-            let vz = z_coordinates_bohr[ib] - z_coordinates_bohr[ia];
-            let dist_ab = (vx * vx + vy * vy + vz * vz).sqrt();
+            for ib in 0..ia {
+                let vx = x_coordinates_bohr[ib] - x;
+                let vy = y_coordinates_bohr[ib] - y;
+                let vz = z_coordinates_bohr[ib] - z;
+                let dist_b = (vx * vx + vy * vy + vz * vz).sqrt();
+                // if dist_b > 5.0 {
+                //     continue;
+                // }
 
-            // JCP 88, 2547 (1988), eq. 11
-            let mu_ab = (dist_a - dist_b) / dist_ab;
+                let r_b = bragg::get_bragg_angstrom(proton_charges[ib]);
 
-            let mut nu_ab = mu_ab;
-            if (r_a - r_b).abs() > parameters::SMALL {
-                let u_ab = (r_a + r_b) / (r_b - r_a);
-                let mut a_ab = u_ab / (u_ab * u_ab - 1.0);
+                let vx = x_coordinates_bohr[ib] - x_coordinates_bohr[ia];
+                let vy = y_coordinates_bohr[ib] - y_coordinates_bohr[ia];
+                let vz = z_coordinates_bohr[ib] - z_coordinates_bohr[ia];
+                let dist_ab = (vx * vx + vy * vy + vz * vz).sqrt();
 
-                // JCP 88, 2547 (1988), eq. A3
-                a_ab = a_ab.min(0.5);
-                a_ab = a_ab.max(-0.5);
+                // JCP 88, 2547 (1988), eq. 11
+                let mu_ab = (dist_a - dist_b) / dist_ab;
 
-                nu_ab += a_ab * (1.0 - mu_ab * mu_ab);
+                let mut nu_ab = mu_ab;
+                if (r_a - r_b).abs() > parameters::SMALL {
+                    let u_ab = (r_a + r_b) / (r_b - r_a);
+                    let mut a_ab = u_ab / (u_ab * u_ab - 1.0);
+
+                    // JCP 88, 2547 (1988), eq. A3
+                    a_ab = a_ab.min(0.5);
+                    a_ab = a_ab.max(-0.5);
+
+                    nu_ab += a_ab * (1.0 - mu_ab * mu_ab);
+                }
+
+                let f = f3(nu_ab, hardness);
+
+                if (1.0 - f).abs() > parameters::SMALL {
+                    pa[ia] *= 0.5 * (1.0 - f);
+                    pa[ib] *= 0.5 * (1.0 + f);
+                } else {
+                    // avoid numerical issues
+                    pa[ia] = 0.0;
+                }
             }
+        }
 
-            let f = f3(nu_ab, becke_hardness);
+        let w: f64 = pa.iter().sum();
 
-            if (1.0 - f).abs() > parameters::SMALL {
-                pa[ia] *= 0.5 * (1.0 - f);
-                pa[ib] *= 0.5 * (1.0 + f);
-            } else {
-                // avoid numerical issues
-                pa[ia] = 0.0;
-            }
+        if w.abs() > parameters::SMALL {
+            becke_weights.push(pa[center_index] / w);
+        } else {
+            becke_weights.push(1.0);
         }
     }
 
-    let w: f64 = pa.iter().sum();
-
-    if w.abs() > parameters::SMALL {
-        return pa[center_index] / w;
-    } else {
-        return 1.0;
-    }
+    return becke_weights;
 }

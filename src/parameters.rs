@@ -1,1 +1,1 @@
-pub const SMALL: f64 = 1.0e-14;
+pub const SMALL: f64 = 1.0e-15;

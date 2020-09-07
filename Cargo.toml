@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 statrs = "0.7.0"
+rand = "0.7.3"

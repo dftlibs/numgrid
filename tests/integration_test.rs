@@ -1,3 +1,4 @@
+use rand::Rng;
 use std::fmt::Debug;
 use std::fs;
 use std::num::ParseFloatError;
@@ -436,7 +437,7 @@ fn atom_grid() {
     let x_coordinates_bohr = vec![0.0];
     let y_coordinates_bohr = vec![0.0];
     let z_coordinates_bohr = vec![0.0];
-    let becke_hardness = 3;
+    let hardness = 3;
 
     let (rs, ws) = numgrid::atom_grid(
         radial_precision,
@@ -450,7 +451,7 @@ fn atom_grid() {
         &x_coordinates_bohr,
         &y_coordinates_bohr,
         &z_coordinates_bohr,
-        becke_hardness,
+        hardness,
     );
 
     let num_points = rs.len();
@@ -481,9 +482,8 @@ fn molecular_grid() {
     let x_coordinates_bohr = vec![0.0, 1.43, -1.43];
     let y_coordinates_bohr = vec![0.0, 0.0, 0.0];
     let z_coordinates_bohr = vec![0.0, 1.1, 1.1];
-    let becke_hardness = 3;
+    let hardness = 3;
 
-    let start = Instant::now();
     let mut num_points = 0;
     let mut rs = Vec::new();
     let mut ws = Vec::new();
@@ -500,13 +500,12 @@ fn molecular_grid() {
             &x_coordinates_bohr,
             &y_coordinates_bohr,
             &z_coordinates_bohr,
-            becke_hardness,
+            hardness,
         );
         num_points += rs_atom.len();
         rs.extend(rs_atom);
         ws.extend(ws_atom);
     }
-    println!("time elapsed in molecular_grid: {:?}", start.elapsed());
 
     assert_eq!(num_points, 5300 + 3900 + 3900);
 
@@ -518,4 +517,45 @@ fn molecular_grid() {
         assert!(floats_are_same(p.z, rs[i].2, 1.0e-15));
         assert!(floats_are_same(p.w, ws[i], 1.0e-15));
     }
+}
+
+#[ignore]
+#[test]
+fn benchmark() {
+    let radial_precision = 1.0e-12;
+    let num_angular_points = 50;
+    let hardness = 3;
+
+    let num_centers = 40;
+    let proton_charges = vec![8; num_centers];
+
+    let mut x_coordinates_bohr = Vec::new();
+    let mut y_coordinates_bohr = Vec::new();
+    let mut z_coordinates_bohr = Vec::new();
+
+    let mut rng = rand::thread_rng();
+    for _ in 0..num_centers {
+        x_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
+        y_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
+        z_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
+    }
+
+    let start = Instant::now();
+    for center_index in 0..num_centers {
+        let (_rs_atom, _ws_atom) = numgrid::atom_grid(
+            radial_precision,
+            &vec![0.3023, 0.2753, 1.185],
+            11720.0,
+            2,
+            num_angular_points,
+            num_centers,
+            &proton_charges,
+            center_index,
+            &x_coordinates_bohr,
+            &y_coordinates_bohr,
+            &z_coordinates_bohr,
+            hardness,
+        );
+    }
+    println!("time elapsed in molecular_grid: {:?}", start.elapsed());
 }
