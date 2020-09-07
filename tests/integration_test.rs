@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::fs;
 use std::num::ParseFloatError;
 use std::str::FromStr;
-// use std::time::Instant;
+use std::time::Instant;
 
 fn floats_are_same(f1: f64, f2: f64, small: f64) -> bool {
     let d = f1 - f2;
@@ -161,7 +161,7 @@ fn angular_grid() {
 #[test]
 fn radial_grid() {
     let alpha_min = vec![0.3023, 0.2753, 1.185];
-    let (rs, ws) = numgrid::radial_grid(1.0e-12, alpha_min, 11720.0, 2, 8);
+    let (rs, ws) = numgrid::radial_grid(1.0e-12, &alpha_min, 11720.0, 2, 8);
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,
@@ -425,21 +425,97 @@ where
 
 #[test]
 fn atom_grid() {
+    let radial_precision = 1.0e-12;
     let alpha_min = vec![0.3023, 0.2753, 1.185];
+    let alpha_max = 11720.0;
+    let max_l_quantum_number = 2;
+    let num_angular_points = 50;
+    let num_centers = 1;
+    let proton_charges = vec![8];
+    let center_index = 0;
+    let x_coordinates_bohr = vec![0.0];
+    let y_coordinates_bohr = vec![0.0];
+    let z_coordinates_bohr = vec![0.0];
+    let becke_hardness = 3;
 
-    // let start = Instant::now();
-    let (rs, ws) = numgrid::atom_grid(1.0e-12, alpha_min, 11720.0, 2, 8, 50);
-    // println!("time elapsed in atom_grid: {:?}", start.elapsed());
+    let (rs, ws) = numgrid::atom_grid(
+        radial_precision,
+        &alpha_min,
+        alpha_max,
+        max_l_quantum_number,
+        num_angular_points,
+        num_centers,
+        &proton_charges,
+        center_index,
+        &x_coordinates_bohr,
+        &y_coordinates_bohr,
+        &z_coordinates_bohr,
+        becke_hardness,
+    );
 
     let num_points = rs.len();
     assert_eq!(num_points, 5300);
 
     let reference_points: Vec<GridPoint> = read_vector("tests/reference/atom.txt");
     for (i, p) in reference_points.iter().enumerate() {
+        assert!(floats_are_same(p.x, rs[i].0, 1.0e-15));
+        assert!(floats_are_same(p.y, rs[i].1, 1.0e-15));
+        assert!(floats_are_same(p.z, rs[i].2, 1.0e-15));
+        assert!(floats_are_same(p.w, ws[i], 1.0e-15));
+    }
+}
+
+#[test]
+fn molecular_grid() {
+    let radial_precision = 1.0e-12;
+    let alpha_min = vec![
+        vec![0.3023, 0.2753, 1.185],
+        vec![0.122, 0.727],
+        vec![0.122, 0.727],
+    ];
+    let alpha_max = vec![11720.0, 13.01, 13.01];
+    let max_l_quantum_numbers = vec![2, 1, 1];
+    let num_angular_points = 50;
+    let num_centers = 3;
+    let proton_charges = vec![8, 1, 1];
+    let x_coordinates_bohr = vec![0.0, 1.43, -1.43];
+    let y_coordinates_bohr = vec![0.0, 0.0, 0.0];
+    let z_coordinates_bohr = vec![0.0, 1.1, 1.1];
+    let becke_hardness = 3;
+
+    let start = Instant::now();
+    let mut num_points = 0;
+    let mut rs = Vec::new();
+    let mut ws = Vec::new();
+    for center_index in 0..num_centers {
+        let (rs_atom, ws_atom) = numgrid::atom_grid(
+            radial_precision,
+            &alpha_min[center_index],
+            alpha_max[center_index],
+            max_l_quantum_numbers[center_index],
+            num_angular_points,
+            num_centers,
+            &proton_charges,
+            center_index,
+            &x_coordinates_bohr,
+            &y_coordinates_bohr,
+            &z_coordinates_bohr,
+            becke_hardness,
+        );
+        num_points += rs_atom.len();
+        rs.extend(rs_atom);
+        ws.extend(ws_atom);
+    }
+    println!("time elapsed in molecular_grid: {:?}", start.elapsed());
+
+    assert_eq!(num_points, 5300 + 3900 + 3900);
+
+    let reference_points: Vec<GridPoint> = read_vector("tests/reference/molecule.txt");
+    for (i, p) in reference_points.iter().enumerate() {
         // println!("{} {} {} {}", rs[i].0, rs[i].1, rs[i].2, ws[i]);
-        assert!(floats_are_same(p.x, rs[i].0, 1.0e-12));
-        assert!(floats_are_same(p.y, rs[i].1, 1.0e-12));
-        assert!(floats_are_same(p.z, rs[i].2, 1.0e-12));
-        assert!(floats_are_same(p.w, ws[i], 1.0e-12));
+        assert!(floats_are_same(p.x, rs[i].0, 1.0e-15));
+        assert!(floats_are_same(p.y, rs[i].1, 1.0e-15));
+        assert!(floats_are_same(p.z, rs[i].2, 1.0e-15));
+        assert!(floats_are_same(p.w, ws[i], 1.0e-15));
     }
 }
