@@ -1,8 +1,12 @@
-use std::time::Instant;
+use std::fmt::Debug;
+use std::fs;
+use std::num::ParseFloatError;
+use std::str::FromStr;
+// use std::time::Instant;
 
-fn floats_are_same(f1: f64, f2: f64) -> bool {
+fn floats_are_same(f1: f64, f2: f64, small: f64) -> bool {
     let d = f1 - f2;
-    return d.abs() < 1.0e-15;
+    return d.abs() < small;
 }
 
 #[test]
@@ -132,13 +136,25 @@ fn angular_grid() {
     ];
 
     for (i, coordinate) in coordinates.iter().enumerate() {
-        assert!(floats_are_same(coordinate.0, coordinates_reference[i].0));
-        assert!(floats_are_same(coordinate.1, coordinates_reference[i].1));
-        assert!(floats_are_same(coordinate.2, coordinates_reference[i].2));
+        assert!(floats_are_same(
+            coordinate.0,
+            coordinates_reference[i].0,
+            1.0e-15
+        ));
+        assert!(floats_are_same(
+            coordinate.1,
+            coordinates_reference[i].1,
+            1.0e-15
+        ));
+        assert!(floats_are_same(
+            coordinate.2,
+            coordinates_reference[i].2,
+            1.0e-15
+        ));
     }
 
     for (i, &weight) in weights.iter().enumerate() {
-        assert!(floats_are_same(weight, weights_reference[i]));
+        assert!(floats_are_same(weight, weights_reference[i], 1.0e-15));
     }
 }
 
@@ -366,18 +382,64 @@ fn radial_grid() {
     ];
 
     for (&x, &x_reference) in rs.iter().zip(rs_reference.iter()) {
-        assert!(floats_are_same(x, x_reference));
+        assert!(floats_are_same(x, x_reference, 1.0e-15));
     }
 
     for (&x, &x_reference) in ws.iter().zip(ws_reference.iter()) {
-        assert!(floats_are_same(x, x_reference));
+        assert!(floats_are_same(x, x_reference, 1.0e-15));
     }
 }
 
-// #[test]
-// fn atom_grid() {
-//     let alpha_min = vec![0.3023, 0.2753, 1.185];
-//     let start = Instant::now();
-//     let (_rs, _ws) = numgrid::atom_grid(1.0e-18, alpha_min, 11720.0, 2, 8, 5810);
-//     println!("time elapsed in atom_grid: {:?}", start.elapsed());
-// }
+pub struct GridPoint {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub w: f64,
+}
+
+impl FromStr for GridPoint {
+    type Err = ParseFloatError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let coords: Vec<&str> = s.split_whitespace().collect();
+
+        let x = coords[0].parse::<f64>()?;
+        let y = coords[1].parse::<f64>()?;
+        let z = coords[2].parse::<f64>()?;
+        let w = coords[3].parse::<f64>()?;
+
+        Ok(GridPoint { x, y, z, w })
+    }
+}
+
+fn read_vector<T: FromStr>(file_name: &str) -> Vec<T>
+where
+    <T as FromStr>::Err: Debug,
+{
+    let error_message = format!("something went wrong reading file {}", file_name);
+    let contents = fs::read_to_string(file_name).expect(&error_message);
+    let v = contents.lines().map(|s| s.parse().unwrap()).collect();
+
+    return v;
+}
+
+#[test]
+fn atom_grid() {
+    let alpha_min = vec![0.3023, 0.2753, 1.185];
+
+    // let start = Instant::now();
+    let (rs, ws) = numgrid::atom_grid(1.0e-12, alpha_min, 11720.0, 2, 8, 50);
+    // println!("time elapsed in atom_grid: {:?}", start.elapsed());
+
+    let num_points = rs.len();
+    assert_eq!(num_points, 5300);
+
+    let reference_points: Vec<GridPoint> = read_vector("tests/reference/atom.txt");
+    for (i, p) in reference_points.iter().enumerate() {
+        // println!("{} {} {} {}", rs[i].0, rs[i].1, rs[i].2, ws[i]);
+        assert!(floats_are_same(p.x, rs[i].0, 1.0e-12));
+        assert!(floats_are_same(p.y, rs[i].1, 1.0e-12));
+        assert!(floats_are_same(p.z, rs[i].2, 1.0e-12));
+        assert!(floats_are_same(p.w, ws[i], 1.0e-12));
+    }
+}
