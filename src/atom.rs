@@ -2,6 +2,8 @@ use crate::becke_partitioning;
 use crate::lebedev;
 use crate::radial;
 
+use rayon::prelude::*;
+
 pub fn atom_grid(
     radial_precision: f64,
     alpha_min: &Vec<f64>,
@@ -45,17 +47,21 @@ pub fn atom_grid(
     }
 
     if num_centers > 1 {
-        let becke_weights = becke_partitioning::partitioning_weight(
-            num_centers,
-            &proton_charges,
-            &center_coordinates_bohr,
-            center_index,
-            &coordinates,
-            hardness,
-        );
+        let w_partitioning: Vec<f64> = coordinates
+            .par_iter()
+            .map(|c| {
+                becke_partitioning::partitioning_weight(
+                    center_index,
+                    &center_coordinates_bohr,
+                    &proton_charges,
+                    *c,
+                    hardness,
+                )
+            })
+            .collect();
 
         for (i, w) in weights.iter_mut().enumerate() {
-            *w *= becke_weights[i];
+            *w *= w_partitioning[i];
         }
     }
 
