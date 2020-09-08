@@ -1,7 +1,11 @@
 #![allow(dead_code)]
 
-pub fn floats_are_same(f1: f64, f2: f64) -> bool {
-    let d = f1 - f2;
-
-    d.abs() < 1.0e-15
+pub fn floats_are_same(value: f64, reference: f64, threshold: f64) -> bool {
+    let absolute_error = (value - reference).abs();
+    if reference.abs() > threshold {
+        let relative_error = (absolute_error / reference).abs();
+        return relative_error < threshold;
+    } else {
+        return absolute_error < threshold;
+    }
 }

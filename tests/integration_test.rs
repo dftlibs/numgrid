@@ -5,9 +5,14 @@ use std::num::ParseFloatError;
 use std::str::FromStr;
 use std::time::Instant;
 
-fn floats_are_same(f1: f64, f2: f64, small: f64) -> bool {
-    let d = f1 - f2;
-    return d.abs() < small;
+fn floats_are_same(value: f64, reference: f64, threshold: f64) -> bool {
+    let absolute_error = (value - reference).abs();
+    if reference.abs() > threshold {
+        let relative_error = (absolute_error / reference).abs();
+        return relative_error < threshold;
+    } else {
+        return absolute_error < threshold;
+    }
 }
 
 #[test]
@@ -155,7 +160,7 @@ fn angular_grid() {
     }
 
     for (i, &weight) in weights.iter().enumerate() {
-        assert!(floats_are_same(weight, weights_reference[i], 1.0e-15));
+        assert!(floats_are_same(weight, weights_reference[i], 1.0e-13));
     }
 }
 

@@ -66,11 +66,13 @@ fn get_r_inner(max_error: f64, alpha_inner: f64) -> f64 {
 fn test_get_r_inner() {
     assert!(comparison::floats_are_same(
         get_r_inner(1.0e-12, 2.344e4),
-        0.0000012304794589759454
+        0.0000012304794589759454,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_inner(1.0e-12, 2.602e1),
-        0.000036931719276091795
+        0.000036931719276091795,
+        1.0e-15
     ));
 }
 
@@ -108,31 +110,38 @@ fn get_r_outer(max_error: f64, alpha_outer: f64, l: usize, guess: f64) -> f64 {
 fn test_get_r_outer() {
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.3023, 0, 2.4),
-        9.827704700468292
+        9.827704700468292,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.2753, 1, 2.4),
-        10.97632862649149
+        10.97632862649149,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 1.1850, 2, 2.4),
-        5.656909461147809
+        5.656909461147809,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.1220, 0, 1.4),
-        15.470033591458682
+        15.470033591458682,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.7270, 1, 1.4),
-        6.75449681779016
+        6.75449681779016,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.1220, 0, 1.4),
-        15.470033591458682
+        15.470033591458682,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_r_outer(1.0e-12, 0.7270, 1, 1.4),
-        6.75449681779016
+        6.75449681779016,
+        1.0e-15
     ));
 }
 
@@ -175,30 +184,37 @@ fn get_h(max_error: f64, l: usize, guess: f64) -> f64 {
 fn test_get_h() {
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 0, 0.9827703),
-        0.1523549756417546
+        0.1523549756417546,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 1, 1.0976330),
-        0.1402889524647394
+        0.1402889524647394,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 2, 1.0976330),
-        0.13136472924710518
+        0.13136472924710518,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 0, 1.5470000),
-        0.15235497564177505
+        0.15235497564177505,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 1, 1.5470000),
-        0.14028895246475018
+        0.14028895246475018,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 0, 1.5470000),
-        0.15235497564177505
+        0.15235497564177505,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         get_h(1.0e-12, 1, 1.5470000),
-        0.14028895246475018
+        0.14028895246475018,
+        1.0e-15
     ));
 }

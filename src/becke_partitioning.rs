@@ -20,23 +20,28 @@ fn f3(x: f64, hardness: usize) -> f64 {
 fn test_f3() {
     assert!(comparison::floats_are_same(
         f3(-0.055317, 3),
-        -0.18512279618232905
+        -0.18512279618232905,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         f3(-0.491055, 3),
-        -0.97223000595777
+        -0.97223000595777,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         f3(-0.974945, 3),
-        -0.9999999999974357
+        -0.9999999999974357,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         f3(0.644797, 3),
-        0.9976980942759357
+        0.9976980942759357,
+        1.0e-15
     ));
     assert!(comparison::floats_are_same(
         f3(0.878986, 3),
-        0.9999993429837151
+        0.9999993429837151,
+        1.0e-15
     ));
 }
 
