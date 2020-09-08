@@ -439,9 +439,7 @@ fn atom_grid() {
     let num_centers = 1;
     let proton_charges = vec![8];
     let center_index = 0;
-    let x_coordinates_bohr = vec![0.0];
-    let y_coordinates_bohr = vec![0.0];
-    let z_coordinates_bohr = vec![0.0];
+    let center_coordinates_bohr = vec![(0.0, 0.0, 0.0)];
     let hardness = 3;
 
     let (rs, ws) = numgrid::atom_grid(
@@ -453,9 +451,7 @@ fn atom_grid() {
         num_centers,
         &proton_charges,
         center_index,
-        &x_coordinates_bohr,
-        &y_coordinates_bohr,
-        &z_coordinates_bohr,
+        &center_coordinates_bohr,
         hardness,
     );
 
@@ -484,9 +480,7 @@ fn molecular_grid() {
     let num_angular_points = 50;
     let num_centers = 3;
     let proton_charges = vec![8, 1, 1];
-    let x_coordinates_bohr = vec![0.0, 1.43, -1.43];
-    let y_coordinates_bohr = vec![0.0, 0.0, 0.0];
-    let z_coordinates_bohr = vec![0.0, 1.1, 1.1];
+    let center_coordinates_bohr = vec![(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)];
     let hardness = 3;
 
     let mut num_points = 0;
@@ -502,9 +496,7 @@ fn molecular_grid() {
             num_centers,
             &proton_charges,
             center_index,
-            &x_coordinates_bohr,
-            &y_coordinates_bohr,
-            &z_coordinates_bohr,
+            &center_coordinates_bohr,
             hardness,
         );
         num_points += rs_atom.len();
@@ -534,15 +526,15 @@ fn benchmark() {
     let num_centers = 40;
     let proton_charges = vec![8; num_centers];
 
-    let mut x_coordinates_bohr = Vec::new();
-    let mut y_coordinates_bohr = Vec::new();
-    let mut z_coordinates_bohr = Vec::new();
+    let mut center_coordinates_bohr = Vec::new();
 
     let mut rng = rand::thread_rng();
     for _ in 0..num_centers {
-        x_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
-        y_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
-        z_coordinates_bohr.push(rng.gen_range(-10.0, 10.0));
+        center_coordinates_bohr.push((
+            rng.gen_range(-10.0, 10.0),
+            rng.gen_range(-10.0, 10.0),
+            rng.gen_range(-10.0, 10.0),
+        ));
     }
 
     let start = Instant::now();
@@ -556,9 +548,7 @@ fn benchmark() {
             num_centers,
             &proton_charges,
             center_index,
-            &x_coordinates_bohr,
-            &y_coordinates_bohr,
-            &z_coordinates_bohr,
+            &center_coordinates_bohr,
             hardness,
         );
     }

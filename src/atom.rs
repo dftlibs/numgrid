@@ -11,9 +11,7 @@ pub fn atom_grid(
     num_centers: usize,
     proton_charges: &Vec<i32>,
     center_index: usize,
-    x_coordinates_bohr: &Vec<f64>,
-    y_coordinates_bohr: &Vec<f64>,
-    z_coordinates_bohr: &Vec<f64>,
+    center_coordinates_bohr: &Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let (rs, weights_radial) = radial::radial_grid(
@@ -30,9 +28,9 @@ pub fn atom_grid(
 
     let pi = std::f64::consts::PI;
 
-    let cx = x_coordinates_bohr[center_index];
-    let cy = y_coordinates_bohr[center_index];
-    let cz = z_coordinates_bohr[center_index];
+    let cx = center_coordinates_bohr[center_index].0;
+    let cy = center_coordinates_bohr[center_index].1;
+    let cz = center_coordinates_bohr[center_index].2;
 
     for (&r, &weight_radial) in rs.iter().zip(weights_radial.iter()) {
         let wt = 4.0 * pi * weight_radial;
@@ -50,9 +48,7 @@ pub fn atom_grid(
         let becke_weights = becke_partitioning::partitioning_weight(
             num_centers,
             &proton_charges,
-            &x_coordinates_bohr,
-            &y_coordinates_bohr,
-            &z_coordinates_bohr,
+            &center_coordinates_bohr,
             center_index,
             &coordinates,
             hardness,

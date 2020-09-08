@@ -45,56 +45,39 @@ fn test_f3() {
     ));
 }
 
+fn distance(p1: &(f64, f64, f64), p2: &(f64, f64, f64)) -> f64 {
+    let dx = p1.0 - p2.0;
+    let dy = p1.1 - p2.1;
+    let dz = p1.2 - p2.2;
+
+    (dx * dx + dy * dy + dz * dz).sqrt()
+}
+
 // JCP 88, 2547 (1988)
 pub fn partitioning_weight(
     num_centers: usize,
     proton_charges: &Vec<i32>,
-    x_coordinates_bohr: &Vec<f64>,
-    y_coordinates_bohr: &Vec<f64>,
-    z_coordinates_bohr: &Vec<f64>,
+    center_coordinates_bohr: &Vec<(f64, f64, f64)>,
     center_index: usize,
-    coordinates: &Vec<(f64, f64, f64)>,
+    grid_coordinates_bohr: &Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> Vec<f64> {
     let mut becke_weights = Vec::new();
 
-    for coordinate in coordinates {
+    for grid_coordinate in grid_coordinates_bohr {
         let mut pa = vec![1.0; num_centers];
 
-        let x = coordinate.0;
-        let y = coordinate.1;
-        let z = coordinate.2;
-
         for ia in 0..num_centers {
-            let vx = x_coordinates_bohr[ia] - x;
-            let vy = y_coordinates_bohr[ia] - y;
-            let vz = z_coordinates_bohr[ia] - z;
-            let dist_a = (vx * vx + vy * vy + vz * vz).sqrt();
-
-            // in principle good idea but fails for larger molecules containing
-            // diffuse sets
-            // if (ia != center_index) && (dist_a > 5.0) {
-            //     pa[ia] = 0.0;
-            //     continue;
-            // }
+            let dist_a = distance(&grid_coordinate, &center_coordinates_bohr[ia]);
 
             let r_a = bragg::get_bragg_angstrom(proton_charges[ia]);
 
             for ib in 0..ia {
-                let vx = x_coordinates_bohr[ib] - x;
-                let vy = y_coordinates_bohr[ib] - y;
-                let vz = z_coordinates_bohr[ib] - z;
-                let dist_b = (vx * vx + vy * vy + vz * vz).sqrt();
-                // if dist_b > 5.0 {
-                //     continue;
-                // }
+                let dist_b = distance(&grid_coordinate, &center_coordinates_bohr[ib]);
 
                 let r_b = bragg::get_bragg_angstrom(proton_charges[ib]);
 
-                let vx = x_coordinates_bohr[ib] - x_coordinates_bohr[ia];
-                let vy = y_coordinates_bohr[ib] - y_coordinates_bohr[ia];
-                let vz = z_coordinates_bohr[ib] - z_coordinates_bohr[ia];
-                let dist_ab = (vx * vx + vy * vy + vz * vz).sqrt();
+                let dist_ab = distance(&center_coordinates_bohr[ia], &center_coordinates_bohr[ib]);
 
                 // JCP 88, 2547 (1988), eq. 11
                 let mu_ab = (dist_a - dist_b) / dist_ab;
