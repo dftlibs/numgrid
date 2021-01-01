@@ -530,9 +530,9 @@ fn benchmark() {
     let mut rng = rand::thread_rng();
     for _ in 0..num_centers {
         center_coordinates_bohr.push((
-            rng.gen_range(-10.0, 10.0),
-            rng.gen_range(-10.0, 10.0),
-            rng.gen_range(-10.0, 10.0),
+            rng.gen_range(-10.0..10.0),
+            rng.gen_range(-10.0..10.0),
+            rng.gen_range(-10.0..10.0),
         ));
     }
 
