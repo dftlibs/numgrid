@@ -12,7 +12,7 @@ def _helper(use_bse):
     reference_grid_z_bohr = []
     reference_grid_w = []
     _here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(_here, 'cc-pVDZ.txt'), 'r') as f:
+    with open(os.path.join(_here, "cc-pVDZ.txt"), "r") as f:
         for line in f.read().splitlines():
             (x, y, z, w) = line.split()
             reference_grid_x_bohr.append(float(x))
@@ -36,26 +36,28 @@ def _helper(use_bse):
     # cc-pVDZ basis
     alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
     max_l_quantum_numbers = [2, 1, 1]  # O, H, H
-    alpha_min = [[0.3023, 0.2753, 1.185],  # O
-                 [0.122, 0.727],  # H
-                 [0.122, 0.727]]  # H
+    alpha_min = [[0.3023, 0.2753, 1.185], [0.122, 0.727], [0.122, 0.727]]  # O  # H  # H
 
     offset = 0
     for center_index in range(num_centers):
         if use_bse:
-            context = numgrid.new_atom_grid_bse(radial_precision,
-                                                min_num_angular_points,
-                                                max_num_angular_points,
-                                                proton_charges[center_index],
-                                                'cc-pVDZ')
+            context = numgrid.new_atom_grid_bse(
+                radial_precision,
+                min_num_angular_points,
+                max_num_angular_points,
+                proton_charges[center_index],
+                "cc-pVDZ",
+            )
         else:
-            context = numgrid.new_atom_grid(radial_precision,
-                                            min_num_angular_points,
-                                            max_num_angular_points,
-                                            proton_charges[center_index],
-                                            alpha_max[center_index],
-                                            max_l_quantum_numbers[center_index],
-                                            alpha_min[center_index])
+            context = numgrid.new_atom_grid(
+                radial_precision,
+                min_num_angular_points,
+                max_num_angular_points,
+                proton_charges[center_index],
+                alpha_max[center_index],
+                max_l_quantum_numbers[center_index],
+                alpha_min[center_index],
+            )
 
         num_points = numgrid.get_num_grid_points(context)
         assert num_points == reference_num_points[center_index]
@@ -63,19 +65,29 @@ def _helper(use_bse):
         num_radial_points = numgrid.get_num_radial_grid_points(context)
         assert num_radial_points == reference_num_radial_points[center_index]
 
-        x, y, z, w = numgrid.get_grid(context,
-                                      num_centers,
-                                      center_index,
-                                      x_coordinates_bohr,
-                                      y_coordinates_bohr,
-                                      z_coordinates_bohr,
-                                      proton_charges)
+        x, y, z, w = numgrid.get_grid(
+            context,
+            num_centers,
+            center_index,
+            x_coordinates_bohr,
+            y_coordinates_bohr,
+            z_coordinates_bohr,
+            proton_charges,
+        )
 
         rel_error = 1.0e-9
-        assert x == approx(reference_grid_x_bohr[offset:offset + num_points], rel=rel_error)
-        assert y == approx(reference_grid_y_bohr[offset:offset + num_points], rel=rel_error)
-        assert z == approx(reference_grid_z_bohr[offset:offset + num_points], rel=rel_error)
-        assert w == approx(reference_grid_w[offset:offset + num_points], rel=rel_error)
+        assert x == approx(
+            reference_grid_x_bohr[offset : offset + num_points], rel=rel_error
+        )
+        assert y == approx(
+            reference_grid_y_bohr[offset : offset + num_points], rel=rel_error
+        )
+        assert z == approx(
+            reference_grid_z_bohr[offset : offset + num_points], rel=rel_error
+        )
+        assert w == approx(
+            reference_grid_w[offset : offset + num_points], rel=rel_error
+        )
 
         # we only check that call works but for the moment do not verify results
         r, w = numgrid.get_radial_grid(context)
@@ -103,4 +115,4 @@ def test_h2o_grid_bse():
 
 
 def test_version():
-    assert numgrid.get_version() == '1.1.2'
+    assert numgrid.get_version() == "1.1.2"
