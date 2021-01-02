@@ -1,8 +1,36 @@
 use crate::becke_partitioning;
+use crate::bse;
 use crate::lebedev;
 use crate::radial;
 
 use rayon::prelude::*;
+
+pub fn atom_grid_bse(
+    basis_set: &str,
+    radial_precision: f64,
+    num_angular_points: usize,
+    num_centers: usize,
+    proton_charges: Vec<i32>,
+    center_index: usize,
+    center_coordinates_bohr: Vec<(f64, f64, f64)>,
+    hardness: usize,
+) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
+    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, 1);
+    let max_l_quantum_number = alpha_min.len() - 1;
+
+    atom_grid(
+        radial_precision,
+        alpha_min,
+        alpha_max,
+        max_l_quantum_number,
+        num_angular_points,
+        num_centers,
+        proton_charges,
+        center_index,
+        center_coordinates_bohr,
+        hardness,
+    )
+}
 
 pub fn atom_grid(
     radial_precision: f64,
