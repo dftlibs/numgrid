@@ -24,7 +24,7 @@ pub fn get_closest_num_angular(n: usize) -> usize {
     valid_numbers.sort();
 
     for number in valid_numbers {
-        if number > n {
+        if number >= n {
             return number;
         }
     }

@@ -17,7 +17,8 @@ pub fn atom_grid_bse(
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
-    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, 1);
+    let (alpha_min, alpha_max) =
+        bse::ang_min_and_max(basis_set, proton_charges[center_index] as usize);
     let max_l_quantum_number = alpha_min.len() - 1;
 
     atom_grid(
