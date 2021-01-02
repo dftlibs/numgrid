@@ -1,4 +1,5 @@
 use crate::becke_partitioning;
+use crate::bragg;
 use crate::bse;
 use crate::lebedev;
 use crate::radial;
@@ -8,7 +9,8 @@ use rayon::prelude::*;
 pub fn atom_grid_bse(
     basis_set: &str,
     radial_precision: f64,
-    num_angular_points: usize,
+    min_num_angular_points: usize,
+    max_num_angular_points: usize,
     num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
@@ -23,7 +25,8 @@ pub fn atom_grid_bse(
         alpha_min,
         alpha_max,
         max_l_quantum_number,
-        num_angular_points,
+        min_num_angular_points,
+        max_num_angular_points,
         num_centers,
         proton_charges,
         center_index,
@@ -37,7 +40,8 @@ pub fn atom_grid(
     alpha_min: Vec<f64>,
     alpha_max: f64,
     max_l_quantum_number: usize,
-    num_angular_points: usize,
+    min_num_angular_points: usize,
+    max_num_angular_points: usize,
     num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
@@ -51,7 +55,9 @@ pub fn atom_grid(
         max_l_quantum_number,
         proton_charges[center_index],
     );
-    let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular_points);
+
+    // factors match DIRAC code
+    let rb = bragg::get_bragg_angstrom(proton_charges[center_index]) / (5.0 * 0.529177249);
 
     let mut coordinates = Vec::new();
     let mut weights = Vec::new();
@@ -63,6 +69,18 @@ pub fn atom_grid(
     let cz = center_coordinates_bohr[center_index].2;
 
     for (&r, &weight_radial) in rs.iter().zip(weights_radial.iter()) {
+        // we read the angular grid at each radial step because of pruning
+        // this can be optimized
+        let mut num_angular = max_num_angular_points;
+        if r < rb {
+            num_angular = ((max_num_angular_points as f64) * r / rb) as usize;
+            num_angular = lebedev::get_closest_num_angular(num_angular);
+            if num_angular < min_num_angular_points {
+                num_angular = min_num_angular_points;
+            }
+        }
+        let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular);
+
         let wt = 4.0 * pi * weight_radial;
         for (&xyz, &weight_angular) in coordinates_angular.iter().zip(weights_angular.iter()) {
             let x = cx + r * xyz.0;

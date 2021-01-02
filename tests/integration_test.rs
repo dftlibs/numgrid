@@ -435,7 +435,8 @@ fn atom_grid() {
     let alpha_min = vec![0.3023, 0.2753, 1.185];
     let alpha_max = 11720.0;
     let max_l_quantum_number = 2;
-    let num_angular_points = 50;
+    let min_num_angular_points = 50;
+    let max_num_angular_points = 50;
     let num_centers = 1;
     let proton_charges = vec![8];
     let center_index = 0;
@@ -447,7 +448,8 @@ fn atom_grid() {
         alpha_min,
         alpha_max,
         max_l_quantum_number,
-        num_angular_points,
+        min_num_angular_points,
+        max_num_angular_points,
         num_centers,
         proton_charges,
         center_index,
@@ -477,7 +479,8 @@ fn molecular_grid() {
     ];
     let alpha_max = vec![11720.0, 13.01, 13.01];
     let max_l_quantum_numbers = vec![2, 1, 1];
-    let num_angular_points = 50;
+    let min_num_angular_points = 50;
+    let max_num_angular_points = 50;
     let num_centers = 3;
     let proton_charges = vec![8, 1, 1];
     let center_coordinates_bohr = vec![(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)];
@@ -492,7 +495,8 @@ fn molecular_grid() {
             alpha_min[center_index].clone(),
             alpha_max[center_index],
             max_l_quantum_numbers[center_index],
-            num_angular_points,
+            min_num_angular_points,
+            max_num_angular_points,
             num_centers,
             proton_charges.clone(),
             center_index,
@@ -520,7 +524,8 @@ fn molecular_grid() {
 #[test]
 fn benchmark() {
     let radial_precision = 1.0e-12;
-    let num_angular_points = 302;
+    let min_num_angular_points = 302;
+    let max_num_angular_points = 302;
     let hardness = 3;
 
     let num_centers = 40;
@@ -543,7 +548,8 @@ fn benchmark() {
             vec![0.3023, 0.2753, 1.185],
             11720.0,
             2,
-            num_angular_points,
+            min_num_angular_points,
+            max_num_angular_points,
             num_centers,
             proton_charges.clone(),
             center_index,
@@ -558,7 +564,8 @@ fn benchmark() {
 #[test]
 fn another_benchmark() {
     let radial_precision = 1.0e-12;
-    let num_angular_points = 302;
+    let min_num_angular_points = 302;
+    let max_num_angular_points = 302;
     let hardness = 3;
 
     let center_coordinates_bohr = vec![
@@ -648,7 +655,8 @@ fn another_benchmark() {
             vec![0.3023, 0.2753, 1.185],
             11720.0,
             2,
-            num_angular_points,
+            min_num_angular_points,
+            max_num_angular_points,
             num_centers,
             proton_charges.clone(),
             center_index,

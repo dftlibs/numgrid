@@ -29,9 +29,10 @@ fn radial_grid(
 
 #[pyfunction]
 fn atom_grid_bse(
-    basis: &str,
+    basis_set: &str,
     radial_precision: f64,
-    num_angular_points: usize,
+    min_num_angular_points: usize,
+    max_num_angular_points: usize,
     num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
@@ -39,9 +40,10 @@ fn atom_grid_bse(
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     atom::atom_grid_bse(
-        basis,
+        basis_set,
         radial_precision,
-        num_angular_points,
+        min_num_angular_points,
+        max_num_angular_points,
         num_centers,
         proton_charges,
         center_index,
@@ -56,7 +58,8 @@ fn atom_grid(
     alpha_min: Vec<f64>,
     alpha_max: f64,
     max_l_quantum_number: usize,
-    num_angular_points: usize,
+    min_num_angular_points: usize,
+    max_num_angular_points: usize,
     num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
@@ -68,7 +71,8 @@ fn atom_grid(
         alpha_min,
         alpha_max,
         max_l_quantum_number,
-        num_angular_points,
+        min_num_angular_points,
+        max_num_angular_points,
         num_centers,
         proton_charges,
         center_index,
