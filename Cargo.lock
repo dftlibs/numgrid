@@ -734,7 +734,7 @@ dependencies = [
 
 [[package]]
 name = "numgrid"
-version = "0.1.0"
+version = "1.1.2"
 dependencies = [
  "pyo3",
  "rand 0.8.0",
