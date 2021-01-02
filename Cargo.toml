@@ -4,7 +4,16 @@ version = "0.1.0"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 edition = "2018"
 
+[lib]
+name = "numgrid"
+crate-type = ["cdylib", "rlib"]
+
+[package.metadata.maturin]
+requires-python = ">=3.6"
+classifier = ["Programming Language :: Python"]
+
 [dependencies]
 statrs = "0.13.0"
 rand = "0.8.0"
 rayon = "1.5"
+pyo3 = { version = "0.12.4", features = ["extension-module"] }

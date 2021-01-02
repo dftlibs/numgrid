@@ -6,6 +6,7 @@ mod bragg;
 mod comparison;
 mod lebedev;
 mod parameters;
+mod python;
 mod radial;
 mod tables;
 
