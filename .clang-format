@@ -1,6 +1,0 @@
-IndentWidth: 4
-AlignAfterOpenBracket: true
-BreakBeforeBraces: Allman
-BinPackParameters: false
-BinPackArguments: false
-SortIncludes: true
