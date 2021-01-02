@@ -20,11 +20,11 @@ pub fn radial_grid(
     let mut h = std::f64::MAX;
     let mut r_outer: f64 = 0.0;
 
-    for l in 0..=max_l_quantum_number {
-        if alpha_min[l] > 0.0 {
+    for (l, a) in alpha_min.iter().enumerate().take(max_l_quantum_number + 1) {
+        if *a > 0.0 {
             r_outer = r_outer.max(get_r_outer(
                 radial_precision,
-                alpha_min[l],
+                *a,
                 l,
                 4.0 * bragg::get_bragg_angstrom(proton_charge),
             ));

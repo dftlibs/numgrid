@@ -56,8 +56,8 @@ fn distance(p1: &(f64, f64, f64), p2: &(f64, f64, f64)) -> f64 {
 // JCP 88, 2547 (1988)
 pub fn partitioning_weight(
     center_index: usize,
-    center_coordinates_bohr: &Vec<(f64, f64, f64)>,
-    proton_charges: &Vec<i32>,
+    center_coordinates_bohr: &[(f64, f64, f64)],
+    proton_charges: &[i32],
     grid_coordinates_bohr: (f64, f64, f64),
     hardness: usize,
 ) -> f64 {
@@ -103,8 +103,8 @@ pub fn partitioning_weight(
     let w: f64 = pa.iter().sum();
 
     if w.abs() > parameters::SMALL {
-        return pa[center_index] / w;
+        pa[center_index] / w
     } else {
-        return 1.0;
+        1.0
     }
 }

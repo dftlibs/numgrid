@@ -2,7 +2,7 @@
 
 const F: f64 = std::f64::consts::FRAC_1_SQRT_2;
 
-pub const COORDINATES: [(f64, f64, f64); 46976] = [
+pub static COORDINATES: [(f64, f64, f64); 46976] = [
     (1.0, 0.0, 0.0),
     (-1.0, 0.0, 0.0),
     (0.0, 1.0, 0.0),
