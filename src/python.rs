@@ -55,7 +55,7 @@ fn atom_grid(
 }
 
 #[pymodule]
-fn demo(_py: Python, m: &PyModule) -> PyResult<()> {
+fn numgrid(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(angular_grid, m)?)?;
     m.add_function(wrap_pyfunction!(radial_grid, m)?)?;
     m.add_function(wrap_pyfunction!(atom_grid, m)?)?;
