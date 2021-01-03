@@ -418,9 +418,11 @@ Closely follows the C API. To see a real example, have a look at the
 Parallelization
 ===============
 
-The design decision was to not parallelize the library but rather
-parallelize over the atom/basis types by the caller. This simplifies
-modularity and code reuse.
+The Becke partitioning step is parallelized using `Rayon
+<https://github.com/rayon-rs/rayon>`__.  In other words, this step should be
+able to use all available cores on the computer or computing node.  Since grids
+are currently generated atom by atom, it is also possible to parallelize
+"outside" by the caller.
 
 
 Space partitioning
