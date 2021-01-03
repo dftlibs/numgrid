@@ -4,8 +4,8 @@
    :target: LICENSE
 .. image:: https://badge.fury.io/py/numgrid.svg
    :target: https://badge.fury.io/py/numgrid
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3746461.svg
-   :target: https://doi.org/10.5281/zenodo.3746461
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470276.svg
+   :target: https://doi.org/10.5281/zenodo.1470276
 
 - `Changelog <CHANGES.rst>`__
 -  Licensed under `MPL v2.0 <LICENSE>`__ (except John
@@ -70,10 +70,10 @@ author(s)::
   @misc{numgrid,
     author    = {Bast, Radovan},
     title     = {Numgrid: Numerical integration grid for molecules},
-    month     = {4},
-    year      = {2020},
+    month     = {1},
+    year      = {2021},
     publisher = {Zenodo},
-    version   = {v1.1.2},
+    version   = {v2.0.0},
     doi       = {10.5281/zenodo.1470276},
     url       = {https://doi.org/10.5281/zenodo.1470276}
   }
