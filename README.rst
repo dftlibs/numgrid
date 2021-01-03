@@ -188,9 +188,6 @@ It is no problem to create several atom objects at the same time.
 Python example
 --------------
 
-The Python interface is generated using
-`CFFI <https://cffi.readthedocs.org>`__.
-
 As an example let us generate a grid for the water molecule:
 
 .. code:: python
@@ -201,69 +198,56 @@ As an example let us generate a grid for the water molecule:
    min_num_angular_points = 86
    max_num_angular_points = 302
 
-   num_centers = 3
    proton_charges = [8, 1, 1]
 
-   x_coordinates_bohr = [0.0, 1.43, -1.43]
-   y_coordinates_bohr = [0.0, 0.0, 0.0]
-   z_coordinates_bohr = [0.0, 1.1, 1.1]
+   center_coordinates_bohr = [(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)]
 
    # cc-pVDZ basis
    alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
    max_l_quantum_numbers = [2, 1, 1]  # O, H, H
-   alpha_min = [[0.3023, 0.2753, 1.185],  # O
-                [0.122, 0.727],  # H
-                [0.122, 0.727]]  # H
+   alpha_min = [[0.3023, 0.2753, 1.185], [0.122, 0.727], [0.122, 0.727]]  # O  # H  # H
 
-   for center_index in range(num_centers):
-       context = numgrid.new_atom_grid(radial_precision,
-                                       min_num_angular_points,
-                                       max_num_angular_points,
-                                       proton_charges[center_index],
-                                       alpha_max[center_index],
-                                       max_l_quantum_numbers[center_index],
-                                       alpha_min[center_index])
+   hardness = 3
 
-       num_points = numgrid.get_num_grid_points(context)
+   offset = 0
+   for center_index in range(len(center_coordinates_bohr)):
+       # atom grid using explicit basis set parameters
+       coordinates, weights = numgrid.atom_grid(
+           alpha_min[center_index],
+           alpha_max[center_index],
+           max_l_quantum_numbers[center_index],
+           radial_precision,
+           min_num_angular_points,
+           max_num_angular_points,
+           proton_charges,
+           center_index,
+           center_coordinates_bohr,
+           hardness,
+       )
 
-       # generate an atomic grid in the molecular environment
-       x, y, z, w = numgrid.get_grid(context,
-                                     num_centers,
-                                     center_index,
-                                     x_coordinates_bohr,
-                                     y_coordinates_bohr,
-                                     z_coordinates_bohr,
-                                     proton_charges)
+       # atom grid using basis set name
+       coordinates, weights = numgrid.atom_grid_bse(
+           "cc-pVDZ",
+           radial_precision,
+           min_num_angular_points,
+           max_num_angular_points,
+           proton_charges,
+           center_index,
+           center_coordinates_bohr,
+           hardness,
+       )
 
-       num_radial_points = numgrid.get_num_radial_grid_points(context)
+       # radial grid using explicit basis set parameters
+       radii, weights = numgrid.radial_grid(
+           alpha_min[center_index],
+           alpha_max[center_index],
+           max_l_quantum_numbers[center_index],
+           radial_precision,
+           proton_charges[center_index],
+       )
 
-       # generate an isolated radial grid
-       r, w = numgrid.get_radial_grid(context)
-
-       numgrid.free_atom_grid(context)
-
-
-   # generate an isolated angular grid
-   x, y, z, w = numgrid.get_angular_grid(num_angular_grid_points=14)
-
-
-Avoiding explicit exponent ranges
----------------------------------
-
-Using the Python interface you can choose to not provide
-explicit exponent ranges and instead specify the basis
-set which is then fetched directly from
-https://github.com/MolSSI-BSE/basis_set_exchange
-using the wonderful
-`MolSSI BSE <https://molssi-bse.github.io/basis_set_exchange/>`__:
-
-.. code:: python
-
-   context = numgrid.new_atom_grid_bse(radial_precision=1.0e-12,
-                                       min_num_angular_points=86,
-                                       max_num_angular_points=302,
-                                       proton_charge=8,
-                                       basis_set='cc-pVDZ')
+       # angular grid with 14 points
+       coordinates, weights = numgrid.angular_grid(14)
 
 
 Saving grid in NumPy format
