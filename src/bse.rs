@@ -18,7 +18,7 @@ struct Shell {
     exponents: Vec<String>,
 }
 
-pub fn ang_min_and_max(basis_set: &str, element: usize) -> (Vec<f64>, f64) {
+pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>, f64) {
     let mut headers = HeaderMap::new();
     headers.insert(USER_AGENT, HeaderValue::from_static("reqwest"));
 
@@ -39,7 +39,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (Vec<f64>, f64) {
     let element = resp.elements.get(&element.to_string()).unwrap();
 
     let mut alpha_max = -std::f64::MAX;
-    let mut alpha_min_map: HashMap<usize, f64> = HashMap::new();
+    let mut alpha_min = HashMap::new();
 
     for shell in &element.electron_shells {
         let angular_momentum = shell.angular_momentum[0];
@@ -48,19 +48,11 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (Vec<f64>, f64) {
             if exponent > alpha_max {
                 alpha_max = exponent;
             }
-            let s = alpha_min_map
-                .entry(angular_momentum)
-                .or_insert(std::f64::MAX);
+            let s = alpha_min.entry(angular_momentum).or_insert(std::f64::MAX);
             if &exponent < s {
                 *s = exponent;
             }
         }
-    }
-
-    // FIXME: instead of doing this we could return the map and use the map outside
-    let mut alpha_min = vec![0.0; alpha_min_map.len()];
-    for (k, v) in alpha_min_map {
-        alpha_min[k] = v;
     }
 
     (alpha_min, alpha_max)

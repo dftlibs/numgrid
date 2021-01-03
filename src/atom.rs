@@ -1,12 +1,13 @@
 use pyo3::prelude::*;
+use rayon::prelude::*;
+
+use std::collections::HashMap;
 
 use crate::becke_partitioning;
 use crate::bragg;
 use crate::bse;
 use crate::lebedev;
 use crate::radial;
-
-use rayon::prelude::*;
 
 #[pyfunction]
 pub fn atom_grid_bse(
@@ -21,12 +22,10 @@ pub fn atom_grid_bse(
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let (alpha_min, alpha_max) =
         bse::ang_min_and_max(basis_set, proton_charges[center_index] as usize);
-    let max_l_quantum_number = alpha_min.len() - 1;
 
     atom_grid(
         alpha_min,
         alpha_max,
-        max_l_quantum_number,
         radial_precision,
         min_num_angular_points,
         max_num_angular_points,
@@ -39,9 +38,8 @@ pub fn atom_grid_bse(
 
 #[pyfunction]
 pub fn atom_grid(
-    alpha_min: Vec<f64>,
+    alpha_min: HashMap<usize, f64>,
     alpha_max: f64,
-    max_l_quantum_number: usize,
     radial_precision: f64,
     min_num_angular_points: usize,
     max_num_angular_points: usize,
@@ -53,7 +51,6 @@ pub fn atom_grid(
     let (rs, weights_radial) = radial::radial_grid(
         alpha_min,
         alpha_max,
-        max_l_quantum_number,
         radial_precision,
         proton_charges[center_index],
     );

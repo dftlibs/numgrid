@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::fs;
 use std::num::ParseFloatError;
@@ -166,8 +167,12 @@ fn angular_grid() {
 
 #[test]
 fn radial_grid() {
-    let alpha_min = vec![0.3023, 0.2753, 1.185];
-    let (rs, ws) = numgrid::radial_grid(alpha_min, 11720.0, 2, 1.0e-12, 8);
+    let mut alpha_min: HashMap<usize, f64> = HashMap::new();
+    alpha_min.insert(0, 0.3023);
+    alpha_min.insert(1, 0.2753);
+    alpha_min.insert(2, 1.185);
+
+    let (rs, ws) = numgrid::radial_grid(alpha_min, 11720.0, 1.0e-12, 8);
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,
@@ -432,9 +437,13 @@ where
 #[test]
 fn atom_grid() {
     let radial_precision = 1.0e-12;
-    let alpha_min = vec![0.3023, 0.2753, 1.185];
+
+    let mut alpha_min: HashMap<usize, f64> = HashMap::new();
+    alpha_min.insert(0, 0.3023);
+    alpha_min.insert(1, 0.2753);
+    alpha_min.insert(2, 1.185);
+
     let alpha_max = 11720.0;
-    let max_l_quantum_number = 2;
     let min_num_angular_points = 50;
     let max_num_angular_points = 50;
     let proton_charges = vec![8];
@@ -445,7 +454,6 @@ fn atom_grid() {
     let (rs, ws) = numgrid::atom_grid(
         alpha_min,
         alpha_max,
-        max_l_quantum_number,
         radial_precision,
         min_num_angular_points,
         max_num_angular_points,
@@ -470,13 +478,19 @@ fn atom_grid() {
 #[test]
 fn molecular_grid() {
     let radial_precision = 1.0e-12;
-    let alpha_min = vec![
-        vec![0.3023, 0.2753, 1.185],
-        vec![0.122, 0.727],
-        vec![0.122, 0.727],
-    ];
+
+    let mut alpha_min_o: HashMap<usize, f64> = HashMap::new();
+    alpha_min_o.insert(0, 0.3023);
+    alpha_min_o.insert(1, 0.2753);
+    alpha_min_o.insert(2, 1.185);
+
+    let mut alpha_min_h: HashMap<usize, f64> = HashMap::new();
+    alpha_min_h.insert(0, 0.122);
+    alpha_min_h.insert(1, 0.727);
+
+    let alpha_min = vec![alpha_min_o, alpha_min_h.clone(), alpha_min_h];
+
     let alpha_max = vec![11720.0, 13.01, 13.01];
-    let max_l_quantum_numbers = vec![2, 1, 1];
     let min_num_angular_points = 50;
     let max_num_angular_points = 50;
     let num_centers = 3;
@@ -491,7 +505,6 @@ fn molecular_grid() {
         let (rs_atom, ws_atom) = numgrid::atom_grid(
             alpha_min[center_index].clone(),
             alpha_max[center_index],
-            max_l_quantum_numbers[center_index],
             radial_precision,
             min_num_angular_points,
             max_num_angular_points,
@@ -538,12 +551,16 @@ fn benchmark() {
         ));
     }
 
+    let mut alpha_min: HashMap<usize, f64> = HashMap::new();
+    alpha_min.insert(0, 0.3023);
+    alpha_min.insert(1, 0.2753);
+    alpha_min.insert(2, 1.185);
+
     let start = Instant::now();
     for center_index in 0..num_centers {
         let (_rs_atom, _ws_atom) = numgrid::atom_grid(
-            vec![0.3023, 0.2753, 1.185],
+            alpha_min.clone(),
             11720.0,
-            2,
             radial_precision,
             min_num_angular_points,
             max_num_angular_points,
@@ -644,12 +661,16 @@ fn another_benchmark() {
     let num_centers = center_coordinates_bohr.len();
     let proton_charges = vec![8; num_centers];
 
+    let mut alpha_min: HashMap<usize, f64> = HashMap::new();
+    alpha_min.insert(0, 0.3023);
+    alpha_min.insert(1, 0.2753);
+    alpha_min.insert(2, 1.185);
+
     let start = Instant::now();
     for center_index in 0..num_centers {
         let (_rs_atom, _ws_atom) = numgrid::atom_grid(
-            vec![0.3023, 0.2753, 1.185],
+            alpha_min.clone(),
             11720.0,
-            2,
             radial_precision,
             min_num_angular_points,
             max_num_angular_points,

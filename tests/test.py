@@ -30,9 +30,16 @@ def _helper(use_bse):
     center_coordinates_bohr = [(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)]
 
     # cc-pVDZ basis
-    alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
-    max_l_quantum_numbers = [2, 1, 1]  # O, H, H
-    alpha_min = [[0.3023, 0.2753, 1.185], [0.122, 0.727], [0.122, 0.727]]  # O  # H  # H
+    alpha_max = [
+        11720.0,  # O
+        13.01,  # H
+        13.01,  # H
+    ]
+    alpha_min = [
+        {0: 0.3023, 1: 0.2753, 2: 1.185},  # O
+        {0: 0.122, 1: 0.727},  # H
+        {0: 0.122, 1: 0.727},  # H
+    ]
 
     hardness = 3
 
@@ -53,7 +60,6 @@ def _helper(use_bse):
             xyz, w = numgrid.atom_grid(
                 alpha_min[center_index],
                 alpha_max[center_index],
-                max_l_quantum_numbers[center_index],
                 radial_precision,
                 min_num_angular_points,
                 max_num_angular_points,
@@ -79,7 +85,6 @@ def _helper(use_bse):
         r, w = numgrid.radial_grid(
             alpha_min[center_index],
             alpha_max[center_index],
-            max_l_quantum_numbers[center_index],
             radial_precision,
             proton_charges[center_index],
         )

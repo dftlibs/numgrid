@@ -2,6 +2,8 @@
 
 use pyo3::prelude::*;
 
+use std::collections::HashMap;
+
 use crate::bragg;
 use crate::parameters;
 use statrs::function::gamma;
@@ -11,9 +13,8 @@ use crate::comparison;
 
 #[pyfunction]
 pub fn radial_grid(
-    alpha_min: Vec<f64>,
+    alpha_min: HashMap<usize, f64>,
     alpha_max: f64,
-    max_l_quantum_number: usize,
     radial_precision: f64,
     proton_charge: i32,
 ) -> (Vec<f64>, Vec<f64>) {
@@ -23,11 +24,16 @@ pub fn radial_grid(
     let mut h = std::f64::MAX;
     let mut r_outer: f64 = 0.0;
 
-    for (l, a) in alpha_min.iter().enumerate().take(max_l_quantum_number + 1) {
-        if *a > 0.0 {
+    // we need alpha_min sorted by l
+    // at this point not sure why ... need to check again the literature
+    let mut v: Vec<_> = alpha_min.into_iter().collect();
+    v.sort_by(|x, y| x.0.cmp(&y.0));
+
+    for (l, a) in v {
+        if a > 0.0 {
             r_outer = r_outer.max(get_r_outer(
                 radial_precision,
-                *a,
+                a,
                 l,
                 4.0 * bragg::get_bragg_angstrom(proton_charge),
             ));

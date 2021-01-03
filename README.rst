@@ -148,20 +148,23 @@ The API changed
 
 The API changed (sorry!) for easier maintenance and simpler use:
 
-- no initialization or deallocation necessary
+- No initialization or deallocation necessary.
 
-- one-step instead of two-steps (since the radial grid generation time is
+- One-step instead of two steps (since the radial grid generation time is
   negligible compared to space partitioning, it did not make sense anymore to
-  separate these steps and introduce a state)
+  separate these steps and introduce a state).
 
-The library now provides Rust and Python bindings. It used to provide C and
-Fortran bindings.  The C/Fortran code lives on on the `cpp-version branch
-<https://github.com/dftlibs/numgrid/tree/cpp-version>`__.  I might bring the C
-interfaces back into the Rust code if there is sufficient interest/need.
+- ``alpha_min`` is given as dictionary which saves an argument and simplifies
+  explaining the API.
 
-Note that the API will probably change again as soon as support for more
-quadratures is added
-(see `issue 43 <https://github.com/dftlibs/numgrid/issues/43>`__).
+- The library now provides Rust and Python bindings. It used to provide C and
+  Fortran bindings. The C/Fortran code lives on on the `cpp-version branch
+  <https://github.com/dftlibs/numgrid/tree/cpp-version>`__.  I might bring the
+  C interfaces back into the Rust code if there is sufficient interest/need.
+
+- Note that the API will probably change again as soon as support for more
+  quadratures is added (see `issue 43
+  <https://github.com/dftlibs/numgrid/issues/43>`__).
 
 
 Units
@@ -188,9 +191,16 @@ As an example let us generate a grid for the water molecule:
    center_coordinates_bohr = [(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)]
 
    # cc-pVDZ basis
-   alpha_max = [11720.0, 13.01, 13.01]  # O, H, H
-   max_l_quantum_numbers = [2, 1, 1]  # O, H, H
-   alpha_min = [[0.3023, 0.2753, 1.185], [0.122, 0.727], [0.122, 0.727]]  # O  # H  # H
+   alpha_max = [
+       11720.0,  # O
+       13.01,  # H
+       13.01,  # H
+   ]
+   alpha_min = [
+       {0: 0.3023, 1: 0.2753, 2: 1.185},  # O
+       {0: 0.122, 1: 0.727},  # H
+       {0: 0.122, 1: 0.727},  # H
+   ]
 
    hardness = 3
 
@@ -200,7 +210,6 @@ As an example let us generate a grid for the water molecule:
        coordinates, weights = numgrid.atom_grid(
            alpha_min[center_index],
            alpha_max[center_index],
-           max_l_quantum_numbers[center_index],
            radial_precision,
            min_num_angular_points,
            max_num_angular_points,
@@ -226,7 +235,6 @@ As an example let us generate a grid for the water molecule:
        radii, weights = numgrid.radial_grid(
            alpha_min[center_index],
            alpha_max[center_index],
-           max_l_quantum_numbers[center_index],
            radial_precision,
            proton_charges[center_index],
        )
@@ -245,13 +253,8 @@ Notes and recommendations
 
 - ``alpha_max`` is the steepest basis set exponent.
 
-- ``alpha_min`` is an array of the size ``max_l_quantum_number`` + 1 and holds
-  the smallest exponents for each angular momentum. If an angular momentum set
-  is missing “in the middle”, provide 0.0. In other words, imagine that you
-  have a basis set which only contains *s* and *d* functions and no *p*
-  functions and let us assume that the most diffuse *s* function has the
-  exponent 0.1 and the most diffuse *d* function has the exponent 0.2, then
-  ``alpha_min`` would be an array of three numbers holding [0.1, 0.0, 0.2].
+- ``alpha_min`` is a dictionary and holds the smallest exponents for each
+  angular momentum (order does not matter).
 
 - Using ``center_index`` we tell the code which of the atom centers is the one
   we have computed the grid for.
