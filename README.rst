@@ -408,13 +408,6 @@ Destroy the atom and deallocate all data
    void numgrid_free_atom_grid(context_t *context);
 
 
-Fortran API
------------
-
-Closely follows the C API. To see a real example, have a look at the
-`Fortran test case <test/test_explicit.f90>`__.
-
-
 Parallelization
 ===============
 
