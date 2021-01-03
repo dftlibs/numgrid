@@ -17,7 +17,7 @@ Numgrid
 
 Numgrid is a library that produces numerical integration grid for
 molecules based on atom coordinates, atom types, and basis set
-information. This library can be built with C, Fortran, and Python bindings.
+information. This library can be built with Rust and Python bindings.
 
 
 .. contents:: Table of Contents
