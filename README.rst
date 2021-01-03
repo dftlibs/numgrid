@@ -17,7 +17,7 @@ Numgrid
 
 Numgrid is a library that produces numerical integration grid for
 molecules based on atom coordinates, atom types, and basis set
-information. This library can be built with Rust and Python bindings.
+information. This library provides Rust and Python bindings.
 
 
 .. contents:: Table of Contents
@@ -162,29 +162,6 @@ Units
 Coordinates are in bohr.
 
 
-Overview
---------
-
-Grid computation is done per atom/basis type and proceeds in five steps:
-
--  Create atom
--  Get number of points (depends on basis set range)
--  Allocate memory to hold the grid
--  Compute grid on this atom in a molecular environment
--  Free atom and its memory
-
-The Python interface takes care of the allocation and deallocation part
-but the essential point is that memory management is happening on the
-client side.
-
-If you have many atom centers that have the same atom type and same
-basis set, it will make sense to create only one atom object and then
-reuse this object to compute the grid on all atoms with the same basis
-type.
-
-It is no problem to create several atom objects at the same time.
-
-
 Python example
 --------------
 
@@ -250,6 +227,40 @@ As an example let us generate a grid for the water molecule:
        coordinates, weights = numgrid.angular_grid(14)
 
 
+Notes and recommendations
+-------------------------
+
+- The smaller the ``radial_precision``, the better grid.
+
+- For ``min_num_angular_points`` and ``max_num_angular_points``, see “Angular
+  grid” below.
+
+- ``alpha_max`` is the steepest basis set exponent.
+
+- ``alpha_min`` is an array of the size ``max_l_quantum_number`` + 1 and holds
+  the smallest exponents for each angular momentum. If an angular momentum set
+  is missing “in the middle”, provide 0.0. In other words, imagine that you
+  have a basis set which only contains *s* and *d* functions and no *p*
+  functions and let us assume that the most diffuse *s* function has the
+  exponent 0.1 and the most diffuse *d* function has the exponent 0.2, then
+  ``alpha_min`` would be an array of three numbers holding [0.1, 0.0, 0.2].
+
+- Using ``center_index`` we tell the code which of the atom centers is the one
+  we have computed the grid for.
+
+- ``num_angular_grid_points`` has to be one of the many supported Lebedev grids
+  (see table on the bottom of this page).
+
+
+Rust interface
+--------------
+
+Needs to be documented better but the library exposes functions with the same
+name as the Python interface and probably the best example on how it can be
+used are the `integration tests
+<https://github.com/dftlibs/numgrid/blob/main/tests/integration_test.rs>`__.
+
+
 Saving grid in NumPy format
 ---------------------------
 
@@ -267,106 +278,6 @@ in NumPy format:
 
    np.save("angular_grid_coordinates.npy", coordinates)
    np.save("angular_grid_weights.npy", weights)
-
-
-C API
------
-
-To see a real example, have a look at the `C++ test
-case <test/test_explicit.cpp>`__.
-
-
-Creating a new atom grid
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: c
-
-   context_t *numgrid_new_atom_grid(const double radial_precision,
-                                    const int min_num_angular_points,
-                                    const int max_num_angular_points,
-                                    const int proton_charge,
-                                    const double alpha_max,
-                                    const int max_l_quantum_number,
-                                    const double alpha_min[]);
-
-The smaller the ``radial_precision``, the better grid.
-
-For ``min_num_angular_points`` and ``max_num_angular_points``, see
-“Angular grid” below.
-
-``alpha_max`` is the steepest basis set exponent.
-
-``alpha_min`` is an array of the size ``max_l_quantum_number`` + 1 and
-holds the smallest exponents for each angular momentum. If an angular
-momentum set is missing “in the middle”, provide 0.0. In other words,
-imagine that you have a basis set which only contains *s* and *d*
-functions and no *p* functions and let us assume that the most diffuse
-*s* function has the exponent 0.1 and the most diffuse *d* function has
-the exponent 0.2, then ``alpha_min`` would be an array of three numbers
-holding {0.1, 0.0, 0.2}.
-
-
-Get grid on current atom, scaled by Becke partitioning
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-We assume that ``grid_x_bohr``, ``grid_y_bohr``, ``grid_z_bohr``, and
-``grid_w`` are allocated by the caller and have the length that equals
-the number of grid points.
-
-``x_coordinates_bohr``, ``y_coordinates_bohr``, ``z_coordinates_bohr``,
-and ``proton_charges`` refer to the molecular environment and have the
-size ``num_centers``.
-
-Using ``center_index`` we tell the code which of the atom centers is the
-one we have computed the grid for.
-
-.. code:: c
-
-   void numgrid_get_grid(const context_t *context,
-                         const int num_centers,
-                         const int center_index,
-                         const double x_coordinates_bohr[],
-                         const double y_coordinates_bohr[],
-                         const double z_coordinates_bohr[],
-                         const int proton_charges[],
-                         double grid_x_bohr[],
-                         double grid_y_bohr[],
-                         double grid_z_bohr[],
-                         double grid_w[]);
-
-
-Get radial grid on current atom
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-We assume that ``radial_grid_r_bohr`` and ``radial_grid_w`` are
-allocated by the caller and have both the length that equals the number
-of radial grid points.
-
-.. code:: c
-
-   void numgrid_get_radial_grid(const context_t *context,
-                                double radial_grid_r_bohr[],
-                                double radial_grid_w[]);
-
-
-Get angular grid
-~~~~~~~~~~~~~~~~
-
-This does not refer to any specific atom and does not require any
-context.
-
-``num_angular_grid_points`` has to be one of the many supported Lebedev
-grids (see table on the bottom of this page) and the code will assume
-that the grid arrays are allocated by the caller and have at least the
-size ``num_angular_grid_points``.
-
-.. code:: c
-
-   void numgrid_get_angular_grid(const int num_angular_grid_points,
-                                 double angular_grid_x_bohr[],
-                                 double angular_grid_y_bohr[],
-                                 double angular_grid_z_bohr[],
-                                 double angular_grid_w[]);
 
 
 Parallelization
