@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ radovan/rust ]
+    branches: [ main ]
   pull_request:
-    branches: [ radovan/rust ]
+    branches: [ main ]
 
 jobs:
   build:
