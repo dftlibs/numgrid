@@ -22,7 +22,6 @@ alpha_min = [
 
 hardness = 3
 
-offset = 0
 for center_index in range(len(center_coordinates_bohr)):
     # atom grid using explicit basis set parameters
     coordinates, weights = numgrid.atom_grid(
