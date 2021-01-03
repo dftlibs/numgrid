@@ -143,17 +143,25 @@ Testing the Python layer::
 API
 ===
 
-The library provides a context-aware C interface. In addition it also
-provides a Fortran and Python interfaces as thin layers on top of the C
-interface::
+The API changed
+---------------
 
-   Python: numgrid/__init__.py
-     \
-      \     Fortran: numgrid/numgrid.f90
-       \   /
-     C interface: numgrid/numgrid.h
-         |
-   implementation
+The API changed (sorry!) for easier maintenance and simpler use:
+
+- no initialization or deallocation necessary
+
+- one-step instead of two-steps (since the radial grid generation time is
+  negligible compared to space partitioning, it did not make sense anymore to
+  separate these steps and introduce a state)
+
+The library now provides Rust and Python bindings. It used to provide C and
+Fortran bindings.  The C/Fortran code lives on on the `cpp-version branch
+<https://github.com/dftlibs/numgrid/tree/cpp-version>`__.  I might bring the C
+interfaces back into the Rust code if there is sufficient interest/need.
+
+Note that the API will probably change again as soon as support for more
+quadratures is added
+(see `issue 43 <https://github.com/dftlibs/numgrid/issues/43>`__).
 
 
 Units
