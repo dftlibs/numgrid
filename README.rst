@@ -103,13 +103,8 @@ under terms of the Mozilla Public License Version 2.0.
 Requirements
 ============
 
--  CMake
--  C and C++ compiler
--  Fortran compiler (to build the optional Fortran interface)
--  `CFFI <https://cffi.readthedocs.org>`__ (to access the optional
-   Python interface)
--  `pytest <http://pytest.org>`__ (to test the optional Python
-   interface)
+-  To use within Python: Python 3 and pip.
+-  For the Rust version: A `Rust installation <https://www.rust-lang.org/tools/install>`__.
 
 
 Installation
@@ -126,24 +121,23 @@ Installing via pip
 Building and testing from sources
 ---------------------------------
 
-Fetch the code::
+Building the code::
 
-   git clone https://github.com/dftlibs/numgrid.git
+   cargo build --release
 
-Install Python dependencies (optional)::
+Testing the Rust interface::
 
-   pipenv install
+   cargo test --release
 
-Build the code::
+Running also the longer tests::
 
-   cd numgrid
-   ./setup --fc=gfortran --cc=gcc --cxx=g++
-   cd build
-   make
-   make test
+   cargo test --release -- --ignored
 
-The Python interface is automatically tested by Travis CI:
-https://github.com/dftlibs/numgrid/blob/master/.travis.yml
+Testing the Python layer::
+
+   pip install -r requirements.txt  # ideally into a virtual environment
+   maturin develop
+   pytest tests/test.py
 
 
 API
