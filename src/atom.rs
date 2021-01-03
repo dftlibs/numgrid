@@ -11,7 +11,6 @@ pub fn atom_grid_bse(
     radial_precision: f64,
     min_num_angular_points: usize,
     max_num_angular_points: usize,
-    num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
@@ -22,13 +21,12 @@ pub fn atom_grid_bse(
     let max_l_quantum_number = alpha_min.len() - 1;
 
     atom_grid(
-        radial_precision,
         alpha_min,
         alpha_max,
         max_l_quantum_number,
+        radial_precision,
         min_num_angular_points,
         max_num_angular_points,
-        num_centers,
         proton_charges,
         center_index,
         center_coordinates_bohr,
@@ -37,23 +35,22 @@ pub fn atom_grid_bse(
 }
 
 pub fn atom_grid(
-    radial_precision: f64,
     alpha_min: Vec<f64>,
     alpha_max: f64,
     max_l_quantum_number: usize,
+    radial_precision: f64,
     min_num_angular_points: usize,
     max_num_angular_points: usize,
-    num_centers: usize,
     proton_charges: Vec<i32>,
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let (rs, weights_radial) = radial::radial_grid(
-        radial_precision,
         alpha_min,
         alpha_max,
         max_l_quantum_number,
+        radial_precision,
         proton_charges[center_index],
     );
 
@@ -93,7 +90,7 @@ pub fn atom_grid(
         }
     }
 
-    if num_centers > 1 {
+    if center_coordinates_bohr.len() > 1 {
         let w_partitioning: Vec<f64> = coordinates
             .par_iter()
             .map(|c| {

@@ -25,7 +25,6 @@ def _helper(use_bse):
     min_num_angular_points = 86
     max_num_angular_points = 302
 
-    num_centers = 3
     proton_charges = [8, 1, 1]
 
     center_coordinates_bohr = [(0.0, 0.0, 0.0), (1.43, 0.0, 1.1), (-1.43, 0.0, 1.1)]
@@ -38,14 +37,13 @@ def _helper(use_bse):
     hardness = 3
 
     offset = 0
-    for center_index in range(num_centers):
+    for center_index in range(len(center_coordinates_bohr)):
         if use_bse:
             xyz, w = numgrid.atom_grid_bse(
                 "cc-pVDZ",
                 radial_precision,
                 min_num_angular_points,
                 max_num_angular_points,
-                num_centers,
                 proton_charges,
                 center_index,
                 center_coordinates_bohr,
@@ -53,13 +51,12 @@ def _helper(use_bse):
             )
         else:
             xyz, w = numgrid.atom_grid(
-                radial_precision,
                 alpha_min[center_index],
                 alpha_max[center_index],
                 max_l_quantum_numbers[center_index],
+                radial_precision,
                 min_num_angular_points,
                 max_num_angular_points,
-                num_centers,
                 proton_charges,
                 center_index,
                 center_coordinates_bohr,
@@ -80,10 +77,10 @@ def _helper(use_bse):
 
         # we only check that call works but for the moment do not verify results
         r, w = numgrid.radial_grid(
-            radial_precision,
             alpha_min[center_index],
             alpha_max[center_index],
             max_l_quantum_numbers[center_index],
+            radial_precision,
             proton_charges[center_index],
         )
 

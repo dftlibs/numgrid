@@ -167,7 +167,7 @@ fn angular_grid() {
 #[test]
 fn radial_grid() {
     let alpha_min = vec![0.3023, 0.2753, 1.185];
-    let (rs, ws) = numgrid::radial_grid(1.0e-12, alpha_min, 11720.0, 2, 8);
+    let (rs, ws) = numgrid::radial_grid(alpha_min, 11720.0, 2, 1.0e-12, 8);
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,
@@ -437,20 +437,18 @@ fn atom_grid() {
     let max_l_quantum_number = 2;
     let min_num_angular_points = 50;
     let max_num_angular_points = 50;
-    let num_centers = 1;
     let proton_charges = vec![8];
     let center_index = 0;
     let center_coordinates_bohr = vec![(0.0, 0.0, 0.0)];
     let hardness = 3;
 
     let (rs, ws) = numgrid::atom_grid(
-        radial_precision,
         alpha_min,
         alpha_max,
         max_l_quantum_number,
+        radial_precision,
         min_num_angular_points,
         max_num_angular_points,
-        num_centers,
         proton_charges,
         center_index,
         center_coordinates_bohr,
@@ -491,13 +489,12 @@ fn molecular_grid() {
     let mut ws = Vec::new();
     for center_index in 0..num_centers {
         let (rs_atom, ws_atom) = numgrid::atom_grid(
-            radial_precision,
             alpha_min[center_index].clone(),
             alpha_max[center_index],
             max_l_quantum_numbers[center_index],
+            radial_precision,
             min_num_angular_points,
             max_num_angular_points,
-            num_centers,
             proton_charges.clone(),
             center_index,
             center_coordinates_bohr.clone(),
@@ -544,13 +541,12 @@ fn benchmark() {
     let start = Instant::now();
     for center_index in 0..num_centers {
         let (_rs_atom, _ws_atom) = numgrid::atom_grid(
-            radial_precision,
             vec![0.3023, 0.2753, 1.185],
             11720.0,
             2,
+            radial_precision,
             min_num_angular_points,
             max_num_angular_points,
-            num_centers,
             proton_charges.clone(),
             center_index,
             center_coordinates_bohr.clone(),
@@ -651,13 +647,12 @@ fn another_benchmark() {
     let start = Instant::now();
     for center_index in 0..num_centers {
         let (_rs_atom, _ws_atom) = numgrid::atom_grid(
-            radial_precision,
             vec![0.3023, 0.2753, 1.185],
             11720.0,
             2,
+            radial_precision,
             min_num_angular_points,
             max_num_angular_points,
-            num_centers,
             proton_charges.clone(),
             center_index,
             center_coordinates_bohr.clone(),

@@ -8,10 +8,10 @@ use statrs::function::gamma;
 use crate::comparison;
 
 pub fn radial_grid(
-    radial_precision: f64,
     alpha_min: Vec<f64>,
     alpha_max: f64,
     max_l_quantum_number: usize,
+    radial_precision: f64,
     proton_charge: i32,
 ) -> (Vec<f64>, Vec<f64>) {
     // factor 2.0 to match DIRAC code
