@@ -4,6 +4,28 @@ Changelog
 =========
 
 
+Version 2.0.0
+-------------
+
+Released on 2021-01-03.
+
+The API changed for easier maintenance and simpler use:
+
+- No initialization or deallocation necessary.
+- One-step instead of two steps (since the radial grid generation time is
+  negligible compared to space partitioning, it did not make sense anymore to
+  separate these steps and introduce a state).
+- ``alpha_min`` is given as dictionary which saves an argument and simplifies
+  explaining the API.
+- The library now provides Rust and Python bindings. It used to provide C and
+  Fortran bindings. The C/Fortran code lives on on the `cpp-version branch
+  <https://github.com/dftlibs/numgrid/tree/cpp-version>`__.  I might bring the
+  C interfaces back into the Rust code if there is sufficient interest/need.
+- Note that the API will probably change again as soon as support for more
+  quadratures is added (see `issue 43
+  <https://github.com/dftlibs/numgrid/issues/43>`__).
+
+
 Version 1.1.2
 -------------
 
