@@ -1,0 +1,39 @@
+name: Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    steps:
+    - name: Switch branch
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Python dependencies
+      run: |
+        which python
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Build crate
+      run: cargo build --verbose
+    - name: Test crate
+      run: cargo test --verbose
+    - name: Maturin build and publish
+      run:
+        maturin publish --no-sdist -u __token__ -i python
+      env:
+        MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+
+# notes:
+# - for test-pypi: maturin publish --no-sdist -u __token__ -i python -r https://test.pypi.org/legacy/
