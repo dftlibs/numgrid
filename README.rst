@@ -266,25 +266,23 @@ using the wonderful
                                        basis_set='cc-pVDZ')
 
 
-Saving grid in Numpy format
+Saving grid in NumPy format
 ---------------------------
 
-The current API makes is relatively easy to export the computed grid in Numpy format.
+The current API makes is relatively easy to export the computed grid in NumPy format.
 
-In this example we save the radial grid positions and weights to two separate files
-in Numpy format:
+In this example we save the angular grid coordinates and weights to two separate files
+in NumPy format:
 
 .. code:: python
 
    import numgrid
    import numpy as np
 
-   # we assume the context is created
-   # ...
-   r, w = numgrid.get_radial_grid(context)
+   coordinates, weights = numgrid.angular_grid(14)
 
-   np.save('radial_grid_r.npy', r)
-   np.save('radial_grid_w.npy', w)
+   np.save("angular_grid_coordinates.npy", coordinates)
+   np.save("angular_grid_weights.npy", weights)
 
 
 C API
