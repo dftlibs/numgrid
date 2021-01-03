@@ -1,5 +1,8 @@
+use pyo3::prelude::*;
+
 use crate::tables;
 
+#[pyfunction]
 pub fn angular_grid(num_points: usize) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let offsets = tables::offsets::offsets();
 

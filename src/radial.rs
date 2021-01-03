@@ -1,5 +1,7 @@
 #![allow(clippy::many_single_char_names)]
 
+use pyo3::prelude::*;
+
 use crate::bragg;
 use crate::parameters;
 use statrs::function::gamma;
@@ -7,6 +9,7 @@ use statrs::function::gamma;
 #[cfg(test)]
 use crate::comparison;
 
+#[pyfunction]
 pub fn radial_grid(
     alpha_min: Vec<f64>,
     alpha_max: f64,

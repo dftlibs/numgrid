@@ -1,3 +1,5 @@
+use pyo3::prelude::*;
+
 use crate::becke_partitioning;
 use crate::bragg;
 use crate::bse;
@@ -6,6 +8,7 @@ use crate::radial;
 
 use rayon::prelude::*;
 
+#[pyfunction]
 pub fn atom_grid_bse(
     basis_set: &str,
     radial_precision: f64,
@@ -34,6 +37,7 @@ pub fn atom_grid_bse(
     )
 }
 
+#[pyfunction]
 pub fn atom_grid(
     alpha_min: Vec<f64>,
     alpha_max: f64,

@@ -16,6 +16,6 @@ classifier = ["Programming Language :: Python"]
 statrs = "0.13.0"
 rand = "0.8.0"
 rayon = "1.5"
-pyo3 = { version = "0.12.4", features = ["extension-module"] }
+pyo3 = { version = "0.13", features = ["extension-module"] }
 reqwest = { version = "0.10", features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }
