@@ -1,7 +1,5 @@
-.. image:: https://travis-ci.org/dftlibs/numgrid.svg?branch=master
-   :target: https://travis-ci.org/dftlibs/numgrid/builds
-.. image:: https://coveralls.io/repos/dftlibs/numgrid/badge.png?branch=master
-   :target: https://coveralls.io/r/dftlibs/numgrid?branch=master
+.. image:: https://github.com/dftlibs/numgrid/workflows/Test/badge.svg
+   :target: https://github.com/dftlibs/numgrid/actions
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: LICENSE
 .. image:: https://badge.fury.io/py/numgrid.svg
@@ -10,12 +8,8 @@
    :target: https://doi.org/10.5281/zenodo.3746461
 
 - `Changelog <CHANGES.rst>`__
--  `Build and test
-   history <https://travis-ci.org/dftlibs/numgrid/builds>`__
--  `Code coverage <https://coveralls.io/r/dftlibs/numgrid>`__
 -  Licensed under `MPL v2.0 <LICENSE>`__ (except John
    Burkardt’s Lebedev code which is redistributed under LGPL v3.0)
--  Built with `Autocmake <https://github.com/coderefinery/autocmake>`__
 
 
 Numgrid
