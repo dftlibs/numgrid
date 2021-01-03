@@ -324,19 +324,6 @@ the exponent 0.2, then ``alpha_min`` would be an array of three numbers
 holding {0.1, 0.0, 0.2}.
 
 
-Get number of grid points on current atom
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following two functions are probably self-explaining. We need to
-provide the context which refers to a specific atom object.
-
-.. code:: c
-
-   int numgrid_get_num_grid_points(const context_t *context);
-
-   int numgrid_get_num_radial_grid_points(const context_t *context);
-
-
 Get grid on current atom, scaled by Becke partitioning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
