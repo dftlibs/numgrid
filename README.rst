@@ -118,7 +118,7 @@ Installing via pip
    pip install numgrid
 
 
-Building and testing from sources
+Building from sources and testing
 ---------------------------------
 
 Building the code::
@@ -158,7 +158,7 @@ The API changed (sorry!) for easier maintenance and simpler use:
   explaining the API.
 
 - The library now provides Rust and Python bindings. It used to provide C and
-  Fortran bindings. The C/Fortran code lives on on the `cpp-version branch
+  Fortran bindings. The C/Fortran code lives on the `cpp-version branch
   <https://github.com/dftlibs/numgrid/tree/cpp-version>`__.  I might bring the
   C interfaces back into the Rust code if there is sufficient interest/need.
 
