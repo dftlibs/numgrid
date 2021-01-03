@@ -400,14 +400,6 @@ size ``num_angular_grid_points``.
                                  double angular_grid_w[]);
 
 
-Destroy the atom and deallocate all data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: c
-
-   void numgrid_free_atom_grid(context_t *context);
-
-
 Parallelization
 ===============
 
