@@ -36,7 +36,7 @@ fn valid_input_values() -> Vec<usize> {
     for (k, _) in offsets {
         valid_numbers.push(k);
     }
-    valid_numbers.sort();
+    valid_numbers.sort_unstable();
 
     valid_numbers
 }
