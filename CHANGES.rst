@@ -4,6 +4,14 @@ Changelog
 =========
 
 
+Version 2.0.1
+-------------
+
+Unreleased.
+
+- Test and build also for Python 3.9.
+
+
 Version 2.0.0
 -------------
 
