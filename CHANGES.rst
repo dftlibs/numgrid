@@ -7,7 +7,7 @@ Changelog
 Version 2.0.1
 -------------
 
-Unreleased.
+Released on 2021-01-04.
 
 - Test and build also for Python 3.9.
 - Export also __version__.

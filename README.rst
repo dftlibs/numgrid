@@ -73,7 +73,7 @@ author(s)::
     month     = {1},
     year      = {2021},
     publisher = {Zenodo},
-    version   = {v2.0.0},
+    version   = {v2.0.1},
     doi       = {10.5281/zenodo.1470276},
     url       = {https://doi.org/10.5281/zenodo.1470276}
   }
