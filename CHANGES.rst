@@ -10,6 +10,7 @@ Version 2.0.1
 Unreleased.
 
 - Test and build also for Python 3.9.
+- Export also __version__.
 
 
 Version 2.0.0

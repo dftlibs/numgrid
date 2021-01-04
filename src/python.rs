@@ -8,6 +8,8 @@ use crate::radial::__pyo3_get_function_radial_grid;
 
 #[pymodule]
 fn numgrid(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+
     m.add_function(wrap_pyfunction!(atom_grid, m)?)?;
     m.add_function(wrap_pyfunction!(atom_grid_bse, m)?)?;
     m.add_function(wrap_pyfunction!(angular_grid, m)?)?;
