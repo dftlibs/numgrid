@@ -219,6 +219,7 @@ As an example let us generate a grid for the water molecule:
        )
 
        # atom grid using basis set name
+       # this takes a second or two for the REST API request
        coordinates, weights = numgrid.atom_grid_bse(
            "cc-pVDZ",
            radial_precision,

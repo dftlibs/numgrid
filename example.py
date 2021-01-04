@@ -37,6 +37,7 @@ for center_index in range(len(center_coordinates_bohr)):
     )
 
     # atom grid using basis set name
+    # this takes a second or two for the REST API request
     coordinates, weights = numgrid.atom_grid_bse(
         "cc-pVDZ",
         radial_precision,
