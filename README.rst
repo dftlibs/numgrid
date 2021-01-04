@@ -103,7 +103,7 @@ under terms of the Mozilla Public License Version 2.0.
 Requirements
 ============
 
--  To use within Python: Python 3 and pip.
+-  Python (3.6, 3.7, 3.8, or 3.9).
 -  For the Rust version: A `Rust installation <https://www.rust-lang.org/tools/install>`__.
 
 
@@ -115,7 +115,7 @@ Installing via pip
 
 ::
 
-   pip install numgrid
+   python -m pip install numgrid
 
 
 Building from sources and testing
