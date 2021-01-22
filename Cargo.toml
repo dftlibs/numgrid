@@ -15,7 +15,6 @@ classifier = ["Programming Language :: Python"]
 [dependencies]
 statrs = "0.13.0"
 rand = "0.8.0"
-rayon = "1.5"
 pyo3 = { version = "0.13", features = ["extension-module"] }
 # default-features = false because it by defaults includes default-tls which
 # seems to pull in libssl and libcrypto which is rejected by manylinux

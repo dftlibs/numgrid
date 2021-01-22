@@ -131,7 +131,7 @@ Testing the Rust interface::
 
 Running also the longer tests::
 
-   cargo test --release -- --ignored
+   cargo test --release -- --ignored --nocapture
 
 Testing the Python layer::
 
@@ -294,11 +294,9 @@ in NumPy format:
 Parallelization
 ===============
 
-The Becke partitioning step is parallelized using `Rayon
-<https://github.com/rayon-rs/rayon>`__.  In other words, this step should be
-able to use all available cores on the computer or computing node.  Since grids
-are currently generated atom by atom, it is also possible to parallelize
-"outside" by the caller.
+Currently no parallelization is used inside this library.  Since grids are
+currently generated atom by atom, it is also possible to parallelize "outside"
+by the caller.
 
 
 Space partitioning

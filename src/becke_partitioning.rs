@@ -1,48 +1,20 @@
-use crate::bragg;
-use crate::parameters;
-
-#[cfg(test)]
-use crate::comparison;
-
 // JCP 88, 2547 (1988), eq. 20
-#[inline]
-fn f3(x: f64, hardness: usize) -> f64 {
+fn g(x: f64) -> f64 {
     let mut f = x;
 
-    for _ in 0..hardness {
+    for _ in 0..3 {
         f *= 1.5 - 0.5 * f * f;
     }
 
     f
 }
 
-#[test]
-fn test_f3() {
-    assert!(comparison::floats_are_same(
-        f3(-0.055317, 3),
-        -0.18512279618232905,
-        1.0e-15
-    ));
-    assert!(comparison::floats_are_same(
-        f3(-0.491055, 3),
-        -0.97223000595777,
-        1.0e-15
-    ));
-    assert!(comparison::floats_are_same(
-        f3(-0.974945, 3),
-        -0.9999999999974357,
-        1.0e-15
-    ));
-    assert!(comparison::floats_are_same(
-        f3(0.644797, 3),
-        0.9976980942759357,
-        1.0e-15
-    ));
-    assert!(comparison::floats_are_same(
-        f3(0.878986, 3),
-        0.9999993429837151,
-        1.0e-15
-    ));
+// CPL 257 (1996), page 215, eq. 14
+fn z(mu: f64) -> f64 {
+    let a = 0.64;
+    let t = mu / a;
+
+    (35.0 * t - 35.0 * t.powi(3) + 21.0 * t.powi(5) - 5.0 * t.powi(7)) / 16.0
 }
 
 fn distance(p1: &(f64, f64, f64), p2: &(f64, f64, f64)) -> f64 {
@@ -53,58 +25,90 @@ fn distance(p1: &(f64, f64, f64), p2: &(f64, f64, f64)) -> f64 {
     (dx * dx + dy * dy + dz * dz).sqrt()
 }
 
-// JCP 88, 2547 (1988)
-pub fn partitioning_weight(
+fn mu(r_i: f64, r_j: f64, r_ij: f64) -> f64 {
+    (r_i - r_j) / r_ij
+}
+
+// JCP 149, 204111 (2018), page 4
+pub fn partitioning_weights_lko(
     center_index: usize,
     center_coordinates_bohr: &[(f64, f64, f64)],
-    proton_charges: &[i32],
-    grid_coordinates_bohr: (f64, f64, f64),
-    hardness: usize,
-) -> f64 {
-    let num_centers = proton_charges.len();
+    grid_coordinates_bohr: &[(f64, f64, f64)],
+    r_cutoff_bohr: f64,
+) -> Vec<f64> {
+    let num_centers = center_coordinates_bohr.len();
 
-    let mut pa = vec![1.0; num_centers];
+    let mut r_pi = Vec::new();
+    for (i, center_coordinate) in center_coordinates_bohr.iter().enumerate() {
+        r_pi.push((
+            distance(&center_coordinate, &center_coordinates_bohr[center_index]),
+            i,
+        ));
+    }
+    r_pi.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-    for ia in 0..num_centers {
-        let dist_a = distance(&grid_coordinates_bohr, &center_coordinates_bohr[ia]);
+    let weights: Vec<f64> = grid_coordinates_bohr
+        .iter()
+        .map(|grid_point| {
+            let r_gp = distance(&grid_point, &center_coordinates_bohr[center_index]);
 
-        let r_a = bragg::get_bragg_angstrom(proton_charges[ia]);
-
-        for ib in 0..ia {
-            let dist_b = distance(&grid_coordinates_bohr, &center_coordinates_bohr[ib]);
-
-            let r_b = bragg::get_bragg_angstrom(proton_charges[ib]);
-
-            let dist_ab = distance(&center_coordinates_bohr[ia], &center_coordinates_bohr[ib]);
-
-            // JCP 88, 2547 (1988), eq. 11
-            let mu_ab = (dist_a - dist_b) / dist_ab;
-
-            let mut nu_ab = mu_ab;
-            if (r_a - r_b).abs() > parameters::SMALL {
-                let u_ab = (r_a + r_b) / (r_b - r_a);
-                let a_ab = u_ab / (u_ab * u_ab - 1.0);
-
-                nu_ab += a_ab.min(0.5).max(-0.5) * (1.0 - mu_ab * mu_ab);
+            // CPL 257 (1996), page 216, eq. 15
+            if r_gp < 0.5 * (1.0 - 0.64) * r_pi[1].0 {
+                return 1.0;
             }
 
-            let f = f3(nu_ab, hardness);
+            let mut r_gn = r_gp;
+            let mut r_gi = Vec::new();
 
-            if (1.0 - f).abs() > parameters::SMALL {
-                pa[ia] *= 0.5 * (1.0 - f);
-                pa[ib] *= 0.5 * (1.0 + f);
+            // skipping 1 because the first is the same center
+            for &(r, i) in r_pi.iter().skip(1) {
+                if r > (r_gn + r_gp + 2.0 * r_cutoff_bohr) {
+                    break;
+                }
+                let t = distance(&grid_point, &center_coordinates_bohr[i]);
+                r_gn = r_gn.min(t);
+                r_gi.push((t, i));
+            }
+
+            if r_gn < (r_gn + r_cutoff_bohr) {
+                r_gi.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+                let mut polyhedron_functions = vec![1.0; num_centers];
+
+                for &(r_i, i) in r_gi.iter() {
+                    if r_i > (r_gn + r_cutoff_bohr) {
+                        break;
+                    }
+                    for &(r_j, j) in r_gi.iter() {
+                        if j > i {
+                            if r_j > (r_i + r_cutoff_bohr) {
+                                break;
+                            }
+
+                            let r_ij =
+                                distance(&center_coordinates_bohr[i], &center_coordinates_bohr[j]);
+
+                            let mu_ij = mu(r_i, r_j, r_ij);
+
+                            // let s_ij = 0.5 - 0.5 * g(mu_ij);
+                            let s_ij = 0.5 - 0.5 * z(mu_ij);
+                            let s_ji = 1.0 - s_ij;
+
+                            polyhedron_functions[i] *= s_ij;
+                            polyhedron_functions[j] *= s_ji;
+                        }
+                    }
+                }
+
+                let s =
+                    polyhedron_functions.iter().sum::<f64>() - polyhedron_functions[center_index];
+
+                polyhedron_functions[center_index] / s
             } else {
-                // avoid numerical issues
-                pa[ia] = 0.0;
+                1.0
             }
-        }
-    }
+        })
+        .collect();
 
-    let w: f64 = pa.iter().sum();
-
-    if w.abs() > parameters::SMALL {
-        pa[center_index] / w
-    } else {
-        1.0
-    }
+    weights
 }
