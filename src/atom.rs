@@ -1,5 +1,4 @@
 use pyo3::prelude::*;
-use rayon::prelude::*;
 
 use std::collections::HashMap;
 
@@ -18,6 +17,7 @@ pub fn atom_grid_bse(
     proton_charges: Vec<i32>,
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
+    r_cutoff_bohr: f64,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let (alpha_min, alpha_max) =
@@ -32,6 +32,7 @@ pub fn atom_grid_bse(
         proton_charges,
         center_index,
         center_coordinates_bohr,
+        r_cutoff_bohr,
         hardness,
     )
 }
@@ -46,6 +47,7 @@ pub fn atom_grid(
     proton_charges: Vec<i32>,
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
+    r_cutoff_bohr: f64,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
     let (rs, weights_radial) = radial::radial_grid(
@@ -54,6 +56,8 @@ pub fn atom_grid(
         radial_precision,
         proton_charges[center_index],
     );
+
+    assert_eq!(hardness, 3, "hardness has to be 3, parameter kept for backwards compatibility and will be removed in future versions");
 
     // factors match DIRAC code
     let rb = bragg::get_bragg_angstrom(proton_charges[center_index]) / (5.0 * 0.529177249);
@@ -92,18 +96,12 @@ pub fn atom_grid(
     }
 
     if center_coordinates_bohr.len() > 1 {
-        let w_partitioning: Vec<f64> = coordinates
-            .par_iter()
-            .map(|c| {
-                becke_partitioning::partitioning_weight(
-                    center_index,
-                    &center_coordinates_bohr,
-                    &proton_charges,
-                    *c,
-                    hardness,
-                )
-            })
-            .collect();
+        let w_partitioning = becke_partitioning::partitioning_weights_lko(
+            center_index,
+            &center_coordinates_bohr,
+            &coordinates,
+            r_cutoff_bohr,
+        );
 
         for (i, w) in weights.iter_mut().enumerate() {
             *w *= w_partitioning[i];
