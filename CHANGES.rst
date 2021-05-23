@@ -7,7 +7,7 @@ Changelog
 Version 2.0.2
 -------------
 
-Unreleased.
+Released on 2021-05-23.
 
 - Better error message for invalid inputs to angular_grid.
 - Improve package metadata.
