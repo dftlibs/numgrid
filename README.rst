@@ -103,7 +103,7 @@ under terms of the Mozilla Public License Version 2.0.
 Requirements
 ============
 
--  Python (3.6, 3.7, 3.8, or 3.9).
+-  Python (3.6 - 3.10).
 -  For the Rust version: A `Rust installation <https://www.rust-lang.org/tools/install>`__.
 
 
