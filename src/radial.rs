@@ -12,6 +12,65 @@ use statrs::function::gamma;
 use crate::comparison;
 
 #[pyfunction]
+pub fn radial_grid_kk(num_points: usize) -> (Vec<f64>, Vec<f64>) {
+    let n = num_points as i32;
+    let rws: Vec<_> = (1..=n).map(|i| kk_r_w(i, n)).collect();
+    rws.iter().cloned().unzip()
+}
+
+// https://doi.org/10.1063/1.475719, eqs. 9-13
+fn kk_r_w(i: i32, n: i32) -> (f64, f64) {
+    let pi = std::f64::consts::PI;
+
+    let angle = ((i as f64) * pi) / ((n + 1) as f64);
+    let s = angle.sin();
+    let c = angle.cos();
+    let t1 = ((n + 1 - 2 * i) as f64) / ((n + 1) as f64);
+    let t2 = 2.0 / pi;
+    let x = t1 + t2 * c * s * (1.0 + (2.0 / 3.0) * s * s);
+    let f = 1.0 / 2.0_f64.ln();
+    let r = f * (2.0 / (1.0 - x)).ln();
+    let w = r * r * (f / (1.0 - x)) * (16.0 * s * s * s * s) / (3.0 * (n as f64) + 3.0);
+
+    (r, w)
+}
+
+#[test]
+fn test_radial_grid_kk() {
+    let (rs, ws) = radial_grid_kk(99);
+    assert!(comparison::floats_are_same(
+        rs[0],
+        27.520865062836048,
+        1.0e-15
+    ));
+    assert!(comparison::floats_are_same(
+        rs[1],
+        22.522899235303480,
+        1.0e-15
+    ));
+    assert!(comparison::floats_are_same(
+        rs[98],
+        7.4914976443367854e-9,
+        1.0e-15
+    ));
+    assert!(comparison::floats_are_same(
+        ws[0],
+        5462.4446669497620,
+        1.0e-15
+    ));
+    assert!(comparison::floats_are_same(
+        ws[1],
+        1828.2535433191961,
+        1.0e-15
+    ));
+    assert!(comparison::floats_are_same(
+        ws[98],
+        2.1018140707490095e-24,
+        1.0e-15
+    ));
+}
+
+#[pyfunction]
 pub fn radial_grid(
     alpha_min: HashMap<usize, f64>,
     alpha_max: f64,

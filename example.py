@@ -57,5 +57,8 @@ for center_index in range(len(center_coordinates_bohr)):
         proton_charges[center_index],
     )
 
+    # radial grid with 100 points using Krack-Koster approach
+    radii, weights = numgrid.radial_grid_kk(100)
+
     # angular grid with 14 points
     coordinates, weights = numgrid.angular_grid(14)

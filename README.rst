@@ -243,6 +243,19 @@ As an example let us generate a grid for the water molecule:
        coordinates, weights = numgrid.angular_grid(14)
 
 
+Unreleased functionality
+------------------------
+
+These will be released soon but I need to think carefully about the API.
+
+.. code:: python
+
+   import numgrid
+
+   # radial grid with 100 points using Krack-Koster approach
+   radii, weights = numgrid.radial_grid_kk(100)
+
+
 Notes and recommendations
 -------------------------
 
