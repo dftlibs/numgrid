@@ -16,8 +16,8 @@ requires-python = ">=3.6"
 classifier = ["Programming Language :: Python"]
 
 [dependencies]
-statrs = "0.13.0"
-rand = "0.8.0"
+statrs = "0.13"
+rand = "0.8"
 rayon = "1.5"
 pyo3 = { version = "0.13", features = ["extension-module"] }
 # default-features = false because it by defaults includes default-tls which
