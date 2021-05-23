@@ -339,11 +339,6 @@ The basis set (more precisely the Gaussian primitives/exponents) are
 used to generate the atomic radial grid range. This means that a more
 diffuse basis set generates a more diffuse radial grid.
 
-If you need a grid but you do not have a basis set or choose not to use
-a specific one, then you can feed the library with a fantasy basis set
-consisting of just two primitives. You can then adjust the range by
-making the exponents more steep or more diffuse.
-
 
 Angular grid
 ============
