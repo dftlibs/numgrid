@@ -4,12 +4,13 @@ Changelog
 =========
 
 
-Version 2.X.Y
+Version 2.0.2
 -------------
 
 Unreleased.
 
 - Better error message for invalid inputs to angular_grid.
+- Improve package metadata.
 
 
 Version 2.0.1
