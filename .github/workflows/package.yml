@@ -22,13 +22,16 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Python dependencies
       run: |
-        which python
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Build crate
       run: cargo build --verbose
     - name: Test crate
       run: cargo test --verbose
+# this needs to be moved to a separate workflow
+# here it is run on the whole matrix and this fails
+#   - name: Publish crate
+#     run: cargo publish --token ${{ secrets.CRATES_TOKEN }}
     - name: Maturin build and publish
       run:
         maturin publish --no-sdist -u __token__ -i python
