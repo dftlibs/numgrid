@@ -326,18 +326,18 @@ default Becke hardness is 3.
 Radial grid
 ===========
 
-The radial grid is generated according to Lindh, Malmqvist, and
-Gagliardi, `TCA 106, 178
-(2001) <http://dx.doi.org/10.1007/s002140100263>`__.
+Two choices are available:
+- Lindh-Malmqvist-Gagliardi (https://dx.doi.org/10.1007/s002140100263)
+- Krack-Köster (https://doi.org/10.1063/1.475719)
 
-The motivation for this choice is the nice feature of the above scheme
-that the range of the radial grid is basis set dependent. The precision
-can be tuned with one single radial precision parameter. The smaller the
-radial precision, the better quality grid you obtain.
+Advantage of LMG scheme: The range of the radial grid is basis set dependent.
+The precision can be tuned with one single radial precision parameter. The
+smaller the radial precision, the better quality grid you obtain.  The basis
+set (more precisely the Gaussian primitives/exponents) are used to generate the
+atomic radial grid range. This means that a more diffuse basis set generates a
+more diffuse radial grid.
 
-The basis set (more precisely the Gaussian primitives/exponents) are
-used to generate the atomic radial grid range. This means that a more
-diffuse basis set generates a more diffuse radial grid.
+Advantage of the KK scheme: parameter-free.
 
 
 Angular grid
