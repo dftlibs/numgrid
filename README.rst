@@ -73,7 +73,7 @@ author(s)::
     month     = {1},
     year      = {2021},
     publisher = {Zenodo},
-    version   = {v2.0.2},
+    version   = {v2.1.0},
     doi       = {10.5281/zenodo.1470276},
     url       = {https://doi.org/10.5281/zenodo.1470276}
   }
@@ -322,6 +322,7 @@ Radial grid
 ===========
 
 Two choices are available:
+
 - Lindh-Malmqvist-Gagliardi (https://dx.doi.org/10.1007/s002140100263)
 - Krack-Köster (https://doi.org/10.1063/1.475719)
 

@@ -4,6 +4,17 @@ Changelog
 =========
 
 
+Version 2.1.0
+-------------
+
+Released on 2021-05-27.
+
+- Add Krack-Köster radial grid (`radial_grid_kk`).
+- Rename `radial_grid` to `radial_grid_lmg`.
+- Make it possible to evaluate LMG grid by basis set name
+  (`radial_grid_lmg_bse`).
+
+
 Version 2.0.2
 -------------
 
