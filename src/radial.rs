@@ -5,6 +5,7 @@ use pyo3::prelude::*;
 use std::collections::HashMap;
 
 use crate::bragg;
+use crate::bse;
 use crate::parameters;
 use statrs::function::gamma;
 
@@ -69,6 +70,17 @@ fn test_radial_grid_kk() {
         2.1018140707490095e-24,
         1.0e-15
     ));
+}
+
+#[pyfunction]
+pub fn radial_grid_lmg_bse(
+    basis_set: &str,
+    radial_precision: f64,
+    proton_charge: i32,
+) -> (Vec<f64>, Vec<f64>) {
+    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, proton_charge as usize);
+
+    radial_grid_lmg(alpha_min, alpha_max, radial_precision, proton_charge)
 }
 
 #[pyfunction]

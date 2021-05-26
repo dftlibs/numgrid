@@ -20,8 +20,6 @@ alpha_min = [
     {0: 0.122, 1: 0.727},  # H
 ]
 
-hardness = 3
-
 for center_index in range(len(center_coordinates_bohr)):
     # atom grid using explicit basis set parameters
     coordinates, weights = numgrid.atom_grid(
@@ -33,7 +31,7 @@ for center_index in range(len(center_coordinates_bohr)):
         proton_charges,
         center_index,
         center_coordinates_bohr,
-        hardness,
+        hardness=3,
     )
 
     # atom grid using basis set name
@@ -46,19 +44,26 @@ for center_index in range(len(center_coordinates_bohr)):
         proton_charges,
         center_index,
         center_coordinates_bohr,
-        hardness,
+        hardness=3,
     )
 
-    # radial grid (LMG) using explicit basis set parameters
-    radii, weights = numgrid.radial_grid_lmg(
-        alpha_min[center_index],
-        alpha_max[center_index],
-        radial_precision,
-        proton_charges[center_index],
-    )
+# radial grid (LMG) using explicit basis set parameters
+radii, weights = numgrid.radial_grid_lmg(
+    alpha_min={0: 0.3023, 1: 0.2753, 2: 1.185},
+    alpha_max=11720.0,
+    radial_precision=1.0e-12,
+    proton_charge=8,
+)
 
-    # radial grid with 100 points using Krack-Koster approach
-    radii, weights = numgrid.radial_grid_kk(100)
+# radial grid (LMG) using basis set name
+radii, weights = numgrid.radial_grid_lmg_bse(
+    basis_set="cc-pVDZ",
+    radial_precision=1.0e-12,
+    proton_charge=8,
+)
 
-    # angular grid with 14 points
-    coordinates, weights = numgrid.angular_grid(14)
+# radial grid with 100 points using Krack-Koster approach
+radii, weights = numgrid.radial_grid_kk(num_points=100)
+
+# angular grid with 14 points
+coordinates, weights = numgrid.angular_grid(num_points=14)
