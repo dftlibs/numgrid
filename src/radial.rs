@@ -14,7 +14,8 @@ use crate::comparison;
 #[pyfunction]
 pub fn radial_grid_kk(num_points: usize) -> (Vec<f64>, Vec<f64>) {
     let n = num_points as i32;
-    let rws: Vec<_> = (1..=n).map(|i| kk_r_w(i, n)).collect();
+    let mut rws: Vec<_> = (1..=n).map(|i| kk_r_w(i, n)).collect();
+    rws.reverse();
     rws.iter().cloned().unzip()
 }
 
@@ -39,32 +40,32 @@ fn kk_r_w(i: i32, n: i32) -> (f64, f64) {
 fn test_radial_grid_kk() {
     let (rs, ws) = radial_grid_kk(99);
     assert!(comparison::floats_are_same(
-        rs[0],
+        rs[98],
         27.520865062836048,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
-        rs[1],
+        rs[97],
         22.522899235303480,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
-        rs[98],
+        rs[0],
         7.4914976443367854e-9,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
-        ws[0],
+        ws[98],
         5462.4446669497620,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
-        ws[1],
+        ws[97],
         1828.2535433191961,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
-        ws[98],
+        ws[0],
         2.1018140707490095e-24,
         1.0e-15
     ));
