@@ -48,7 +48,7 @@ pub fn atom_grid(
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
-    let (rs, weights_radial) = radial::radial_grid(
+    let (rs, weights_radial) = radial::radial_grid_lmg(
         alpha_min,
         alpha_max,
         radial_precision,

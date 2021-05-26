@@ -166,13 +166,13 @@ fn angular_grid() {
 }
 
 #[test]
-fn radial_grid() {
+fn radial_grid_lmg() {
     let mut alpha_min: HashMap<usize, f64> = HashMap::new();
     alpha_min.insert(0, 0.3023);
     alpha_min.insert(1, 0.2753);
     alpha_min.insert(2, 1.185);
 
-    let (rs, ws) = numgrid::radial_grid(alpha_min, 11720.0, 1.0e-12, 8);
+    let (rs, ws) = numgrid::radial_grid_lmg(alpha_min, 11720.0, 1.0e-12, 8);
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,

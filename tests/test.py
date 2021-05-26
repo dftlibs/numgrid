@@ -82,7 +82,7 @@ def _helper(use_bse):
         )
 
         # we only check that call works but for the moment do not verify results
-        r, w = numgrid.radial_grid(
+        r, w = numgrid.radial_grid_lmg(
             alpha_min[center_index],
             alpha_max[center_index],
             radial_precision,

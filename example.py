@@ -49,8 +49,8 @@ for center_index in range(len(center_coordinates_bohr)):
         hardness,
     )
 
-    # radial grid using explicit basis set parameters
-    radii, weights = numgrid.radial_grid(
+    # radial grid (LMG) using explicit basis set parameters
+    radii, weights = numgrid.radial_grid_lmg(
         alpha_min[center_index],
         alpha_max[center_index],
         radial_precision,

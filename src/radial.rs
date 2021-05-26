@@ -72,7 +72,7 @@ fn test_radial_grid_kk() {
 }
 
 #[pyfunction]
-pub fn radial_grid(
+pub fn radial_grid_lmg(
     alpha_min: HashMap<usize, f64>,
     alpha_max: f64,
     radial_precision: f64,
