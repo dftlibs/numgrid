@@ -24,8 +24,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>,
 
     let url = format!(
         "http://basissetexchange.org/api/basis/{}/format/json?elements={}",
-        basis_set.to_string(),
-        element.to_string()
+        basis_set, element,
     );
 
     let resp = reqwest::blocking::Client::new()
