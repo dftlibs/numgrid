@@ -44,9 +44,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>,
         let angular_momentum = shell.angular_momentum[0];
         for exponent_string in &shell.exponents {
             let exponent: f64 = exponent_string.parse().unwrap();
-            if exponent > alpha_max {
-                alpha_max = exponent;
-            }
+            alpha_max = alpha_max.max(exponent);
             let s = alpha_min.entry(angular_momentum).or_insert(std::f64::MAX);
             if &exponent < s {
                 *s = exponent;
