@@ -28,7 +28,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>,
     );
 
     let resp = reqwest::blocking::Client::new()
-        .get(&url)
+        .get(url)
         .headers(headers)
         .send()
         .unwrap()

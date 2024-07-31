@@ -1,26 +1,22 @@
 [package]
 name = "numgrid"
-version = "2.1.0"
+version = "2.1.1"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Numerical integration grid for molecules."
 license = "MPL-2.0"
-edition = "2018"
-readme = "README.rst"
+edition = "2021"
+readme = "README.md"
 homepage = "https://github.com/dftlibs/numgrid/"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
-[package.metadata.maturin]
-requires-python = ">=3.6"
-classifier = ["Programming Language :: Python"]
-
 [dependencies]
-statrs = "0.13"
+statrs = "0.17"
 rand = "0.8"
-rayon = "1.5"
-pyo3 = { version = "0.13", features = ["extension-module"] }
+rayon = "1.10"
+pyo3 = { version = "0.22", features = ["extension-module"] }
 # default-features = false because it by defaults includes default-tls which
 # seems to pull in libssl and libcrypto which is rejected by manylinux
-reqwest = { version = "0.10", default-features = false, features = ["blocking", "json"] }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }

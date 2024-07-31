@@ -237,7 +237,7 @@ fn get_h(max_error: f64, l: usize, guess: f64) -> f64 {
     let pi = std::f64::consts::PI;
 
     while (h_old - h).abs() > parameters::SMALL {
-        let c0 = 4.0 * (2.0 as f64).sqrt() * pi;
+        let c0 = 4.0 * (2.0_f64).sqrt() * pi;
         let cm = gamma::gamma(3.0 / 2.0) / gamma::gamma((m + 3.0) / 2.0);
         let p0 = 1.0 / h;
         let e0 = (-pi * pi / (2.0 * h)).exp();
