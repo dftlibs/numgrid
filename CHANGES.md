@@ -3,7 +3,7 @@
 
 ## Version 2.1.1
 
-Released on 2021-07-31.
+Released on 2024-07-31.
 
 - Package for Python 3.10, 3.11, and 3.12.
 - Updated dependencies and workflows.
