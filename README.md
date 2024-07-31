@@ -279,6 +279,12 @@ be able to use all available cores on the computer or computing node.  Since
 grids are currently generated atom by atom, it is also possible to parallelize
 "outside" by the caller.
 
+If you need to limit the number of cores used by Rayon, you can set (in this
+case limiting to 4 threads):
+```bash
+export RAYON_NUM_THREADS=4
+```
+
 
 ## Space partitioning
 
