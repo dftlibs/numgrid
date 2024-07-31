@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-
+    permissions: write-all
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,14 +14,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    # - name: Build wheels
-    #   uses: messense/maturin-action@v1
-    #   with:
-    #     maturin-version: latest
-    #     manylinux: auto
-    #     command: build
-    #     args: --release
+      uses: actions/checkout@v4
     - name: Publish wheels
       uses: messense/maturin-action@v1
       with:
