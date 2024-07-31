@@ -7,7 +7,7 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1470276.svg
    :target: https://doi.org/10.5281/zenodo.1470276
 
-- `Changelog <CHANGES.rst>`__
+- `Changelog <CHANGES.md>`__
 -  Licensed under `MPL v2.0 <LICENSE>`__ (except John
    Burkardt’s Lebedev code which is redistributed under LGPL v3.0)
 
