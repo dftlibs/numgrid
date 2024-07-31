@@ -16,11 +16,11 @@ requires-python = ">=3.6"
 classifier = ["Programming Language :: Python"]
 
 [dependencies]
-statrs = "0.13"
+statrs = "0.17"
 rand = "0.8"
-rayon = "1.5"
+rayon = "1.10"
 pyo3 = { version = "0.13", features = ["extension-module"] }
 # default-features = false because it by defaults includes default-tls which
 # seems to pull in libssl and libcrypto which is rejected by manylinux
-reqwest = { version = "0.10", default-features = false, features = ["blocking", "json"] }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }
