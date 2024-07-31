@@ -1,15 +1,14 @@
 use pyo3::prelude::*;
-use pyo3::wrap_pyfunction;
 
-use crate::atom::__pyo3_get_function_atom_grid;
-use crate::atom::__pyo3_get_function_atom_grid_bse;
-use crate::lebedev::__pyo3_get_function_angular_grid;
-use crate::radial::__pyo3_get_function_radial_grid_kk;
-use crate::radial::__pyo3_get_function_radial_grid_lmg;
-use crate::radial::__pyo3_get_function_radial_grid_lmg_bse;
+use crate::atom::atom_grid;
+use crate::atom::atom_grid_bse;
+use crate::lebedev::angular_grid;
+use crate::radial::radial_grid_kk;
+use crate::radial::radial_grid_lmg;
+use crate::radial::radial_grid_lmg_bse;
 
 #[pymodule]
-fn numgrid(_py: Python, m: &PyModule) -> PyResult<()> {
+fn numgrid(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
 
     m.add_function(wrap_pyfunction!(atom_grid, m)?)?;
