@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-latest]
 
     steps:
@@ -26,6 +26,10 @@ jobs:
       run: cargo build --verbose
     - name: Test crate
       run: cargo test --verbose
+    - name: Package crate
+      run: cargo package
+    - name: Verify a dry-run publish
+      run: cargo publish --dry-run
     - name: Build and test the Python interface
       run: |
         python -m venv venv
