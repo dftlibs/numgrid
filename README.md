@@ -86,7 +86,7 @@ Mozilla Public License Version 2.0.
 
 ## Requirements
 
-- Python (3.8 - 3.12).
+- Python (3.10 - 3.13).
 - For the Rust version: A [Rust installation](https://www.rust-lang.org/tools/install).
 
 
