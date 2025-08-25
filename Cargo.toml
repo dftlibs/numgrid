@@ -1,6 +1,6 @@
 [package]
 name = "numgrid"
-version = "2.1.1"
+version = "2.1.2"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Numerical integration grid for molecules."
 license = "MPL-2.0"

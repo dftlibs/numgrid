@@ -1,6 +1,14 @@
 # Changelog
 
 
+## Version 2.1.2
+
+Released on 2025-08-25.
+
+- Package for Python 3.13.
+- Updated dependencies.
+
+
 ## Version 2.1.1
 
 Released on 2024-07-31.
