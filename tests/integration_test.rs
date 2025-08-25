@@ -542,12 +542,12 @@ fn benchmark() {
     let proton_charges = vec![8; num_centers];
 
     let mut center_coordinates_bohr = Vec::new();
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     for _ in 0..num_centers {
         center_coordinates_bohr.push((
-            rng.gen_range(-10.0..10.0),
-            rng.gen_range(-10.0..10.0),
-            rng.gen_range(-10.0..10.0),
+            rng.random_range(-10.0..10.0),
+            rng.random_range(-10.0..10.0),
+            rng.random_range(-10.0..10.0),
         ));
     }
 
