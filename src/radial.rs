@@ -93,7 +93,7 @@ pub fn radial_grid_lmg(
     // factor 2.0 to match DIRAC code
     let r_inner = get_r_inner(radial_precision, alpha_max * 2.0);
 
-    let mut h = std::f64::MAX;
+    let mut h = f64::MAX;
     let mut r_outer: f64 = 0.0;
 
     // we need alpha_min sorted by l
@@ -160,7 +160,7 @@ fn test_get_r_inner() {
 // TCA 106, 178 (2001), eq. 19
 fn get_r_outer(max_error: f64, alpha_outer: f64, l: usize, guess: f64) -> f64 {
     let m = (2 * l) as f64;
-    let mut r_old = std::f64::MAX;
+    let mut r_old = f64::MAX;
     let mut step = 0.5;
     let mut sign = 1.0;
     let mut r = guess;
@@ -229,7 +229,7 @@ fn test_get_r_outer() {
 // TCA 106, 178 (2001), eqs. 17 and 18
 fn get_h(max_error: f64, l: usize, guess: f64) -> f64 {
     let m = (2 * l) as f64;
-    let mut h_old = std::f64::MAX;
+    let mut h_old = f64::MAX;
     let mut h = guess;
     let mut step = 0.1 * guess;
     let mut sign = -1.0;

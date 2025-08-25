@@ -37,7 +37,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>,
 
     let element = resp.elements.get(&element.to_string()).unwrap();
 
-    let mut alpha_max = -std::f64::MAX;
+    let mut alpha_max = -f64::MAX;
     let mut alpha_min = HashMap::new();
 
     for shell in &element.electron_shells {
@@ -45,7 +45,7 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> (HashMap<usize, f64>,
         for exponent_string in &shell.exponents {
             let exponent: f64 = exponent_string.parse().unwrap();
             alpha_max = alpha_max.max(exponent);
-            let s = alpha_min.entry(angular_momentum).or_insert(std::f64::MAX);
+            let s = alpha_min.entry(angular_momentum).or_insert(f64::MAX);
             if &exponent < s {
                 *s = exponent;
             }

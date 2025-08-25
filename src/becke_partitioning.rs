@@ -85,7 +85,7 @@ pub fn partitioning_weight(
                 let u_ab = (r_a + r_b) / (r_b - r_a);
                 let a_ab = u_ab / (u_ab * u_ab - 1.0);
 
-                nu_ab += a_ab.min(0.5).max(-0.5) * (1.0 - mu_ab * mu_ab);
+                nu_ab += a_ab.clamp(-0.5, 0.5) * (1.0 - mu_ab * mu_ab);
             }
 
             let f = f3(nu_ab, hardness);
