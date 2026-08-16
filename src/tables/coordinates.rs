@@ -1,4 +1,7 @@
-#![allow(clippy::unreadable_literal)]
+#![allow(
+    clippy::unreadable_literal,
+    reason = "generated Lebedev tables, digit grouping would only obscure them"
+)]
 
 const F: f64 = std::f64::consts::FRAC_1_SQRT_2;
 

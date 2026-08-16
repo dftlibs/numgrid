@@ -1,6 +1,8 @@
+use crate::{NumgridError, Result};
+
 // we use the same values as the DIRAC15 code
-pub fn get_bragg_angstrom(charge: i32) -> f64 {
-    match charge {
+pub fn get_bragg_angstrom(charge: i32) -> Result<f64> {
+    Ok(match charge {
         1 => 0.35,
         2 => 0.35,
         3 => 1.45,
@@ -87,6 +89,10 @@ pub fn get_bragg_angstrom(charge: i32) -> f64 {
         84 => 1.90,
         85 => 1.50,
         86 => 1.50,
-        _ => panic!("Bragg radius not found for input charge"),
-    }
+        _ => {
+            return Err(NumgridError::InvalidInput(format!(
+                "Bragg radius not found for proton charge {charge}"
+            )));
+        }
+    })
 }

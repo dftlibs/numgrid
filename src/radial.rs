@@ -1,4 +1,7 @@
-#![allow(clippy::many_single_char_names)]
+#![expect(
+    clippy::many_single_char_names,
+    reason = "single-letter names here mirror the symbols used in the cited papers"
+)]
 
 use pyo3::prelude::*;
 
@@ -7,13 +10,14 @@ use std::collections::HashMap;
 use crate::bragg;
 use crate::bse;
 use crate::parameters;
+use crate::{NumgridError, RadialGrid, Result};
 use statrs::function::gamma;
 
 #[cfg(test)]
 use crate::comparison;
 
 #[pyfunction]
-pub fn radial_grid_kk(num_points: usize) -> (Vec<f64>, Vec<f64>) {
+pub fn radial_grid_kk(num_points: usize) -> RadialGrid {
     let n = num_points as i32;
     let mut rws: Vec<_> = (1..=n).map(|i| kk_r_w(i, n)).collect();
     rws.reverse();
@@ -47,22 +51,22 @@ fn test_radial_grid_kk() {
     ));
     assert!(comparison::floats_are_same(
         rs[97],
-        22.522899235303480,
+        22.52289923530348,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
         rs[0],
-        7.4914976443367854e-9,
+        7.491497644336785e-9,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
         ws[98],
-        5462.4446669497620,
+        5462.444666949762,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
         ws[97],
-        1828.2535433191961,
+        1828.253543319196,
         1.0e-15
     ));
     assert!(comparison::floats_are_same(
@@ -77,8 +81,13 @@ pub fn radial_grid_lmg_bse(
     basis_set: &str,
     radial_precision: f64,
     proton_charge: i32,
-) -> (Vec<f64>, Vec<f64>) {
-    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, proton_charge as usize);
+) -> Result<RadialGrid> {
+    let element = usize::try_from(proton_charge).map_err(|e| {
+        NumgridError::InvalidInput(format!(
+            "proton charge {proton_charge} is not a valid element: {e}"
+        ))
+    })?;
+    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, element)?;
 
     radial_grid_lmg(alpha_min, alpha_max, radial_precision, proton_charge)
 }
@@ -89,7 +98,7 @@ pub fn radial_grid_lmg(
     alpha_max: f64,
     radial_precision: f64,
     proton_charge: i32,
-) -> (Vec<f64>, Vec<f64>) {
+) -> Result<RadialGrid> {
     // factor 2.0 to match DIRAC code
     let r_inner = get_r_inner(radial_precision, alpha_max * 2.0);
 
@@ -99,23 +108,42 @@ pub fn radial_grid_lmg(
     // we need alpha_min sorted by l
     // at this point not sure why ... need to check again the literature
     let mut v: Vec<_> = alpha_min.into_iter().collect();
-    v.sort_by(|x, y| x.0.cmp(&y.0));
+    v.sort_by_key(|x| x.0);
+
+    let bragg_angstrom = bragg::get_bragg_angstrom(proton_charge)?;
 
     for (l, a) in v {
         if a > 0.0 {
-            r_outer = r_outer.max(get_r_outer(
-                radial_precision,
-                a,
-                l,
-                4.0 * bragg::get_bragg_angstrom(proton_charge),
-            ));
-            assert!(r_outer > r_inner);
+            r_outer = r_outer.max(get_r_outer(radial_precision, a, l, 4.0 * bragg_angstrom));
+            // negated comparison so that a NaN is rejected as well
+            #[expect(
+                clippy::neg_cmp_op_on_partial_ord,
+                reason = "r_outer <= r_inner would let a NaN through"
+            )]
+            if !(r_outer > r_inner) {
+                return Err(NumgridError::InvalidInput(format!(
+                    "r_outer ({r_outer}) must be larger than r_inner ({r_inner})"
+                )));
+            }
             h = h.min(get_h(radial_precision, l, 0.1 * (r_outer - r_inner)));
         }
     }
-    assert!(r_outer > h);
+    // negated comparison so that a NaN is rejected as well
+    #[expect(
+        clippy::neg_cmp_op_on_partial_ord,
+        reason = "r_outer <= h would let a NaN through"
+    )]
+    if !(r_outer > h) {
+        return Err(NumgridError::InvalidInput(format!(
+            "r_outer ({r_outer}) must be larger than the step size h ({h})"
+        )));
+    }
 
     let c = r_inner / (h.exp() - 1.0);
+    #[expect(
+        clippy::cast_sign_loss,
+        reason = "r_outer, c and h are all positive so the logarithm ratio is non-negative"
+    )]
     let num_points = ((1.0 + (r_outer / c)).ln() / h) as usize;
 
     let mut rs = Vec::new();
@@ -127,7 +155,7 @@ pub fn radial_grid_lmg(
         ws.push((r + c) * r * r * h);
     }
 
-    (rs, ws)
+    Ok((rs, ws))
 }
 
 // TCA 106, 178 (2001), eq. 25

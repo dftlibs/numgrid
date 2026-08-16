@@ -10,15 +10,15 @@ fn floats_are_same(value: f64, reference: f64, threshold: f64) -> bool {
     let absolute_error = (value - reference).abs();
     if reference.abs() > threshold {
         let relative_error = (absolute_error / reference).abs();
-        return relative_error < threshold;
+        relative_error < threshold
     } else {
-        return absolute_error < threshold;
+        absolute_error < threshold
     }
 }
 
 #[test]
 fn angular_grid() {
-    let (coordinates, weights) = numgrid::angular_grid(50);
+    let (coordinates, weights) = numgrid::angular_grid(50).expect("angular_grid failed");
 
     let coordinates_reference: [(f64, f64, f64); 50] = [
         (1.0, 0.0, 0.0),
@@ -172,7 +172,8 @@ fn radial_grid_lmg() {
     alpha_min.insert(1, 0.2753);
     alpha_min.insert(2, 1.185);
 
-    let (rs, ws) = numgrid::radial_grid_lmg(alpha_min, 11720.0, 1.0e-12, 8);
+    let (rs, ws) =
+        numgrid::radial_grid_lmg(alpha_min, 11720.0, 1.0e-12, 8).expect("radial_grid_lmg failed");
 
     let rs_reference: [f64; 106] = [
         0.0000012304794589759454,
@@ -427,11 +428,13 @@ fn read_vector<T: FromStr>(file_name: &str) -> Vec<T>
 where
     <T as FromStr>::Err: Debug,
 {
-    let error_message = format!("something went wrong reading file {}", file_name);
-    let contents = fs::read_to_string(file_name).expect(&error_message);
-    let v = contents.lines().map(|s| s.parse().unwrap()).collect();
+    let read_error_message = format!("something went wrong reading file {file_name}");
+    let contents = fs::read_to_string(file_name).expect(&read_error_message);
 
-    return v;
+    let parse_error_message = format!("something went wrong parsing file {file_name}");
+    let values: Result<Vec<T>, <T as FromStr>::Err> = contents.lines().map(|s| s.parse()).collect();
+
+    values.expect(&parse_error_message)
 }
 
 #[test]
@@ -461,7 +464,8 @@ fn atom_grid() {
         center_index,
         center_coordinates_bohr,
         hardness,
-    );
+    )
+    .expect("atom_grid failed");
 
     let num_points = rs.len();
     assert_eq!(num_points, 5300);
@@ -488,9 +492,9 @@ fn molecular_grid() {
     alpha_min_h.insert(0, 0.122);
     alpha_min_h.insert(1, 0.727);
 
-    let alpha_min = vec![alpha_min_o, alpha_min_h.clone(), alpha_min_h];
+    let alpha_min = [alpha_min_o, alpha_min_h.clone(), alpha_min_h];
 
-    let alpha_max = vec![11720.0, 13.01, 13.01];
+    let alpha_max = [11720.0, 13.01, 13.01];
     let min_num_angular_points = 50;
     let max_num_angular_points = 50;
     let num_centers = 3;
@@ -512,7 +516,8 @@ fn molecular_grid() {
             center_index,
             center_coordinates_bohr.clone(),
             hardness,
-        );
+        )
+        .expect("atom_grid failed");
         num_points += rs_atom.len();
         rs.extend(rs_atom);
         ws.extend(ws_atom);
@@ -568,7 +573,8 @@ fn benchmark() {
             center_index,
             center_coordinates_bohr.clone(),
             hardness,
-        );
+        )
+        .expect("atom_grid failed");
     }
     println!("time elapsed in benchmark 1: {:?}", start.elapsed());
 }
@@ -678,7 +684,8 @@ fn another_benchmark() {
             center_index,
             center_coordinates_bohr.clone(),
             hardness,
-        );
+        )
+        .expect("atom_grid failed");
     }
     println!("time elapsed in benchmark 2: {:?}", start.elapsed());
 }

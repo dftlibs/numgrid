@@ -1,6 +1,15 @@
 # Changelog
 
 
+## Version 2.2.0
+
+Unreleased.
+
+- Updated dependencies.
+- Stricter lints.
+- Invalid input returns an error instead of panicking.
+
+
 ## Version 2.1.2
 
 Released on 2025-08-25.

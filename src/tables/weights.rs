@@ -1,4 +1,7 @@
-#![allow(clippy::unreadable_literal)]
+#![allow(
+    clippy::unreadable_literal,
+    reason = "generated Lebedev tables, digit grouping would only obscure them"
+)]
 
 pub static WEIGHTS: [f64; 46976] = [
     0.166666666666667,

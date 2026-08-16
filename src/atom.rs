@@ -1,4 +1,7 @@
-#![allow(clippy::too_many_arguments)]
+#![expect(
+    clippy::too_many_arguments,
+    reason = "these are the parameters the Python API exposes; grouping them into a struct would complicate the binding"
+)]
 
 use pyo3::prelude::*;
 use rayon::prelude::*;
@@ -10,6 +13,7 @@ use crate::bragg;
 use crate::bse;
 use crate::lebedev;
 use crate::radial;
+use crate::{Grid, NumgridError, Result};
 
 #[pyfunction]
 pub fn atom_grid_bse(
@@ -21,9 +25,14 @@ pub fn atom_grid_bse(
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
-) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
-    let (alpha_min, alpha_max) =
-        bse::ang_min_and_max(basis_set, proton_charges[center_index] as usize);
+) -> Result<Grid> {
+    let element = usize::try_from(proton_charges[center_index]).map_err(|e| {
+        NumgridError::InvalidInput(format!(
+            "proton charge {} is not a valid element: {e}",
+            proton_charges[center_index]
+        ))
+    })?;
+    let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, element)?;
 
     atom_grid(
         alpha_min,
@@ -49,16 +58,16 @@ pub fn atom_grid(
     center_index: usize,
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
-) -> (Vec<(f64, f64, f64)>, Vec<f64>) {
+) -> Result<Grid> {
     let (rs, weights_radial) = radial::radial_grid_lmg(
         alpha_min,
         alpha_max,
         radial_precision,
         proton_charges[center_index],
-    );
+    )?;
 
     // factors match DIRAC code
-    let rb = bragg::get_bragg_angstrom(proton_charges[center_index]) / (5.0 * 0.529177249);
+    let rb = bragg::get_bragg_angstrom(proton_charges[center_index])? / (5.0 * 0.529177249);
 
     let mut coordinates = Vec::new();
     let mut weights = Vec::new();
@@ -74,13 +83,19 @@ pub fn atom_grid(
         // this can be optimized
         let mut num_angular = max_num_angular_points;
         if r < rb {
-            num_angular = ((max_num_angular_points as f64) * r / rb) as usize;
-            num_angular = lebedev::get_closest_num_angular(num_angular);
+            #[expect(
+                clippy::cast_sign_loss,
+                reason = "r and rb are both positive so the product is non-negative"
+            )]
+            {
+                num_angular = ((max_num_angular_points as f64) * r / rb) as usize;
+            }
+            num_angular = lebedev::get_closest_num_angular(num_angular)?;
             if num_angular < min_num_angular_points {
                 num_angular = min_num_angular_points;
             }
         }
-        let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular);
+        let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular)?;
 
         let wt = 4.0 * pi * weight_radial;
         for (&xyz, &weight_angular) in coordinates_angular.iter().zip(weights_angular.iter()) {
@@ -105,12 +120,12 @@ pub fn atom_grid(
                     hardness,
                 )
             })
-            .collect();
+            .collect::<Result<Vec<f64>>>()?;
 
         for (i, w) in weights.iter_mut().enumerate() {
             *w *= w_partitioning[i];
         }
     }
 
-    (coordinates, weights)
+    Ok((coordinates, weights))
 }

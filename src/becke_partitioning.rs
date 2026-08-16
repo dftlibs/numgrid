@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::bragg;
 use crate::parameters;
 
@@ -60,7 +61,7 @@ pub fn partitioning_weight(
     proton_charges: &[i32],
     grid_coordinates_bohr: (f64, f64, f64),
     hardness: usize,
-) -> f64 {
+) -> Result<f64> {
     let num_centers = proton_charges.len();
 
     let mut pa = vec![1.0; num_centers];
@@ -68,12 +69,12 @@ pub fn partitioning_weight(
     for ia in 0..num_centers {
         let dist_a = distance(&grid_coordinates_bohr, &center_coordinates_bohr[ia]);
 
-        let r_a = bragg::get_bragg_angstrom(proton_charges[ia]);
+        let r_a = bragg::get_bragg_angstrom(proton_charges[ia])?;
 
         for ib in 0..ia {
             let dist_b = distance(&grid_coordinates_bohr, &center_coordinates_bohr[ib]);
 
-            let r_b = bragg::get_bragg_angstrom(proton_charges[ib]);
+            let r_b = bragg::get_bragg_angstrom(proton_charges[ib])?;
 
             let dist_ab = distance(&center_coordinates_bohr[ia], &center_coordinates_bohr[ib]);
 
@@ -103,8 +104,8 @@ pub fn partitioning_weight(
     let w: f64 = pa.iter().sum();
 
     if w.abs() > parameters::SMALL {
-        pa[center_index] / w
+        Ok(pa[center_index] / w)
     } else {
-        1.0
+        Ok(1.0)
     }
 }
