@@ -20,3 +20,58 @@ pyo3 = { version = "0.29", features = ["extension-module"] }
 # seems to pull in libssl and libcrypto which is rejected by manylinux
 reqwest = { version = "0.13", default-features = false, features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }
+
+# https://emschwartz.me/your-clippy-config-should-be-stricter/
+[lints.clippy]
+# don't panic - prevent panics from unwraps and unsafe slicing or indexing
+string_slice = "warn"
+# indexing_slicing = "warn"
+unwrap_used = "warn"
+panic = "warn"
+todo = "warn"
+unimplemented = "warn"
+unreachable = "warn"
+get_unwrap = "warn"
+unwrap_in_result = "warn"
+unchecked_time_subtraction = "warn"
+panic_in_result_fn = "warn"
+
+# don't fail silently - prevent dropped futures and swallowed errors
+let_underscore_future = "warn"
+let_underscore_must_use = "warn"
+# unused_result_ok = "warn"
+map_err_ignore = "warn"
+assertions_on_result_states = "warn"
+
+# don't do bad async stuff - prevent deadlocks and concurrency bugs
+await_holding_lock = "warn"
+await_holding_refcell_ref = "warn"
+if_let_mutex = "warn"  # only relevant on editions before 2024
+large_futures = "warn"
+
+# don't do unsafe things with memory
+mem_forget = "warn"
+undocumented_unsafe_blocks = "warn"
+multiple_unsafe_ops_per_block = "warn"
+unnecessary_safety_doc = "warn"
+unnecessary_safety_comment = "warn"
+
+# don't do potentially incorrect things with numbers
+float_cmp = "warn"
+float_cmp_const = "warn"
+lossy_float_literal = "warn"
+cast_sign_loss = "warn"
+invalid_upcast_comparisons = "warn"
+
+# don't do bad things that are easy to avoid
+rc_mutex = "warn"
+debug_assert_with_mut_call = "warn"
+iter_not_returning_iterator = "warn"
+expl_impl_clone_on_copy = "warn"
+infallible_try_from = "warn"
+dbg_macro = "warn"
+
+# don't `allow` your way around these lints - every suppression must be
+# a deliberate #[expect(..., reason = "...")] rather than a silent #[allow]
+allow_attributes = "warn"
+allow_attributes_without_reason = "warn"
