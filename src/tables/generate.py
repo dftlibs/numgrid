@@ -1,6 +1,14 @@
 import glob
 import math
 
+# clippy's allow_attributes_without_reason lint wants a reason on every allow
+ALLOW_UNREADABLE_LITERAL = """#![allow(
+    clippy::unreadable_literal,
+    reason = "generated Lebedev tables, digit grouping would only obscure them"
+)]
+
+"""
+
 
 def read_data():
     coordinates = []
@@ -27,8 +35,10 @@ def write_table_offsets(offsets):
         f.write("use std::collections::HashMap;\n")
         f.write("\npub fn offsets() -> HashMap<usize, usize> {\n")
         f.write("    let mut mapping = HashMap::new();\n")
-        for (num_points, offset) in offsets:
-            f.write(f"    mapping.insert({num_points}, {offset});\n")
+        f.writelines(
+            f"    mapping.insert({num_points}, {offset});\n"
+            for num_points, offset in offsets
+        )
         f.write("    mapping\n")
         f.write("}\n")
 
@@ -65,19 +75,17 @@ def spherical_to_cartesian(coordinate):
 
 def write_tables(coordinates, ws):
     with open("coordinates.rs", "w") as f:
-        f.write("#![allow(clippy::unreadable_literal)]\n\n")
+        f.write(ALLOW_UNREADABLE_LITERAL)
         f.write("const F: f64 = std::f64::consts::FRAC_1_SQRT_2;\n\n")
-        f.write(f"pub const COORDINATES: [(f64, f64, f64); {len(coordinates)}] = [\n")
-        for (x, y, z) in coordinates:
-            f.write(f"    ({x}, {y}, {z}),\n")
-        f.write(f"];\n")
+        f.write(f"pub static COORDINATES: [(f64, f64, f64); {len(coordinates)}] = [\n")
+        f.writelines(f"    ({x}, {y}, {z}),\n" for x, y, z in coordinates)
+        f.write("];\n")
 
     with open("weights.rs", "w") as f:
-        f.write("#![allow(clippy::unreadable_literal)]\n\n")
-        f.write(f"pub const WEIGHTS: [f64; {len(ws)}] = [\n")
-        for w in ws:
-            f.write(f"    {w},\n")
-        f.write(f"];\n")
+        f.write(ALLOW_UNREADABLE_LITERAL)
+        f.write(f"pub static WEIGHTS: [f64; {len(ws)}] = [\n")
+        f.writelines(f"    {w},\n" for w in ws)
+        f.write("];\n")
 
 
 if __name__ == "__main__":
@@ -87,3 +95,6 @@ if __name__ == "__main__":
     write_table_offsets(offsets)
 
     write_tables(coordinates, ws)
+
+    # run "cargo fmt" afterwards: rustfmt wraps the longer coordinate tuples
+    # over several lines and the generated files are checked in formatted
