@@ -19,9 +19,7 @@ use crate::comparison;
 #[pyfunction]
 pub fn radial_grid_kk(num_points: usize) -> RadialGrid {
     let n = num_points as i32;
-    let mut rws: Vec<_> = (1..=n).map(|i| kk_r_w(i, n)).collect();
-    rws.reverse();
-    rws.iter().cloned().unzip()
+    (1..=n).rev().map(|i| kk_r_w(i, n)).unzip()
 }
 
 // https://doi.org/10.1063/1.475719, eqs. 9-13
@@ -82,11 +80,7 @@ pub fn radial_grid_lmg_bse(
     radial_precision: f64,
     proton_charge: i32,
 ) -> Result<RadialGrid> {
-    let element = usize::try_from(proton_charge).map_err(|e| {
-        NumgridError::InvalidInput(format!(
-            "proton charge {proton_charge} is not a valid element: {e}"
-        ))
-    })?;
+    let element = bse::element_from_proton_charge(proton_charge)?;
     let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, element)?;
 
     radial_grid_lmg(alpha_min, alpha_max, radial_precision, proton_charge)
@@ -146,16 +140,13 @@ pub fn radial_grid_lmg(
     )]
     let num_points = ((1.0 + (r_outer / c)).ln() / h) as usize;
 
-    let mut rs = Vec::new();
-    let mut ws = Vec::new();
+    Ok((1..=num_points)
+        .map(|i| {
+            let r = c * (((i as f64) * h).exp() - 1.0);
 
-    for i in 1..=num_points {
-        let r = c * (((i as f64) * h).exp() - 1.0);
-        rs.push(r);
-        ws.push((r + c) * r * r * h);
-    }
-
-    Ok((rs, ws))
+            (r, (r + c) * r * r * h)
+        })
+        .unzip())
 }
 
 // TCA 106, 178 (2001), eq. 25
@@ -163,12 +154,9 @@ pub fn radial_grid_lmg(
 fn get_r_inner(max_error: f64, alpha_inner: f64) -> f64 {
     let d = 1.9;
 
-    let mut r = d - (1.0 / max_error).ln();
-    r *= 2.0 / 3.0;
-    r = r.exp() / alpha_inner;
-    r = r.sqrt();
+    let r = d - (1.0 / max_error).ln();
 
-    r
+    ((r * (2.0 / 3.0)).exp() / alpha_inner).sqrt()
 }
 
 #[test]

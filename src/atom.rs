@@ -12,8 +12,9 @@ use crate::becke_partitioning;
 use crate::bragg;
 use crate::bse;
 use crate::lebedev;
+use crate::parameters;
 use crate::radial;
-use crate::{Grid, NumgridError, Result};
+use crate::{Grid, Result};
 
 #[pyfunction]
 pub fn atom_grid_bse(
@@ -26,12 +27,7 @@ pub fn atom_grid_bse(
     center_coordinates_bohr: Vec<(f64, f64, f64)>,
     hardness: usize,
 ) -> Result<Grid> {
-    let element = usize::try_from(proton_charges[center_index]).map_err(|e| {
-        NumgridError::InvalidInput(format!(
-            "proton charge {} is not a valid element: {e}",
-            proton_charges[center_index]
-        ))
-    })?;
+    let element = bse::element_from_proton_charge(proton_charges[center_index])?;
     let (alpha_min, alpha_max) = bse::ang_min_and_max(basis_set, element)?;
 
     atom_grid(
@@ -67,7 +63,8 @@ pub fn atom_grid(
     )?;
 
     // factors match DIRAC code
-    let rb = bragg::get_bragg_angstrom(proton_charges[center_index])? / (5.0 * 0.529177249);
+    let rb = bragg::get_bragg_angstrom(proton_charges[center_index])?
+        / (5.0 * parameters::BOHR_IN_ANGSTROM);
 
     let mut coordinates = Vec::new();
     let mut weights = Vec::new();
@@ -81,21 +78,18 @@ pub fn atom_grid(
     for (&r, &weight_radial) in rs.iter().zip(weights_radial.iter()) {
         // we read the angular grid at each radial step because of pruning
         // this can be optimized
-        let mut num_angular = max_num_angular_points;
-        if r < rb {
+        let num_angular = if r < rb {
             #[expect(
                 clippy::cast_sign_loss,
                 reason = "r and rb are both positive so the product is non-negative"
             )]
-            {
-                num_angular = ((max_num_angular_points as f64) * r / rb) as usize;
-            }
-            num_angular = lebedev::get_closest_num_angular(num_angular)?;
-            if num_angular < min_num_angular_points {
-                num_angular = min_num_angular_points;
-            }
-        }
-        let (coordinates_angular, weights_angular) = lebedev::angular_grid(num_angular)?;
+            let pruned = ((max_num_angular_points as f64) * r / rb) as usize;
+
+            lebedev::get_closest_num_angular(pruned)?.max(min_num_angular_points)
+        } else {
+            max_num_angular_points
+        };
+        let (coordinates_angular, weights_angular) = lebedev::angular_grid_slices(num_angular)?;
 
         let wt = 4.0 * pi * weight_radial;
         for (&xyz, &weight_angular) in coordinates_angular.iter().zip(weights_angular.iter()) {
@@ -109,21 +103,27 @@ pub fn atom_grid(
     }
 
     if center_coordinates_bohr.len() > 1 {
+        // map_init hands each rayon thread one scratch buffer to reuse across
+        // all the grid points it handles, instead of allocating per point
         let w_partitioning: Vec<f64> = coordinates
             .par_iter()
-            .map(|c| {
-                becke_partitioning::partitioning_weight(
-                    center_index,
-                    &center_coordinates_bohr,
-                    &proton_charges,
-                    *c,
-                    hardness,
-                )
-            })
+            .map_init(
+                || vec![1.0; proton_charges.len()],
+                |pa, c| {
+                    becke_partitioning::partitioning_weight(
+                        center_index,
+                        &center_coordinates_bohr,
+                        &proton_charges,
+                        *c,
+                        hardness,
+                        pa,
+                    )
+                },
+            )
             .collect::<Result<Vec<f64>>>()?;
 
-        for (i, w) in weights.iter_mut().enumerate() {
-            *w *= w_partitioning[i];
+        for (w, wp) in weights.iter_mut().zip(&w_partitioning) {
+            *w *= wp;
         }
     }
 

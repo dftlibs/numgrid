@@ -3,7 +3,7 @@
     reason = "generated Lebedev tables, digit grouping would only obscure them"
 )]
 
-pub static WEIGHTS: [f64; 46976] = [
+pub(crate) static WEIGHTS: [f64; 46976] = [
     0.166666666666667,
     0.166666666666667,
     0.166666666666667,

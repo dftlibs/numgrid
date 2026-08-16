@@ -33,7 +33,7 @@ def read_data():
 def write_table_offsets(offsets):
     with open("offsets.rs", "w") as f:
         f.write("use std::collections::HashMap;\n")
-        f.write("\npub fn offsets() -> HashMap<usize, usize> {\n")
+        f.write("\npub(crate) fn offsets() -> HashMap<usize, usize> {\n")
         f.write("    let mut mapping = HashMap::new();\n")
         f.writelines(
             f"    mapping.insert({num_points}, {offset});\n"
@@ -77,13 +77,15 @@ def write_tables(coordinates, ws):
     with open("coordinates.rs", "w") as f:
         f.write(ALLOW_UNREADABLE_LITERAL)
         f.write("const F: f64 = std::f64::consts::FRAC_1_SQRT_2;\n\n")
-        f.write(f"pub static COORDINATES: [(f64, f64, f64); {len(coordinates)}] = [\n")
+        f.write(
+            f"pub(crate) static COORDINATES: [(f64, f64, f64); {len(coordinates)}] = [\n"
+        )
         f.writelines(f"    ({x}, {y}, {z}),\n" for x, y, z in coordinates)
         f.write("];\n")
 
     with open("weights.rs", "w") as f:
         f.write(ALLOW_UNREADABLE_LITERAL)
-        f.write(f"pub static WEIGHTS: [f64; {len(ws)}] = [\n")
+        f.write(f"pub(crate) static WEIGHTS: [f64; {len(ws)}] = [\n")
         f.writelines(f"    {w},\n" for w in ws)
         f.write("];\n")
 

@@ -1,7 +1,7 @@
 use crate::{NumgridError, Result};
 
 // we use the same values as the DIRAC15 code
-pub fn get_bragg_angstrom(charge: i32) -> Result<f64> {
+pub(crate) fn get_bragg_angstrom(charge: i32) -> Result<f64> {
     Ok(match charge {
         1 => 0.35,
         2 => 0.35,

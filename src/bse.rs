@@ -22,17 +22,24 @@ struct Shell {
 // reqwest errors render as "error sending request for url (...)" and keep the
 // interesting part in the source chain, so we spell the whole chain out
 fn error_chain(error: &dyn std::error::Error) -> String {
-    let mut messages = vec![error.to_string()];
-    let mut source = error.source();
-    while let Some(cause) = source {
-        messages.push(cause.to_string());
-        source = cause.source();
-    }
-
-    messages.join(": ")
+    std::iter::successors(Some(error), |e| e.source())
+        .map(ToString::to_string)
+        .collect::<Vec<_>>()
+        .join(": ")
 }
 
-pub fn ang_min_and_max(basis_set: &str, element: usize) -> Result<(HashMap<usize, f64>, f64)> {
+pub(crate) fn element_from_proton_charge(proton_charge: i32) -> Result<usize> {
+    usize::try_from(proton_charge).map_err(|e| {
+        NumgridError::InvalidInput(format!(
+            "proton charge {proton_charge} is not a valid element: {e}"
+        ))
+    })
+}
+
+pub(crate) fn ang_min_and_max(
+    basis_set: &str,
+    element: usize,
+) -> Result<(HashMap<usize, f64>, f64)> {
     let mut headers = HeaderMap::new();
     headers.insert(USER_AGENT, HeaderValue::from_static("reqwest"));
 

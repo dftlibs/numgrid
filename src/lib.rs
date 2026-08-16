@@ -21,6 +21,9 @@ pub type Grid = (Vec<(f64, f64, f64)>, Vec<f64>);
 /// radial grid points in bohr paired with their integration weights
 pub type RadialGrid = (Vec<f64>, Vec<f64>);
 
+/// borrowed view into the static angular grid tables
+pub(crate) type GridSlices = (&'static [(f64, f64, f64)], &'static [f64]);
+
 /// result type of the fallible entry points of this crate
 pub type Result<T> = std::result::Result<T, NumgridError>;
 

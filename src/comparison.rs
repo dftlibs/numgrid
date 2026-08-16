@@ -1,4 +1,4 @@
-pub fn floats_are_same(value: f64, reference: f64, threshold: f64) -> bool {
+pub(crate) fn floats_are_same(value: f64, reference: f64, threshold: f64) -> bool {
     let absolute_error = (value - reference).abs();
     if reference.abs() > threshold {
         let relative_error = (absolute_error / reference).abs();

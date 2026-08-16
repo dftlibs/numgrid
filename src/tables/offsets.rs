@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub fn offsets() -> HashMap<usize, usize> {
+pub(crate) fn offsets() -> HashMap<usize, usize> {
     let mut mapping = HashMap::new();
     mapping.insert(6, 0);
     mapping.insert(14, 6);

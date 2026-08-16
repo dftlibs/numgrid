@@ -8,13 +8,7 @@ use crate::comparison;
 // JCP 88, 2547 (1988), eq. 20
 #[inline]
 fn f3(x: f64, hardness: usize) -> f64 {
-    let mut f = x;
-
-    for _ in 0..hardness {
-        f *= 1.5 - 0.5 * f * f;
-    }
-
-    f
+    (0..hardness).fold(x, |f, _| f * (1.5 - 0.5 * f * f))
 }
 
 #[test]
@@ -55,16 +49,21 @@ fn distance(p1: &(f64, f64, f64), p2: &(f64, f64, f64)) -> f64 {
 }
 
 // JCP 88, 2547 (1988)
-pub fn partitioning_weight(
+//
+// this runs once per grid point, so the caller hands in the per-center scratch
+// buffer instead of us allocating a fresh one every time. it must hold one
+// entry per center and is reset here, so its incoming contents do not matter
+pub(crate) fn partitioning_weight(
     center_index: usize,
     center_coordinates_bohr: &[(f64, f64, f64)],
     proton_charges: &[i32],
     grid_coordinates_bohr: (f64, f64, f64),
     hardness: usize,
+    pa: &mut [f64],
 ) -> Result<f64> {
     let num_centers = proton_charges.len();
 
-    let mut pa = vec![1.0; num_centers];
+    pa.fill(1.0);
 
     for ia in 0..num_centers {
         let dist_a = distance(&grid_coordinates_bohr, &center_coordinates_bohr[ia]);
@@ -81,13 +80,14 @@ pub fn partitioning_weight(
             // JCP 88, 2547 (1988), eq. 11
             let mu_ab = (dist_a - dist_b) / dist_ab;
 
-            let mut nu_ab = mu_ab;
-            if (r_a - r_b).abs() > parameters::SMALL {
+            let nu_ab = if (r_a - r_b).abs() > parameters::SMALL {
                 let u_ab = (r_a + r_b) / (r_b - r_a);
                 let a_ab = u_ab / (u_ab * u_ab - 1.0);
 
-                nu_ab += a_ab.clamp(-0.5, 0.5) * (1.0 - mu_ab * mu_ab);
-            }
+                mu_ab + a_ab.clamp(-0.5, 0.5) * (1.0 - mu_ab * mu_ab)
+            } else {
+                mu_ab
+            };
 
             let f = f3(nu_ab, hardness);
 
