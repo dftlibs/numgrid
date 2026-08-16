@@ -16,9 +16,7 @@ statrs = "0.19"
 rand = "0.10"
 rayon = "1.12"
 pyo3 = { version = "0.29", features = ["extension-module"] }
-# default-features = false because it by defaults includes default-tls which
-# seems to pull in libssl and libcrypto which is rejected by manylinux
-reqwest = { version = "0.13", default-features = false, features = ["blocking", "json"] }
+reqwest = { version = "0.13", default-features = false, features = ["blocking", "json", "rustls"] }
 serde = { version = "1.0", features = ["derive"] }
 
 # https://emschwartz.me/your-clippy-config-should-be-stricter/

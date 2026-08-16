@@ -5,9 +5,12 @@
 
 Unreleased.
 
+- Use HTTPS to access Basis Set Exchange.
 - Updated dependencies.
 - Stricter lints.
 - Invalid input returns an error instead of panicking.
+- Fix the basis set exchange query which had no TLS backend and could not
+  follow the redirect to https.
 
 
 ## Version 2.1.2

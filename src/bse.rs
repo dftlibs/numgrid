@@ -19,12 +19,25 @@ struct Shell {
     exponents: Vec<String>,
 }
 
+// reqwest errors render as "error sending request for url (...)" and keep the
+// interesting part in the source chain, so we spell the whole chain out
+fn error_chain(error: &dyn std::error::Error) -> String {
+    let mut messages = vec![error.to_string()];
+    let mut source = error.source();
+    while let Some(cause) = source {
+        messages.push(cause.to_string());
+        source = cause.source();
+    }
+
+    messages.join(": ")
+}
+
 pub fn ang_min_and_max(basis_set: &str, element: usize) -> Result<(HashMap<usize, f64>, f64)> {
     let mut headers = HeaderMap::new();
     headers.insert(USER_AGENT, HeaderValue::from_static("reqwest"));
 
     let url = format!(
-        "http://basissetexchange.org/api/basis/{}/format/json?elements={}",
+        "https://basissetexchange.org/api/basis/{}/format/json?elements={}",
         basis_set, element,
     );
 
@@ -33,12 +46,16 @@ pub fn ang_min_and_max(basis_set: &str, element: usize) -> Result<(HashMap<usize
         .headers(headers)
         .send()
         .map_err(|e| {
-            NumgridError::External(format!("could not query the basis set exchange: {e}"))
+            NumgridError::External(format!(
+                "could not query the basis set exchange: {}",
+                error_chain(&e)
+            ))
         })?
         .json::<Basis>()
         .map_err(|e| {
             NumgridError::External(format!(
-                "could not parse the response from the basis set exchange: {e}"
+                "could not parse the response from the basis set exchange: {}",
+                error_chain(&e)
             ))
         })?;
 
