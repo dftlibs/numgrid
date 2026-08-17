@@ -3,13 +3,13 @@
 
 ## Version 2.2.0
 
-Unreleased.
+Released on 2026-08-17.
 
 - Use HTTPS to access Basis Set Exchange.
 - Updated dependencies.
 - Stricter lints.
 - Invalid input returns an error instead of panicking.
-- Fix the basis set exchange query which had no TLS backend and could not
+- Fix the basis set exchange query which had no TLS back-end and could not
   follow the redirect to https.
 - Package also for Python 3.14.
 

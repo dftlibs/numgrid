@@ -57,7 +57,7 @@ author(s)
   month     = {7},
   year      = {2024},
   publisher = {Zenodo},
-  version   = {v2.1.1},
+  version   = {v2.2.0},
   doi       = {10.5281/zenodo.1470276},
   url       = {https://doi.org/10.5281/zenodo.1470276}
 }
@@ -86,7 +86,7 @@ Mozilla Public License Version 2.0.
 
 ## Requirements
 
-- Python (3.10 - 3.13).
+- Python (3.10 - 3.14).
 - For the Rust version: A [Rust installation](https://www.rust-lang.org/tools/install).
 
 
