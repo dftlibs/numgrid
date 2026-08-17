@@ -11,6 +11,7 @@ Unreleased.
 - Invalid input returns an error instead of panicking.
 - Fix the basis set exchange query which had no TLS backend and could not
   follow the redirect to https.
+- Package also for Python 3.14.
 
 
 ## Version 2.1.2
